@@ -3,6 +3,7 @@ export type DocumentStatus = 'OK' | 'Brak' | 'Spóźnione' | 'W toku' | 'Zatwier
 export interface UploadedFile {
   name: string;
   timestamp: string;
+  rawFile?: File; // TA LINIA JEST KLUCZOWA
 }
 
 export interface OCRRecord {
