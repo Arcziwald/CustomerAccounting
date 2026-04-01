@@ -68,23 +68,23 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
     );
   }
 
-  const handleRealUpload = (docId: string, file: File) => {
+  // POPRAWIONA FUNKCJA PRZESYŁANIA
+  const handleUpload = (docId: string, file: File) => {
     setUploading(docId);
     
-    // Tworzymy obiekt UploadedFile rozszerzony o surowy plik dla n8n
     const fileData: UploadedFile = {
       name: file.name,
       timestamp: new Date().toISOString(),
-      rawFile: file // To jest kluczowe dla funkcji w App.tsx!
+      rawFile: file // Przekazujemy fizyczny plik do App.tsx
     };
 
     if (id) {
       addFileToDocument(id, docId, fileData);
       
-      // Małe opóźnienie dla efektu wizualnego "ładowania"
+      // Krótkie opóźnienie tylko dla efektu UI
       setTimeout(() => {
         setUploading(null);
-      }, 1000);
+      }, 800);
     }
   };
 
@@ -161,18 +161,17 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                       )}
                       
                       <input 
-  type="file" 
-  id={`file-upload-${doc.id}`}
-  className="hidden" 
-  accept=".pdf, .jpg, .jpeg, .png"
-  onChange={(e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Zmieniamy wywołanie na naszą nową funkcję
-      handleRealUpload(doc.id, file);
-    }
-  }}
-/>
+                        type="file" 
+                        id={`file-upload-${doc.id}`}
+                        className="hidden" 
+                        accept=".pdf, .jpg, .jpeg, .png"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleUpload(doc.id, file); // WYWOŁANIE PRAWDZIWEGO UPLOADU
+                          }
+                        }}
+                      />
                       
                       <button 
                         onClick={() => document.getElementById(`file-upload-${doc.id}`)?.click()}
@@ -187,7 +186,7 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                             >
                               <Upload className="w-4 h-4" />
                             </motion.div>
-                            Drive...
+                            Wysyłanie...
                           </span>
                         ) : (
                           <><Plus className="w-4 h-4" /> Dodaj dokument</>
@@ -202,17 +201,11 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                   </div>
                 </div>
 
-                {/* File counter and list */}
                 <div className="pt-4 border-t border-slate-200/50">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-medium text-slate-500">
                       Przesłano: <span className="text-slate-900 font-bold">{doc.files.length} {doc.files.length === 1 ? 'plik' : (doc.files.length > 1 && doc.files.length < 5) ? 'pliki' : 'plików'}</span>
                     </p>
-                    {doc.files.length > 0 && (
-                      <span className="text-[10px] uppercase tracking-wider font-bold text-blue-500 bg-blue-50 px-2 py-0.5 rounded-md">
-                        Google Drive Sync Active
-                      </span>
-                    )}
                   </div>
                   
                   {doc.files.length > 0 ? (
@@ -224,11 +217,6 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                           <span className="text-[10px] text-slate-300">{new Date(file.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                         </li>
                       ))}
-                      {doc.files.length > 4 && (
-                        <li className="text-xs text-slate-400 italic p-2">
-                          + {doc.files.length - 4} więcej plików w folderze...
-                        </li>
-                      )}
                     </ul>
                   ) : (
                     <p className="text-xs text-slate-400 italic">Brak przesłanych plików w tej kategorii.</p>
@@ -253,13 +241,9 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                   <h3 className="text-xl font-bold text-slate-900">Weryfikator ciągłości faktur</h3>
                 </div>
                 
-                <p className="text-slate-600 mb-4 text-sm">
-                  Wklej numery faktur oddzielone przecinkami lub spacjami (np. 1, 2, 4, 5), aby sprawdzić czy brakuje jakiegoś numeru w serii.
-                </p>
-
                 <textarea
                   className="w-full p-4 bg-white border border-blue-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all min-h-[100px] text-lg font-mono"
-                  placeholder="Wklej tutaj numery..."
+                  placeholder="Wklej numery..."
                   value={invoiceInput}
                   onChange={(e) => handleSequenceCheck(e.target.value)}
                 />
@@ -274,22 +258,8 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                     <div>
                       <p className="text-red-800 font-bold text-lg">Wykryto braki w numeracji!</p>
                       <p className="text-red-600">
-                        Brakuje {missingInvoices.length === 1 ? 'faktury' : 'faktur'} nr: <span className="font-bold">{missingInvoices.join(', ')}</span>
+                        Brakuje faktur nr: <span className="font-bold">{missingInvoices.join(', ')}</span>
                       </p>
-                    </div>
-                  </motion.div>
-                )}
-
-                {invoiceInput && missingInvoices.length === 0 && (
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="mt-6 p-5 bg-green-50 border border-green-100 rounded-2xl flex items-start gap-4"
-                  >
-                    <CheckCircle className="w-6 h-6 text-green-500 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-green-800 font-bold text-lg">Ciągłość zachowana!</p>
-                      <p className="text-green-600">Wszystkie faktury w podanym zakresie są obecne.</p>
                     </div>
                   </motion.div>
                 )}
@@ -301,35 +271,18 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
         <div className="mt-12 p-10 bg-blue-600 rounded-[3rem] text-white text-center shadow-2xl shadow-blue-200 relative overflow-hidden group">
           <div className="relative z-10">
             <h3 className="text-3xl font-bold mb-3">Gotowe na ten miesiąc?</h3>
-            <p className="text-blue-100 mb-8 text-lg max-w-md mx-auto">Kliknij poniżej, aby poinformować biuro o zakończeniu przesyłania dokumentów za {client.month}.</p>
+            <p className="text-blue-100 mb-8 text-lg max-w-md mx-auto">Kliknij poniżej, aby poinformować biuro o zakończeniu przesyłania dokumentów.</p>
             <button 
               onClick={() => {
                 if (id && !client.locked) finishUploading(id);
               }}
               disabled={client.locked}
-              className="inline-flex items-center gap-3 px-10 py-5 bg-white text-blue-600 rounded-2xl font-bold text-xl hover:bg-blue-50 transition-all transform hover:scale-105 active:scale-95 shadow-xl group-hover:shadow-white/20 disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-3 px-10 py-5 bg-white text-blue-600 rounded-2xl font-bold text-xl hover:bg-blue-50 transition-all transform hover:scale-105 active:scale-95 shadow-xl disabled:opacity-50"
             >
               <Send className="w-6 h-6" />
-              {client.locked ? 'Miesiąc zatwierdzony' : 'Zakończ przesyłanie'}
+              {client.locked ? 'Zatwierdzone' : 'Zakończ przesyłanie'}
             </button>
           </div>
-          
-          {/* Decorative elements */}
-          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white rounded-full blur-3xl"></div>
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-white rounded-full blur-3xl"></div>
-          </div>
-        </div>
-
-        <div className="mt-16 p-8 bg-slate-900 rounded-[2.5rem] text-white relative overflow-hidden">
-          <div className="relative z-10">
-            <h3 className="text-2xl font-bold mb-2">Potrzebujesz pomocy?</h3>
-            <p className="text-slate-400 mb-6">Skontaktuj się bezpośrednio ze swoim księgowym.</p>
-            <button className="px-6 py-3 bg-white text-slate-900 rounded-2xl font-bold hover:bg-slate-100 transition-colors">
-              Zadzwoń do nas
-            </button>
-          </div>
-          <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-600/20 rounded-full blur-3xl"></div>
         </div>
       </div>
     </div>
