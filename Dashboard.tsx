@@ -121,11 +121,12 @@ export default function App() {
     ));
   };
 
-  const addFileToDocument = (clientId: string, docId: string, file: UploadedFile) => {
+  const addFileToDocument = async (clientId: string, docId: string, file: UploadedFile) => {
     const client = clients.find(c => c.id === clientId);
     const doc = client?.documents.find(d => d.id === docId);
 
     if (client && doc) {
+      // 1. Logika wizualna (to co już masz)
       const newActivity: ActivityEntry = {
         id: Date.now().toString(),
         clientName: client.name,
@@ -135,7 +136,27 @@ export default function App() {
       };
       setActivities(prev => [newActivity, ...prev].slice(0, 10));
 
-      // Create a pending OCR record
+      // 2. FIZYCZNE WYSYŁANIE DO n8n
+      // Zakładamy, że 'file' zawiera obiekt File z przeglądarki (blob)
+      if (file.rawFile) { 
+        const formData = new FormData();
+        formData.append('data', file.rawFile); // Klucz 'data' musi być taki sam jak w n8n
+        formData.append('clientId', clientId);
+        formData.append('clientName', client.name);
+
+        try {
+          // TU WPISZ SWÓJ ADRES WEBHOOKA
+          fetch('https://n8n.srv1151721.hstgr.cloud/webhook-test/odbierz-dokument', {
+            method: 'POST',
+            body: formData,
+          });
+          // Nie czekamy na 'await', żeby nie blokować interfejsu (n8n i tak mieli to w tle)
+        } catch (error) {
+          console.error("Błąd wysyłki do n8n:", error);
+        }
+      }
+
+      // 3. Reszta logiki OCR (to co już masz)
       if (doc.label.includes('Faktury')) {
         const newOCRRecord: OCRRecord = {
           id: Date.now().toString() + '-ocr',
@@ -154,24 +175,18 @@ export default function App() {
       }
     }
 
-    setClients(prev => prev.map(client => 
-      client.id === clientId 
+    // Aktualizacja stanu UI
+    setClients(prev => prev.map(c => 
+      c.id === clientId 
         ? { 
-            ...client, 
-            documents: client.documents.map(doc => 
-              doc.id === docId 
-                ? { 
-                    ...doc, 
-                    files: [...doc.files, file],
-                    status: 'W toku' 
-                  } 
-                : doc
+            ...c, 
+            documents: c.documents.map(d => 
+              d.id === docId ? { ...d, files: [...d.files, file], status: 'W toku' } : d
             ) 
           }
-        : client
+        : c
     ));
   };
-
   const finishUploading = (clientId: string) => {
     const client = clients.find(c => c.id === clientId);
     if (client) {
