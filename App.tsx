@@ -1,10 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import "tailwindcss";
+import React from 'react';
+import Dashboard from './components/Dashboard';
 
-@theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+function App() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Dashboard />
+    </div>
+  );
 }
 
-body {
-  @apply bg-slate-50 text-slate-900 font-sans;
-}
+export default App;
