@@ -68,17 +68,24 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
     );
   }
 
-  const handleSimulatedUpload = (docId: string, fileName: string) => {
+  const handleRealUpload = (docId: string, file: File) => {
     setUploading(docId);
-    setTimeout(() => {
-      setUploading(null);
-      if (id) {
-        addFileToDocument(id, docId, {
-          name: fileName,
-          timestamp: new Date().toISOString()
-        });
-      }
-    }, 2000);
+    
+    // Tworzymy obiekt UploadedFile rozszerzony o surowy plik dla n8n
+    const fileData: UploadedFile = {
+      name: file.name,
+      timestamp: new Date().toISOString(),
+      rawFile: file // To jest kluczowe dla funkcji w App.tsx!
+    };
+
+    if (id) {
+      addFileToDocument(id, docId, fileData);
+      
+      // Małe opóźnienie dla efektu wizualnego "ładowania"
+      setTimeout(() => {
+        setUploading(null);
+      }, 1000);
+    }
   };
 
   return (
@@ -154,17 +161,18 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                       )}
                       
                       <input 
-                        type="file" 
-                        id={`file-upload-${doc.id}`}
-                        className="hidden" 
-                        accept=".pdf, .jpg, .jpeg, .png"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            handleSimulatedUpload(doc.id, file.name);
-                          }
-                        }}
-                      />
+  type="file" 
+  id={`file-upload-${doc.id}`}
+  className="hidden" 
+  accept=".pdf, .jpg, .jpeg, .png"
+  onChange={(e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Zmieniamy wywołanie na naszą nową funkcję
+      handleRealUpload(doc.id, file);
+    }
+  }}
+/>
                       
                       <button 
                         onClick={() => document.getElementById(`file-upload-${doc.id}`)?.click()}
