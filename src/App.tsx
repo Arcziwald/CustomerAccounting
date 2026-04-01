@@ -121,7 +121,7 @@ export default function App() {
     ));
   };
 
-  const addFileToDocument = (clientId: string, docId: string, file: UploadedFile) => {
+  const addFileToDocument = async (clientId: string, docId: string, file: UploadedFile) => {
     const client = clients.find(c => c.id === clientId);
     const doc = client?.documents.find(d => d.id === docId);
 
@@ -134,6 +134,25 @@ export default function App() {
         timestamp: file.timestamp
       };
       setActivities(prev => [newActivity, ...prev].slice(0, 10));
+
+      // POŁĄCZENIE Z n8n
+      if (file.rawFile) {
+        const formData = new FormData();
+        formData.append('data', file.rawFile);
+        formData.append('clientId', clientId);
+        formData.append('clientName', client.name);
+        formData.append('docLabel', doc.label);
+
+        try {
+          fetch('https://n8n.srv1151721.hstgr.cloud/webhook-test/odbierz-dokument', {
+            method: 'POST',
+            body: formData,
+          });
+          console.log("Wysłano do n8n:", file.name);
+        } catch (error) {
+          console.error("Błąd Webhooka:", error);
+        }
+      }
 
       // Create a pending OCR record
       if (doc.label.includes('Faktury')) {
