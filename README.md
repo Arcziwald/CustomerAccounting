@@ -2,7 +2,7 @@
 
 > Inteligentny asystent, który automatycznie analizuje faktury i suplementy w Twoim biurze rachunkowym. Zasilany przez n8n i Gemini.
 
-![Główny widok aplikacji](https://client.accounting.artwebcraft.com/public/images/dashboard_screenshot.png.png)
+![Główny widok aplikacji](https://client.accounting.artwebcraft.com/dashboard_screenshot.png.png)
 
 ## ✅ Co potrafi ta aplikacja?
 
