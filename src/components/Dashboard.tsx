@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { ActivityEntry } from '../types';
 import { useTranslation } from 'react-i18next';
 
-const { t, i18n } = useTranslation();
 
 interface DashboardProps {
   clients: Client[];
@@ -31,6 +30,7 @@ export default function Dashboard({
   updateOCRStatus,
   analyzeDocument
 }: DashboardProps) {
+  const { t, i18n } = useTranslation();
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [editingClientId, setEditingClientId] = useState<string | null>(null);
@@ -80,6 +80,10 @@ export default function Dashboard({
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">The Missing Link</h1>
           <p className="text-slate-500 text-lg">Panel administracyjny biura rachunkowego</p>
+          <div className="flex gap-2 mb-4">
+          <button onClick={() => i18n.changeLanguage('pl')} className="px-2 py-1 bg-slate-200 rounded text-xs">PL</button>
+          <button onClick={() => i18n.changeLanguage('en')} className="px-2 py-1 bg-slate-200 rounded text-xs">EN</button>
+        </div>
         </div>
         
         <div className="relative w-full md:w-80">
