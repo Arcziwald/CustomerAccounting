@@ -491,7 +491,7 @@ export default function Dashboard({
                               className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold text-xs hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200"
                             >
                               <Search className="w-3.5 h-3.5" /> {t('common.analyze')}
-                            </button>
+                            </button> 
                           ) : (
                             <>
                               <button 
