@@ -408,8 +408,8 @@ export default function Dashboard({
                 <FileText className="w-7 h-7" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-slate-900">Inteligentny Rejestr Dokumentów</h2>
-                <p className="text-slate-500">Automatyczna ekstrakcja danych z faktur (OCR)</p>
+                <h2 className="text-2xl font-bold text-slate-900">{t('dashboard.title')}</h2>
+                <p className="text-slate-500">{t('dashboard.subtitle')}</p>
               </div>
             </div>
             <button 
@@ -490,7 +490,7 @@ export default function Dashboard({
                               onClick={() => analyzeDocument(record.id)}
                               className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold text-xs hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200"
                             >
-                              <Search className="w-3.5 h-3.5" /> Analizuj
+                              <Search className="w-3.5 h-3.5" /> {t('common.analyze')}
                             </button>
                           ) : (
                             <>
