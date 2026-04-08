@@ -4,6 +4,9 @@ import { Bell, Copy, Check, ExternalLink, Search, Settings2, Plus, Trash2, X, Us
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ActivityEntry } from '../types';
+import { useTranslation } from 'react-i18next';
+
+const { t, i18n } = useTranslation();
 
 interface DashboardProps {
   clients: Client[];

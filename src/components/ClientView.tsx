@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Client, STATUS_COLORS, DocumentStatus, UploadedFile } from '../types';
 import { ArrowLeft, Upload, CheckCircle, FileText, Clock, AlertCircle, Hash, Search, FileUp, Send, Plus, Lock } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ClientViewProps {
   clients: Client[];
