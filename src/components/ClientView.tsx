@@ -24,6 +24,26 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
     if (found) setClient(found);
   }, [id, clients]);
 
+  // --- NOWA FUNKCJA WYSYŁKI DO n8n ---
+  const sendToN8nKombajn = async (file: File, docLabel: string) => {
+    const formData = new FormData();
+    formData.append('data', file); // Klucz 'data' musi zgadzać się z n8n
+    formData.append('clientName', client?.name || 'Nieznany');
+    formData.append('documentType', docLabel);
+
+    try {
+      // Twój URL z drugiego screena (Kombajn OCR)
+      await fetch('https://n8n.srv1151721.hstgr.cloud/webhook/abd250c7-8d55-4c9f-b9bb-71b7d1a7207e', {
+        method: 'POST',
+        body: formData,
+      });
+      console.log('n8n: Plik odebrany przez kombajn');
+    } catch (error) {
+      console.error('n8n Error:', error);
+    }
+  };
+  // ----------------------------------
+
   const handleSequenceCheck = (input: string) => {
     setInvoiceInput(input);
     const nums = input.split(/[\s,]+/).map(n => parseInt(n.trim())).filter(n => !isNaN(n));
@@ -68,23 +88,22 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
     );
   }
 
-  // POPRAWIONA FUNKCJA PRZESYŁANIA
-  const handleUpload = (docId: string, file: File) => {
+  const handleUpload = async (docId: string, docLabel: string, file: File) => {
     setUploading(docId);
     
+    // 1. Wysyłamy do n8n (Kombajn)
+    await sendToN8nKombajn(file, docLabel);
+
+    // 2. Aktualizujemy stan lokalny aplikacji
     const fileData: UploadedFile = {
       name: file.name,
       timestamp: new Date().toISOString(),
-      rawFile: file // Przekazujemy fizyczny plik do App.tsx
+      rawFile: file 
     };
 
     if (id) {
       addFileToDocument(id, docId, fileData);
-      
-      // Krótkie opóźnienie tylko dla efektu UI
-      setTimeout(() => {
-        setUploading(null);
-      }, 800);
+      setUploading(null);
     }
   };
 
@@ -165,10 +184,10 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                         id={`file-upload-${doc.id}`}
                         className="hidden" 
                         accept=".pdf, .jpg, .jpeg, .png"
-                        onChange={(e) => {
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           const file = e.target.files?.[0];
                           if (file) {
-                            handleUpload(doc.id, file); // WYWOŁANIE PRAWDZIWEGO UPLOADU
+                            handleUpload(doc.id, doc.label, file);
                           }
                         }}
                       />
@@ -193,20 +212,13 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                         )}
                       </button>
                     </div>
-                    {doc.status === 'OK' && (
-                      <div className="flex items-center gap-2 text-green-600 font-medium bg-green-50 px-4 py-2 rounded-xl border border-green-100">
-                        <CheckCircle className="w-4 h-4" /> Gotowe
-                      </div>
-                    )}
                   </div>
                 </div>
 
                 <div className="pt-4 border-t border-slate-200/50">
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm font-medium text-slate-500">
-                      Przesłano: <span className="text-slate-900 font-bold">{doc.files.length} {doc.files.length === 1 ? 'plik' : (doc.files.length > 1 && doc.files.length < 5) ? 'pliki' : 'plików'}</span>
-                    </p>
-                  </div>
+                  <p className="text-sm font-medium text-slate-500 mb-2">
+                    Przesłano: <span className="text-slate-900 font-bold">{doc.files.length} {doc.files.length === 1 ? 'plik' : (doc.files.length > 1 && doc.files.length < 5) ? 'pliki' : 'plików'}</span>
+                  </p>
                   
                   {doc.files.length > 0 ? (
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -219,70 +231,27 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-xs text-slate-400 italic">Brak przesłanych plików w tej kategorii.</p>
+                    <p className="text-xs text-slate-400 italic">Brak przesłanych plików.</p>
                   )}
                 </div>
               </motion.div>
             ))}
           </div>
-
-          <AnimatePresence>
-            {showChecker && (
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="p-8 bg-blue-50/50 rounded-[2rem] border border-blue-100 shadow-inner"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 bg-blue-600 text-white rounded-lg">
-                    <Hash className="w-5 h-5" />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900">Weryfikator ciągłości faktur</h3>
-                </div>
-                
-                <textarea
-                  className="w-full p-4 bg-white border border-blue-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all min-h-[100px] text-lg font-mono"
-                  placeholder="Wklej numery..."
-                  value={invoiceInput}
-                  onChange={(e) => handleSequenceCheck(e.target.value)}
-                />
-
-                {missingInvoices.length > 0 && (
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="mt-6 p-5 bg-red-50 border border-red-100 rounded-2xl flex items-start gap-4"
-                  >
-                    <AlertCircle className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-red-800 font-bold text-lg">Wykryto braki w numeracji!</p>
-                      <p className="text-red-600">
-                        Brakuje faktur nr: <span className="font-bold">{missingInvoices.join(', ')}</span>
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
-        <div className="mt-12 p-10 bg-blue-600 rounded-[3rem] text-white text-center shadow-2xl shadow-blue-200 relative overflow-hidden group">
-          <div className="relative z-10">
-            <h3 className="text-3xl font-bold mb-3">Gotowe na ten miesiąc?</h3>
-            <p className="text-blue-100 mb-8 text-lg max-w-md mx-auto">Kliknij poniżej, aby poinformować biuro o zakończeniu przesyłania dokumentów.</p>
-            <button 
-              onClick={() => {
-                if (id && !client.locked) finishUploading(id);
-              }}
-              disabled={client.locked}
-              className="inline-flex items-center gap-3 px-10 py-5 bg-white text-blue-600 rounded-2xl font-bold text-xl hover:bg-blue-50 transition-all transform hover:scale-105 active:scale-95 shadow-xl disabled:opacity-50"
-            >
-              <Send className="w-6 h-6" />
-              {client.locked ? 'Zatwierdzone' : 'Zakończ przesyłanie'}
-            </button>
-          </div>
+        <div className="mt-12 p-10 bg-blue-600 rounded-[3rem] text-white text-center shadow-2xl shadow-blue-200">
+          <h3 className="text-3xl font-bold mb-3">Gotowe na ten miesiąc?</h3>
+          <p className="text-blue-100 mb-8 text-lg max-w-md mx-auto">Kliknij poniżej, aby poinformować biuro o zakończeniu przesyłania.</p>
+          <button 
+            onClick={() => {
+              if (id && !client.locked) finishUploading(id);
+            }}
+            disabled={client.locked}
+            className="inline-flex items-center gap-3 px-10 py-5 bg-white text-blue-600 rounded-2xl font-bold text-xl hover:bg-blue-50 transition-all shadow-xl disabled:opacity-50"
+          >
+            <Send className="w-6 h-6" />
+            {client.locked ? 'Zatwierdzone' : 'Zakończ przesyłanie'}
+          </button>
         </div>
       </div>
     </div>

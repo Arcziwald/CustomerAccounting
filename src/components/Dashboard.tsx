@@ -7,6 +7,7 @@ import { ActivityEntry } from '../types';
 import { useTranslation } from 'react-i18next';
 
 
+
 interface DashboardProps {
   clients: Client[];
   subscriptionTier: string;
@@ -38,18 +39,36 @@ export default function Dashboard({
   const [viewingFilesDocId, setViewingFilesDocId] = useState<string | null>(null);
   const [previewDoc, setPreviewDoc] = useState<OCRRecord | null>(null);
 
-  const handleNudge = (client: Client) => {
-    const missing = client.documents
-      .filter(doc => doc.status === 'Brak' || doc.status === 'Spóźnione' || doc.status === 'W toku')
-      .map(doc => doc.label)
-      .join(', ');
+  const handleNudge = async (client: any) => {
+  // 1. Logika wizualna (to co już masz)
+  setCopiedId(client.id);
+  
+  // 2. WYSYŁKA DO n8n (Dodajemy to!)
+  try {
+    // Tutaj wklejasz URL Webhooka z n8n (najlepiej TEST URL na początek)
+    const webhookUrl = 'https://n8n.srv1151721.hstgr.cloud/webhook-test/smart-nudge'; 
 
-    const message = `Cześć ${client.name}, brakuje nam jeszcze ${missing || 'dokumentów'} za miesiąc ${client.month}. Pozdrawiamy, Twoje Biuro`;
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        clientId: client.id,
+        clientName: client.name,
+        action: 'nudge_clicked',
+        timestamp: new Date().toISOString()
+      }),
+    });
     
-    navigator.clipboard.writeText(message);
-    setCopiedId(client.id);
-    setTimeout(() => setCopiedId(null), 2000);
-  };
+    console.log('n8n odebrało sygnał dla:', client.name);
+  } catch (error) {
+    console.error('Problem z połączeniem z n8n:', error);
+  }
+
+  // 3. Reset powiadomienia "Skopiowano" po 2 sekundach
+  setTimeout(() => setCopiedId(null), 2000);
+};
 
   const filteredClients = clients.filter(c => 
     c.name.toLowerCase().includes(searchTerm.toLowerCase())
