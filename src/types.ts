@@ -1,4 +1,5 @@
 export type DocumentStatus = 'OK' | 'Brak' | 'Spóźnione' | 'W toku' | 'Zatwierdzone';
+export type ClientTier = '1' | '2' | '3';
 
 export interface UploadedFile {
   name: string;
@@ -35,11 +36,19 @@ export interface DocumentItem {
   files: UploadedFile[];
 }
 
+export interface DocumentGroup {
+  id: string;
+  label: string;
+  status: DocumentStatus;
+  files: UploadedFile[];
+}
+
 export interface Client {
   id: string;
   name: string;
   month: string;
-  documents: DocumentItem[];
+  tier: ClientTier; // Dodajemy informację o pakiecie
+  documents: DocumentGroup[];
   locked?: boolean;
 }
 
