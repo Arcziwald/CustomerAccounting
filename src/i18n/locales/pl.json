@@ -1,0 +1,11 @@
+{
+  "common": {
+    "analyze": "Analizuj",
+    "upgrade": "Ulepsz do Pakietu 2"
+  },
+  "dashboard": {
+    "title": "Inteligentny Rejestr Dokumentów",
+    "subtitle": "Automatyczna ekstrakcja danych z faktur (OCR)",
+    "demo_alert": "Jesteś w trybie DEMO. Zobacz jak działa analiza dokumentów!"
+  }
+}

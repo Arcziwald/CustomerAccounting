@@ -7,13 +7,14 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import ClientView from './components/ClientView';
-import { Client, DocumentStatus, UploadedFile, ActivityEntry, OCRRecord } from './types';
+import { Client, DocumentStatus, UploadedFile, ActivityEntry, ClientTier, OCRRecord } from './types';
 
 const MOCK_CLIENTS: Client[] = [
   {
     id: '1',
     name: 'Tech Solutions Sp. z o.o.',
     month: 'Marzec 2026',
+    tier: '2', // Pakiet Kontrola (z OCR)
     documents: [
       { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [] },
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Brak', files: [] },
@@ -26,6 +27,7 @@ const MOCK_CLIENTS: Client[] = [
     id: '2',
     name: 'Kawiarnia "Pod Chmurką"',
     month: 'Marzec 2026',
+    tier: '1', // Pakiet Porządek (bez OCR)
     documents: [
       { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Brak', files: [] },
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Brak', files: [] },
@@ -38,6 +40,7 @@ const MOCK_CLIENTS: Client[] = [
     id: '3',
     name: 'Jan Kowalski - Usługi IT',
     month: 'Marzec 2026',
+    tier: '2', // Pakiet Kontrola (z OCR)
     documents: [
       { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [] },
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'OK', files: [] },
@@ -50,6 +53,7 @@ const MOCK_CLIENTS: Client[] = [
     id: '4',
     name: 'Eko-Budownictwo S.A.',
     month: 'Marzec 2026',
+    tier: '2', // Pakiet Kontrola (z OCR)
     documents: [
       { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Spóźnione', files: [] },
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Spóźnione', files: [] },
@@ -60,10 +64,39 @@ const MOCK_CLIENTS: Client[] = [
   }
 ];
 
+const OFFICE_SUBSCRIPTION: ClientTier = 'demo'; // Tu zmieniasz pakiet dla całego biura (np. na '1' dla demo)
+
 export default function App() {
   const [clients, setClients] = useState<Client[]>(MOCK_CLIENTS);
   const [activities, setActivities] = useState<ActivityEntry[]>([]);
-  const [ocrRecords, setOcrRecords] = useState<OCRRecord[]>([]);
+  const [ocrRecords, setOcrRecords] = useState<OCRRecord[]>([
+  {
+    id: 'demo-1',
+    clientName: 'Tech Solutions Sp. z o.o.',
+    invoiceNumber: 'FV/2026/001',
+    issueDate: '2026-03-01',
+    sellerNip: 'PL5260000000',
+    netAmount: 1500.00,
+    vatAmount: 345.00,
+    grossAmount: 1845.00,
+    status: 'Oczekiwanie',
+    documentType: 'Faktura',
+    fileName: 'faktura_serwer_marzec.pdf'
+  },
+  {
+    id: 'demo-2',
+    clientName: 'Kawiarnia "Pod Chmurką"',
+    invoiceNumber: '---',
+    issueDate: '---',
+    sellerNip: '---',
+    netAmount: 0,
+    vatAmount: 0,
+    grossAmount: 0,
+    status: 'Oczekiwanie',
+    documentType: 'Nieznany',
+    fileName: 'zdjecie_z_wakacji.jpg'
+  }
+]);
 
   const toggleLockClient = (clientId: string) => {
     setClients(prev => prev.map(client => 
@@ -80,27 +113,63 @@ export default function App() {
   };
 
   const analyzeDocument = (recordId: string) => {
-    setOcrRecords(prev => prev.map(record => {
-      if (record.id === recordId) {
-        const isInvoice = Math.random() > 0.5; // 50/50 chance
-        const net = Math.floor(Math.random() * 5000) + 100;
-        const vat = Math.round(net * 0.23);
-        
+  // 1. Blokada limitu w Demo
+  if (OFFICE_SUBSCRIPTION === 'demo' && ocrRecords.filter(r => r.status !== 'Oczekiwanie' && !r.id.startsWith('demo')).length >= 2) {
+    alert("W wersji DEMO możesz przeanalizować tylko 2 własne dokumenty. Kup Pakiet 2, aby zdjąć limity!");
+    return;
+  }
+
+  setOcrRecords(prev => prev.map(record => {
+    if (record.id === recordId) {
+      // LOGIKA DEMO - USTAWIONE SCENARIUSZE
+      if (record.id === 'demo-1') {
         return {
           ...record,
-          invoiceNumber: isInvoice ? `FV/${new Date().getFullYear()}/${Math.floor(Math.random() * 1000)}` : '---',
-          issueDate: isInvoice ? new Date().toISOString().split('T')[0] : '---',
-          sellerNip: isInvoice ? 'PL' + Math.floor(Math.random() * 10000000000) : '---',
-          netAmount: isInvoice ? net : 0,
-          vatAmount: isInvoice ? vat : 0,
-          grossAmount: isInvoice ? net + vat : 0,
-          status: isInvoice ? 'Do weryfikacji' : 'Odrzucone',
-          documentType: isInvoice ? 'Faktura' : 'Nieznany',
+          invoiceNumber: 'FV/2026/102/AB',
+          issueDate: '2026-03-15',
+          sellerNip: 'PL5260001234',
+          netAmount: 2500.00,
+          vatAmount: 575.00,
+          grossAmount: 3075.00,
+          status: 'Do weryfikacji',
+          documentType: 'Faktura',
         };
       }
-      return record;
-    }));
-  };
+
+      if (record.id === 'demo-2') {
+        return {
+          ...record,
+          invoiceNumber: '---',
+          issueDate: '---',
+          sellerNip: '---',
+          netAmount: 0,
+          vatAmount: 0,
+          grossAmount: 0,
+          status: 'Odrzucone',
+          documentType: 'Nieznany',
+        };
+      }
+
+      // LOGIKA DLA REALNYCH PLIKÓW (Twoje losowanie)
+      const isInvoice = Math.random() > 0.3; // Zwiększyłem szansę na sukces do 70%
+      const net = Math.floor(Math.random() * 5000) + 100;
+      const vat = Math.round(net * 0.23);
+      
+      return {
+        ...record,
+        invoiceNumber: isInvoice ? `FV/2026/${Math.floor(Math.random() * 1000)}` : '---',
+        issueDate: isInvoice ? new Date().toISOString().split('T')[0] : '---',
+        sellerNip: isInvoice ? 'PL' + Math.floor(Math.random() * 1000000000) : '---',
+        netAmount: isInvoice ? net : 0,
+        vatAmount: isInvoice ? vat : 0,
+        grossAmount: isInvoice ? net + vat : 0,
+        status: isInvoice ? 'Do weryfikacji' : 'Odrzucone',
+        documentType: isInvoice ? 'Faktura' : 'Nieznany',
+      };
+    }
+    return record;
+  }));
+};
 
   const updateOCRStatus = (recordId: string, newStatus: 'Oczekiwanie' | 'Do weryfikacji' | 'Zweryfikowano' | 'Odrzucone') => {
     setOcrRecords(prev => prev.map(record => 
@@ -244,7 +313,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={
             <Dashboard 
-              clients={clients} 
+              clients={clients}
+              subscriptionTier={OFFICE_SUBSCRIPTION}
               addDocument={addDocument} 
               removeDocument={removeDocument} 
               activities={activities}

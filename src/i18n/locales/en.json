@@ -1,0 +1,11 @@
+{
+  "common": {
+    "analyze": "Analyze",
+    "upgrade": "Upgrade to Tier 2"
+  },
+  "dashboard": {
+    "title": "Smart Document Registry",
+    "subtitle": "Automatic data extraction from invoices (OCR)",
+    "demo_alert": "You are in DEMO mode. See how document analysis works!"
+  }
+}

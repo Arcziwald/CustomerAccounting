@@ -1,5 +1,5 @@
 export type DocumentStatus = 'OK' | 'Brak' | 'Spóźnione' | 'W toku' | 'Zatwierdzone';
-export type ClientTier = '1' | '2' | '3';
+export type ClientTier = '1' | '2' | '3' | 'demo';
 
 export interface UploadedFile {
   name: string;
