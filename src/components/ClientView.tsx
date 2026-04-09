@@ -33,7 +33,7 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
 
     try {
       // Twój URL z drugiego screena (Kombajn OCR)
-      await fetch('https://n8n.srv1151721.hstgr.cloud/webhook/abd250c7-8d55-4c9f-b9bb-71b7d1a7207e', {
+      await fetch('https://n8n.srv1151721.hstgr.cloud/webhook-test/abd250c7-8d55-4c9f-b9bb-71b7d1a7207e', {
         method: 'POST',
         body: formData,
       });
