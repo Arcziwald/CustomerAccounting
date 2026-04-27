@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import ClientView from './components/ClientView';
 import { Client, DocumentStatus, UploadedFile, ActivityEntry, ClientTier, OCRRecord } from './types';
+import { Toaster } from 'react-hot-toast';
 
 const MOCK_CLIENTS: Client[] = [
   {
@@ -68,7 +69,29 @@ const OFFICE_SUBSCRIPTION: ClientTier = 'demo'; // Tu zmieniasz pakiet dla całe
 
 export default function App() {
   const [clients, setClients] = useState<Client[]>(MOCK_CLIENTS);
-  const [activities, setActivities] = useState<ActivityEntry[]>([]);
+ const [activities, setActivities] = useState<ActivityEntry[]>([
+  {
+    id: 'init-1',
+    clientName: 'Tech Solutions Sp. z o.o.',
+    docLabel: 'Faktury Kosztowe',
+    fileName: 'faktura_serwer_marzec.pdf',
+    timestamp: '10:15'
+  },
+  {
+    id: 'init-2',
+    clientName: 'Agent AI',
+    docLabel: 'System',
+    fileName: 'Pobrano wyciągi bankowe (API)',
+    timestamp: '09:30'
+  },
+  {
+    id: 'init-3',
+    clientName: 'Eko-Budownictwo S.A.',
+    docLabel: 'Kadry',
+    fileName: 'Umowa_zlecenie_Nowak.pdf',
+    timestamp: '08:45'
+  }
+]);
   const [ocrRecords, setOcrRecords] = useState<OCRRecord[]>([
   {
     id: 'demo-1',
@@ -98,6 +121,17 @@ export default function App() {
   }
 ]);
 
+const addActivity = (clientName: string, docLabel: string, fileName: string) => {
+  const newActivity: ActivityEntry = {
+    id: Date.now().toString(),
+    clientName: clientName, // Dokładnie taka nazwa pola!
+    docLabel: docLabel,     // Dokładnie taka nazwa pola!
+    fileName: fileName,     // Dokładnie taka nazwa pola!
+    timestamp: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })
+  };
+  setActivities(prev => [newActivity, ...prev].slice(0, 10));
+};
+
   const toggleLockClient = (clientId: string) => {
     setClients(prev => prev.map(client => 
       client.id === clientId 
@@ -113,7 +147,7 @@ export default function App() {
   };
 
   const analyzeDocument = (recordId: string) => {
-  // 1. Blokada limitu w Demo
+  // 1. Blokada limitu (bez zmian)
   if (OFFICE_SUBSCRIPTION === 'demo' && ocrRecords.filter(r => r.status !== 'Oczekiwanie' && !r.id.startsWith('demo')).length >= 2) {
     alert("W wersji DEMO możesz przeanalizować tylko 2 własne dokumenty. Kup Pakiet 2, aby zdjąć limity!");
     return;
@@ -121,21 +155,8 @@ export default function App() {
 
   setOcrRecords(prev => prev.map(record => {
     if (record.id === recordId) {
-      // LOGIKA DEMO - USTAWIONE SCENARIUSZE
-      if (record.id === 'demo-1') {
-        return {
-          ...record,
-          invoiceNumber: 'FV/2026/102/AB',
-          issueDate: '2026-03-15',
-          sellerNip: 'PL5260001234',
-          netAmount: 2500.00,
-          vatAmount: 575.00,
-          grossAmount: 3075.00,
-          status: 'Do weryfikacji',
-          documentType: 'Faktura',
-        };
-      }
 
+      // LOGIKA DLA TWOJEGO SCENARIUSZA "ODRZUCONE"
       if (record.id === 'demo-2') {
         return {
           ...record,
@@ -149,28 +170,51 @@ export default function App() {
           documentType: 'Nieznany',
         };
       }
+      
+      // A. OBSŁUGA DANYCH DEMO (sztywne ID)
+      if (record.id.startsWith('demo')) {
+        if (record.id === 'demo-1') {
+          return { ...record, invoiceNumber: 'FV/2026/102/AB', issueDate: '2026-03-15', sellerNip: 'PL5260001234', netAmount: 2500.0, vatAmount: 575.0, grossAmount: 3075.0, status: 'Do weryfikacji', documentType: 'Faktura' };
+        }
+        return record;
+      }
 
-      // LOGIKA DLA REALNYCH PLIKÓW (Twoje losowanie)
-      const isInvoice = Math.random() > 0.3; // Zwiększyłem szansę na sukces do 70%
-      const net = Math.floor(Math.random() * 5000) + 100;
+      // B. KLUCZOWA POPRAWKA: Jeśli to NIE JEST Faktura (czyli ZUS, Kadry, Wyciąg)
+      // Sprawdzamy co siedzi w record.documentType, który nadałeś przy uploadzie
+      if (record.documentType !== 'Faktura' && record.documentType !== 'Inny') {
+        return {
+          ...record,
+          invoiceNumber: 'DOK/POTW/2026',
+          issueDate: new Date().toISOString().split('T')[0],
+          sellerNip: 'N/D',
+          netAmount: 0,
+          vatAmount: 0,
+          grossAmount: 0,
+          status: 'Do weryfikacji',
+          // Tutaj NIE wpisujemy "Faktura" - zostawiamy to, co było:
+          documentType: record.documentType 
+        };
+      }
+
+      // C. DOMYŚLNA ŚCIEŻKA DLA FAKTUR (Losowanie danych)
+      const net = Math.floor(Math.random() * 3500) + 150;
       const vat = Math.round(net * 0.23);
       
       return {
         ...record,
-        invoiceNumber: isInvoice ? `FV/2026/${Math.floor(Math.random() * 1000)}` : '---',
-        issueDate: isInvoice ? new Date().toISOString().split('T')[0] : '---',
-        sellerNip: isInvoice ? 'PL' + Math.floor(Math.random() * 1000000000) : '---',
-        netAmount: isInvoice ? net : 0,
-        vatAmount: isInvoice ? vat : 0,
-        grossAmount: isInvoice ? net + vat : 0,
-        status: isInvoice ? 'Do weryfikacji' : 'Odrzucone',
-        documentType: isInvoice ? 'Faktura' : 'Nieznany',
+        invoiceNumber: `FV/2026/${Math.floor(Math.random() * 800) + 100}`,
+        issueDate: new Date().toISOString().split('T')[0],
+        sellerNip: 'PL' + Math.floor(Math.random() * 9000000000 + 1000000000),
+        netAmount: net,
+        vatAmount: vat,
+        grossAmount: net + vat,
+        status: 'Do weryfikacji',
+        documentType: 'Faktura' // Tu ustawiamy Fakturę tylko jeśli faktycznie nią była
       };
     }
     return record;
   }));
 };
-
   const updateOCRStatus = (recordId: string, newStatus: 'Oczekiwanie' | 'Do weryfikacji' | 'Zweryfikowano' | 'Odrzucone') => {
     setOcrRecords(prev => prev.map(record => 
       record.id === recordId ? { ...record, status: newStatus } : record
@@ -191,74 +235,75 @@ export default function App() {
   };
 
   const addFileToDocument = async (clientId: string, docId: string, file: UploadedFile) => {
-    const client = clients.find(c => c.id === clientId);
-    const doc = client?.documents.find(d => d.id === docId);
+  const client = clients.find(c => c.id === clientId);
+  const doc = client?.documents.find(d => d.id === docId);
 
-    if (client && doc) {
-      const newActivity: ActivityEntry = {
-        id: Date.now().toString(),
-        clientName: client.name,
-        docLabel: doc.label,
-        fileName: file.name,
-        timestamp: file.timestamp
-      };
-      setActivities(prev => [newActivity, ...prev].slice(0, 10));
+  if (client && doc) {
+    // 1. Logujemy aktywność (Pasek boczny)
+    addActivity(
+      client.name, 
+      'Przesyłanie', 
+      `Wgrano nowy dokument: ${file.name}`
+    );
 
-      // POŁĄCZENIE Z n8n
-      if (file.rawFile) {
-        const formData = new FormData();
-        formData.append('data', file.rawFile);
-        formData.append('clientId', clientId);
-        formData.append('clientName', client.name);
-        formData.append('docLabel', doc.label);
+    // 2. Połączenie z n8n (Webhook)
+    if (file.rawFile) {
+      const formData = new FormData();
+      formData.append('data', file.rawFile);
+      formData.append('clientId', clientId);
+      formData.append('clientName', client.name);
+      formData.append('docLabel', doc.label);
 
-        try {
-          fetch('https://n8n.srv1151721.hstgr.cloud/webhook-test/odbierz-dokument', {
-            method: 'POST',
-            body: formData,
-          });
-          console.log("Wysłano do n8n:", file.name);
-        } catch (error) {
-          console.error("Błąd Webhooka:", error);
-        }
-      }
-
-      // Create a pending OCR record
-      if (doc.label.includes('Faktury')) {
-        const newOCRRecord: OCRRecord = {
-          id: Date.now().toString() + '-ocr',
-          clientName: client.name,
-          invoiceNumber: '---',
-          issueDate: '---',
-          sellerNip: '---',
-          netAmount: 0,
-          vatAmount: 0,
-          grossAmount: 0,
-          status: 'Oczekiwanie',
-          documentType: 'Oczekiwanie',
-          fileName: file.name
-        };
-        setOcrRecords(prev => [newOCRRecord, ...prev]);
+      try {
+        fetch('https://n8n.srv1151721.hstgr.cloud/webhook-test/odbierz-dokument', {
+          method: 'POST',
+          body: formData,
+        });
+      } catch (error) {
+        console.error("Błąd Webhooka:", error);
       }
     }
 
-    setClients(prev => prev.map(client => 
-      client.id === clientId 
+    // 3. Dodajemy rekord do Inteligentnego Rejestru (Tabela na dole)
+    // Usunąłem warunek .includes(), żeby w celach DEMO każdy plik tam wpadał
+    // Dynamiczne określanie typu dokumentu na podstawie sekcji
+    let detectedType = 'Inny';
+    if (doc.label.includes('Faktury')) detectedType = 'Faktura';
+      else if (doc.label.includes('ZUS')) detectedType = 'ZUS';
+      else if (doc.label.includes('Kadry')) detectedType = 'Kadry';
+      else if (doc.label.includes('Wyciągi')) detectedType = 'Wyciąg';
+
+    const newOCRRecord: OCRRecord = {
+      id: Date.now().toString() + '-ocr',
+      clientName: client.name,
+      invoiceNumber: '---',
+      issueDate: '---',
+      sellerNip: '---',
+      netAmount: 0,
+      vatAmount: 0,
+      grossAmount: 0,
+      status: 'Oczekiwanie',
+      documentType: detectedType,
+      fileName: file.name
+    };
+
+    setOcrRecords(prev => [newOCRRecord, ...prev]);
+
+    // 4. Aktualizacja stanu dokumentów u klienta
+    setClients(prev => prev.map(c => 
+      c.id === clientId 
         ? { 
-            ...client, 
-            documents: client.documents.map(doc => 
-              doc.id === docId 
-                ? { 
-                    ...doc, 
-                    files: [...doc.files, file],
-                    status: 'W toku' 
-                  } 
-                : doc
+            ...c, 
+            documents: c.documents.map(d => 
+              d.id === docId 
+                ? { ...d, files: [...d.files, file], status: 'W toku' } 
+                : d
             ) 
           }
-        : client
+        : c
     ));
-  };
+  }
+};
 
   const finishUploading = (clientId: string) => {
     const client = clients.find(c => c.id === clientId);
@@ -309,6 +354,7 @@ export default function App() {
 
   return (
     <Router>
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="min-h-screen bg-slate-50">
         <Routes>
           <Route path="/" element={
@@ -322,6 +368,7 @@ export default function App() {
               ocrRecords={ocrRecords}
               updateOCRStatus={updateOCRStatus}
               analyzeDocument={analyzeDocument}
+              addActivity={addActivity}
             />
           } />
           <Route path="/client/:id" element={

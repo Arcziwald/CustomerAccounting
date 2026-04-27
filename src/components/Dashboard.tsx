@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ActivityEntry } from '../types';
 import { useTranslation } from 'react-i18next';
-
+import toast from 'react-hot-toast';
 
 
 interface DashboardProps {
@@ -18,6 +18,7 @@ interface DashboardProps {
   ocrRecords: OCRRecord[];
   updateOCRStatus: (recordId: string, newStatus: 'Oczekiwanie' | 'Do weryfikacji' | 'Zweryfikowano' | 'Odrzucone') => void;
   analyzeDocument: (recordId: string) => void;
+  addActivity: (clientName: string, docLabel: string, fileName: string) => void;
 }
 
 export default function Dashboard({ 
@@ -29,7 +30,8 @@ export default function Dashboard({
   toggleLockClient,
   ocrRecords,
   updateOCRStatus,
-  analyzeDocument
+  analyzeDocument,
+  addActivity
 }: DashboardProps) {
   const { t, i18n } = useTranslation();
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -40,10 +42,34 @@ export default function Dashboard({
   const [previewDoc, setPreviewDoc] = useState<OCRRecord | null>(null);
 
   const handleNudge = async (client: any) => {
-  // 1. Logika wizualna (to co już masz)
+// 1. Treść wiadomości od Agenta
+  const aiMessage = `Dzień dobry! Agent AI z tej strony. 🤖 Widzę, że w firmie ${client.name} brakuje jeszcze kilku dokumentów za ten miesiąc. Pomóżmy sobie to dokończyć`;
+
+  // 2. Logika wizualna (to co już masz)
   setCopiedId(client.id);
+  // 3. Dodanie do paska (bezpieczne wywołanie)
+  try {
+    if (typeof addActivity === 'function') {
+      addActivity('Agent AI', 'Przypomnienie', `Wysłano monit do ${client.name}`);
+    }
+  } catch (e) {
+    console.error("Błąd przy dodawaniu aktywności:", e);
+  }
   
-  // 2. WYSYŁKA DO n8n (Dodajemy to!)
+// 4. Profesjonalny dymek dla księgowego
+  toast.success(
+    <div>
+      <p className="font-bold text-xs text-blue-600">Agent AI wysłał monit:</p>
+      <p className="text-sm italic">"{aiMessage}"</p>
+    </div>,
+    {
+      icon: '📩',
+      duration: 5000,
+      style: { borderRadius: '12px', border: '1px solid #e2e8f0' }
+    }
+  );
+
+  // 5. WYSYŁKA DO n8n (Dodajemy to!)
   try {
     // Tutaj wklejasz URL Webhooka z n8n (najlepiej TEST URL na początek)
     const webhookUrl = 'https://n8n.srv1151721.hstgr.cloud/webhook-test/smart-nudge'; 
@@ -66,7 +92,7 @@ export default function Dashboard({
     console.error('Problem z połączeniem z n8n:', error);
   }
 
-  // 3. Reset powiadomienia "Skopiowano" po 2 sekundach
+  // 5. Reset powiadomienia "Wysłano" po 2 sekundach
   setTimeout(() => setCopiedId(null), 2000);
 };
 
@@ -77,11 +103,30 @@ export default function Dashboard({
   const editingClient = clients.find(c => c.id === editingClientId);
 
   const handleSmartNudge = (record: OCRRecord) => {
-    const message = `Cześć! Przesłany plik ${record.fileName} nie wygląda na dokument księgowy. Proszę, prześlij poprawną fakturę.`;
-    navigator.clipboard.writeText(message);
-    alert('Skopiowano inteligentne powiadomienie do schowka!');
-  };
+  const aiMessage = `Pani Krysiu, to zdjęcie z plaży, a nie faktura za prąd! Proszę o właściwy dokument. 😉`;
 
+  // 1. Ślad w historii (widoczny dla księgowego)
+  addActivity(
+    'Agent AI', 
+    'Humorystyczny Monit', 
+    `Wysłano: "${aiMessage}" do ${record.clientName}`
+  );
+
+  // 2. Profesjonalny Toast z podglądem treści
+  toast.success(
+    <div>
+      <p className="font-bold">Agent AI wysłał wiadomość:</p>
+      <p className="text-sm italic">"{aiMessage}"</p>
+    </div>,
+    {
+      icon: '🤖',
+      duration: 6000, // Dłużej, żeby zdążył przeczytać i się uśmiechnąć
+      style: { borderRadius: '15px', border: '1px solid #713abe' }
+  });
+
+  // 3. Opcjonalnie wysyłka do n8n (jeśli chcesz mieć podpięty e-mail/whatsapp)
+  // fetch('TWOJ_WEBHOOK_N8N', { method: 'POST', body: JSON.stringify(record) });
+};
   const stats = {
     total: clients.length,
     complete: clients.filter(c => c.documents.every(d => d.status === 'OK' || d.status === 'Zatwierdzone')).length,
@@ -314,7 +359,7 @@ export default function Dashboard({
                         }`}
                       >
                         {copiedId === client.id ? (
-                          <><Check className="w-4 h-4" /> Skopiowano</>
+                          <><Check className="w-4 h-4" /> Wysłano</>
                         ) : (
                           <><Bell className="w-4 h-4" /> Nudge</>
                         )}
@@ -444,7 +489,7 @@ export default function Dashboard({
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-slate-50">
-                  <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider">Klient / Faktura</th>
+                  <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider">Klient / Dokument</th>
                   <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider">Typ / Data / NIP</th>
                   <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider text-right">Kwoty (Netto / VAT / Brutto)</th>
                   <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider text-center">Status</th>
@@ -484,7 +529,7 @@ export default function Dashboard({
                         ) : (
                           <>
                             <div className={`text-xs font-bold mb-1 ${record.documentType === 'Nieznany' ? 'text-red-500' : 'text-indigo-500'}`}>
-                              {record.documentType === 'Nieznany' ? '⚠️ BŁĄD: Nieznany dokument' : 'Faktura'}
+                              {record.documentType === 'Nieznany' ? '⚠️ BŁĄD: Nieznany dokument' : record.documentType}
                             </div>
                             <div className="text-sm text-slate-700 font-medium">{record.issueDate}</div>
                             <div className="text-xs text-slate-400 font-mono mt-0.5">{record.sellerNip}</div>
@@ -514,21 +559,29 @@ export default function Dashboard({
                           ) : (
                             <>
                               <button 
-                                onClick={() => {
-                                  const nextStatus = record.status === 'Zweryfikowano' ? 'Do weryfikacji' : 'Zweryfikowano';
-                                  updateOCRStatus(record.id, nextStatus);
-                                }}
-                                className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm ${
-                                  record.status === 'Zweryfikowano' 
-                                    ? 'bg-green-100 text-green-700 border border-green-200' 
-                                    : record.status === 'Odrzucone'
-                                    ? 'bg-red-100 text-red-700 border border-red-200'
-                                    : 'bg-yellow-100 text-yellow-700 border border-yellow-200'
-                                }`}
-                              >
-                                {record.status === 'Zweryfikowano' ? <Check className="w-3.5 h-3.5" /> : <Info className="w-3.5 h-3.5" />}
-                                {record.status}
-                              </button>
+  onClick={() => {
+    // Jeśli dokument jest już zweryfikowany, nie pozwalamy na powrót
+    if (record.status === 'Zweryfikowano') return; 
+
+    const nextStatus = record.status === 'Odrzucone' ? 'Do weryfikacji' : 'Zweryfikowano';
+    updateOCRStatus(record.id, nextStatus);
+    
+    // Opcjonalnie dodaj activity, żeby było widać kto zatwierdził
+    if (nextStatus === 'Zweryfikowano') {
+      addActivity('Księgowy', 'System', `Zatwierdzono dokument: ${record.invoiceNumber}`);
+    }
+  }}
+  className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm ${
+    record.status === 'Zweryfikowano' 
+      ? 'bg-green-100 text-green-700 border border-green-200 cursor-default opacity-80' // Wyłączamy kursor i lekko przyciemniamy
+      : record.status === 'Odrzucone'
+      ? 'bg-red-100 text-red-700 border border-red-200 cursor-pointer'
+      : 'bg-yellow-100 text-yellow-700 border border-yellow-200 cursor-pointer'
+  }`}
+>
+  {record.status === 'Zweryfikowano' ? <Check className="w-3.5 h-3.5" /> : <Info className="w-3.5 h-3.5" />}
+  {record.status}
+</button>
                               {record.status === 'Odrzucone' && (
                                 <button 
                                   onClick={() => handleSmartNudge(record)}
@@ -607,15 +660,27 @@ export default function Dashboard({
               </div>
               <div className="p-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
                 <button 
-                  onClick={() => {
-                    updateOCRStatus(previewDoc.id, 'Odrzucone');
-                    setPreviewDoc(null);
-                    alert('Dokument odrzucony. Klient otrzyma powiadomienie.');
-                  }}
-                  className="px-6 py-2.5 bg-red-50 text-red-600 border border-red-100 rounded-xl font-bold hover:bg-red-100 transition-all"
-                >
-                  Odrzuć (Powiadom klienta)
-                </button>
+  onClick={() => {
+    updateOCRStatus(previewDoc.id, 'Odrzucone');
+    
+    // Dodajemy wpis do paska aktywności
+    addActivity(
+      'Agent AI', 
+      'System', 
+      `Odrzucono dokument i powiadomiono: ${previewDoc.clientName}`
+    );
+
+    // Toast zamiast alertu
+    toast.error('Dokument odrzucony. Klient otrzymał powiadomienie.', {
+      icon: '📩'
+    });
+
+    setPreviewDoc(null);
+  }}
+  className="px-6 py-2.5 bg-red-50 text-red-600 border border-red-100 rounded-xl font-bold hover:bg-red-100 transition-all"
+>
+  Odrzuć (Powiadom klienta)
+</button>
                 <button 
                   onClick={() => {
                     updateOCRStatus(previewDoc.id, 'Zweryfikowano');
