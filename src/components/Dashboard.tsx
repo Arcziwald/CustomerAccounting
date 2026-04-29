@@ -103,26 +103,29 @@ export default function Dashboard({
   const editingClient = clients.find(c => c.id === editingClientId);
 
   const handleSmartNudge = (record: OCRRecord) => {
-  const aiMessage = `Pani Krysiu, to zdjęcie z plaży, a nie faktura za prąd! Proszę o właściwy dokument. 😉`;
+  // 1. Pobieramy treść z i18n
+  const aiMessage = t('ai.beach_photo_msg');
 
-  // 1. Ślad w historii (widoczny dla księgowego)
+  // 2. Ślad w historii (też używamy t())
   addActivity(
     'Agent AI', 
-    'Humorystyczny Monit', 
-    `Wysłano: "${aiMessage}" do ${record.clientName}`
+    t('ai.nudge_type_humor'), 
+    `${t('actions.sent')}: "${aiMessage}" do ${record.clientName}`
   );
 
-  // 2. Profesjonalny Toast z podglądem treści
+  // 3. Profesjonalny Toast
   toast.success(
     <div>
-      <p className="font-bold">Agent AI wysłał wiadomość:</p>
+      <p className="font-bold">{t('ai.toast_header')}:</p>
       <p className="text-sm italic">"{aiMessage}"</p>
     </div>,
     {
       icon: '🤖',
-      duration: 10000, // Dłużej, żeby zdążył przeczytać i się uśmiechnąć
+      duration: 10000,
       style: { borderRadius: '15px', border: '1px solid #713abe' }
-  });
+    }
+  );
+
 
   // 3. Opcjonalnie wysyłka do n8n (jeśli chcesz mieć podpięty e-mail/whatsapp)
   // fetch('TWOJ_WEBHOOK_N8N', { method: 'POST', body: JSON.stringify(record) });
@@ -292,7 +295,7 @@ export default function Dashboard({
               {client.locked && <Lock className="w-4 h-4 text-emerald-600 shrink-0" />}
             </div>
             <div className="text-xs lg:text-sm text-slate-400 font-medium flex items-center gap-2">
-              {client.month}
+              {t(`months.${client.month.toLowerCase().replace(/ /g, '_')}`)}
               <span className="w-1 h-1 bg-slate-300 rounded-full" />
               <a 
                 href={`https://drive.google.com/drive/search?q=${encodeURIComponent(client.name)}`} 
@@ -633,94 +636,92 @@ export default function Dashboard({
 
 
       {/* Preview Modal */}
-      <AnimatePresence>
-        {previewDoc && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setPreviewDoc(null)}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
-            />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden"
-            >
-              <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900">Podgląd dokumentu</h3>
-                  <p className="text-sm text-slate-500">{previewDoc.invoiceNumber} • {previewDoc.clientName}</p>
-                </div>
-                <button 
-                  onClick={() => setPreviewDoc(null)}
-                  className="p-2 hover:bg-white rounded-xl transition-colors text-slate-400 hover:text-slate-600 shadow-sm"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-              <div className="p-8">
-                <div className="aspect-[3/4] bg-slate-100 rounded-2xl flex items-center justify-center border-2 border-dashed border-slate-200 overflow-hidden relative group">
-                  <img 
-                    src={`https://picsum.photos/seed/${previewDoc.id}/800/1200`} 
-                    alt="Podgląd faktury" 
-                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/40 backdrop-blur-[2px]">
-                    <div className="p-4 bg-white rounded-2xl shadow-xl flex flex-col items-center gap-3">
-                      <FileText className="w-12 h-12 text-blue-500" />
-                      <p className="font-bold text-slate-900">Symulacja podglądu</p>
-                      <div className="text-xs text-slate-500 text-center space-y-1">
-                        <p>Plik: {previewDoc.fileName}</p>
-                        <p>Rozmiar: 1.2 MB</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="p-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
-                <button 
-  onClick={() => {
-    updateOCRStatus(previewDoc.id, 'Odrzucone');
-    
-    // Dodajemy wpis do paska aktywności
-    addActivity(
-      'Agent AI', 
-      'System', 
-      `Odrzucono dokument i powiadomiono: ${previewDoc.clientName}`
-    );
-
-    // Toast zamiast alertu
-    toast.error('Dokument odrzucony. Klient otrzymał powiadomienie.', {
-      icon: '📩'
-    });
-
-    setPreviewDoc(null);
-  }}
-  className="px-6 py-2.5 bg-red-50 text-red-600 border border-red-100 rounded-xl font-bold hover:bg-red-100 transition-all"
->
-  Odrzuć (Powiadom klienta)
-</button>
-                <button 
-                  onClick={() => {
-                    updateOCRStatus(previewDoc.id, 'Zweryfikowano');
-                    setPreviewDoc(null);
-                  }}
-                  className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
-                >
-                  Zatwierdź dane
-                </button>
-              </div>
-            </motion.div>
+<AnimatePresence>
+  {previewDoc && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setPreviewDoc(null)}
+        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+      />
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden"
+      >
+        <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div>
+            <h3 className="text-xl font-bold text-slate-900">{t('ocr.preview_title')}</h3>
+            <p className="text-sm text-slate-500">{previewDoc.invoiceNumber} • {previewDoc.clientName}</p>
           </div>
-        )}
-      </AnimatePresence>
+          <button 
+            onClick={() => setPreviewDoc(null)}
+            className="p-2 hover:bg-white rounded-xl transition-colors text-slate-400 hover:text-slate-600 shadow-sm"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        <div className="p-8">
+          <div className="aspect-[3/4] bg-slate-100 rounded-2xl flex items-center justify-center border-2 border-dashed border-slate-200 overflow-hidden relative group">
+            <img 
+              src={`https://picsum.photos/seed/${previewDoc.id}/800/1200`} 
+              alt={t('ocr.preview_title')} 
+              className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/40 backdrop-blur-[2px]">
+              <div className="p-4 bg-white rounded-2xl shadow-xl flex flex-col items-center gap-3">
+                <FileText className="w-12 h-12 text-blue-500" />
+                <p className="font-bold text-slate-900">{t('ocr.simulation_title')}</p>
+                <div className="text-xs text-slate-500 text-center space-y-1">
+                  <p>{t('ocr.file')}: {previewDoc.fileName}</p>
+                  <p>{t('ocr.size')}: 1.2 MB</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="p-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+          <button 
+            onClick={() => {
+              updateOCRStatus(previewDoc.id, 'Odrzucone');
+              
+              addActivity(
+                'Agent AI', 
+                'System', 
+                `${t('status.rejected')}: ${previewDoc.clientName}`
+              );
+
+              toast.error(t('ocr.toast_rejected_msg'), {
+                icon: '📩'
+              });
+
+              setPreviewDoc(null);
+            }}
+            className="px-6 py-2.5 bg-red-50 text-red-600 border border-red-100 rounded-xl font-bold hover:bg-red-100 transition-all"
+          >
+            {t('ocr.reject_btn')}
+          </button>
+          <button 
+            onClick={() => {
+              updateOCRStatus(previewDoc.id, 'Zweryfikowano');
+              setPreviewDoc(null);
+            }}
+            className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
+          >
+            {t('ocr.approve_btn')}
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  )}
+</AnimatePresence>
 
       <footer className="mt-12 text-center text-slate-400 text-sm">
-        &copy; 2026 {t('footer.system_name')} - {t('footer.system_description')}
+        &copy; ArtWebCraft 2026 | {t('footer.system_name')} - {t('footer.system_description')}
       </footer>
     </div>
 </div>

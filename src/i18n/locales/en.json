@@ -23,7 +23,10 @@
   "ai": {
     "nudge_msg": "Hello! AI Agent here. 🤖 I see that {{name}} is missing some documents. Let's get this done!",
     "beach_msg": "Hey, that's a beach photo, not an invoice! Please provide the correct document. 😉",
-    "excel_toast": "In the full version, AI extracts all details and saves them to Excel!"
+    "excel_toast": "In the full version, AI extracts all details and saves them to Excel!",
+    "beach_photo_msg": "This is a beach photo, not an invoice! Please send the correct document. 😉",
+  "nudge_type_humor": "Humorous Nudge",
+  "toast_header": "Agent AI sent a message"
   },
   "header": {
     "app_name": "The Missing Link",
@@ -79,7 +82,14 @@
     "analyze_btn": "Analyze",
     "value": "Value",
     "vat": "VAT",
-    "smart_nudge": "SMART NUDGE"
+    "smart_nudge": "SMART NUDGE",
+    "preview_title": "Document Preview",
+    "simulation_title": "Preview Simulation",
+    "file": "File",
+    "size": "Size",
+    "reject_btn": "Reject (Notify client)",
+    "approve_btn": "Approve data",
+    "toast_rejected_msg": "Document rejected. Client has been notified."
   },
   "client_view": {
     "back": "Back to panel",
@@ -93,5 +103,8 @@
     "ready_title": "Ready for this month?",
     "ready_desc": "Click below to inform the office that you have finished uploading.",
     "finish_btn": "Finish uploading"
+  },
+  "months": {
+    "marzec_2026": "March 2026"
   }
 }

@@ -23,7 +23,10 @@
   "ai": {
     "nudge_msg": "Dzień dobry! Agent AI z tej strony. 🤖 Widzę, że w firmie {{name}} brakuje dokumentów. Pomóżmy sobie to dokończyć!",
     "beach_msg": "To zdjęcie z plaży, a nie faktura! Proszę o właściwy dokument. 😉",
-    "excel_toast": "W pełnej wersji AI ekstrahuje wszystkie detale i zapisuje je w Excelu!"
+    "excel_toast": "W pełnej wersji AI ekstrahuje wszystkie detale i zapisuje je w Excelu!",
+    "beach_photo_msg": "To zdjęcie z plaży, a nie faktura! Proszę o właściwy dokument. 😉",
+    "nudge_type_humor": "Humorystyczny Monit",
+    "toast_header": "Agent AI wysłał wiadomość"
   },
   "header": {
     "app_name": "BRAKOMAT",
@@ -80,7 +83,14 @@
     "analyze_btn": "Analizuj",
     "value": "Wartość",
     "vat": "VAT",
-    "smart_nudge": "SZYBKA DEPESZA"
+    "smart_nudge": "SZYBKA DEPESZA",
+    "preview_title": "Podgląd dokumentu",
+    "simulation_title": "Symulacja podglądu",
+    "file": "Plik",
+    "size": "Rozmiar",
+    "reject_btn": "Odrzuć (Powiadom klienta)",
+    "approve_btn": "Zatwierdź dane",
+    "toast_rejected_msg": "Dokument odrzucony. Klient otrzymał powiadomienie."
   },
   "client_view": {
     "back": "Powrót do panelu",
@@ -94,5 +104,8 @@
     "ready_title": "Gotowe na ten miesiąc?",
     "ready_desc": "Kliknij poniżej, aby poinformować biuro o zakończeniu przesyłania.",
     "finish_btn": "Zakończ przesyłanie"
+  },
+  "months": {
+    "marzec_2026": "Marzec 2026"
   }
 }
