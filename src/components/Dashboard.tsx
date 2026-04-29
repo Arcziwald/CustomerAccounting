@@ -18,7 +18,7 @@ interface DashboardProps {
   ocrRecords: OCRRecord[];
   updateOCRStatus: (recordId: string, newStatus: 'Oczekiwanie' | 'Do weryfikacji' | 'Zweryfikowano' | 'Odrzucone') => void;
   analyzeDocument: (recordId: string) => void;
-  addActivity: (clientName: string, docLabel: string, fileName: string) => void;
+  addActivity: (clientName: string, action: string, detail: string) => void;
 }
 
 export default function Dashboard({ 
@@ -108,10 +108,10 @@ export default function Dashboard({
 
   // 2. Ślad w historii (też używamy t())
   addActivity(
-    'Agent AI', 
-    t('ai.nudge_type_humor'), 
-    `${t('actions.sent')}: "${aiMessage}" do ${record.clientName}`
-  );
+  'Agent AI', 
+  t('ai.nudge_type_humor'), 
+  t('activities.ai_nudge_sent', { msg: aiMessage, client: record.clientName })
+);
 
   // 3. Profesjonalny Toast
   toast.success(
@@ -174,15 +174,16 @@ export default function Dashboard({
   </div>
   
   <div className="relative w-full md:w-80">
-    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-    <input 
-      type="text" 
-      placeholder="Szukaj klienta..." 
-      className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-    />
-  </div>
+  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+  <input 
+    type="text" 
+    // POPRAWKA: Placeholder używa teraz klucza z i18next
+    placeholder={t('common.search_placeholder', { defaultValue: 'Search client...' })} 
+    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+</div>
 </header>
 
       {/* Stats Section */}
@@ -246,18 +247,25 @@ export default function Dashboard({
             <span>{t('stats.history')}</span>
           </div>
           <div className="space-y-3 overflow-y-auto max-h-[100px] lg:max-h-none scrollbar-hide">
-            {activities.length === 0 ? (
-              <p className="text-xs text-slate-400 italic">Brak niedawnych aktywności</p>
-            ) : (
-              activities.map(activity => (
-                <div key={activity.id} className="text-xs border-l-2 border-blue-100 pl-3 py-1">
-                  <div className="font-bold text-slate-800 truncate">{activity.clientName}</div>
-                  <div className="text-slate-500 truncate">{activity.docLabel}: {activity.fileName}</div>
-                  <div className="text-[10px] text-slate-400 mt-0.5">{activity.timestamp}</div>
-                </div>
-              ))
-            )}
-          </div>
+  {activities.length === 0 ? (
+    <p className="text-xs text-slate-400 italic">
+      {t('activities.no_activities', { defaultValue: 'No recent activities' })}
+    </p>
+  ) : (
+    activities.map(activity => (
+  <div key={activity.id} className="text-xs border-l-2 border-blue-100 pl-3 py-1">
+    <div className="font-bold text-slate-800 truncate">{activity.clientName}</div>
+    <div className="text-slate-500 truncate">
+      {/* Używamy operatora || aby kod nie wywalił błędu, jeśli trafi na stary rekord */}
+      {(activity.action)}: {(activity.detail)}
+    </div>
+    <div className="text-[10px] text-slate-400 mt-0.5">
+      {new Date(activity.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+    </div>
+  </div>
+))
+  )}
+</div>
         </div>
       </div>
 

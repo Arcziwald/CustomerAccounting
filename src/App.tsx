@@ -75,22 +75,22 @@ export default function App() {
   {
     id: 'init-1',
     clientName: 'Tech Solutions Sp. z o.o.',
-    docLabel: 'Faktury Kosztowe',
-    fileName: 'faktura_serwer_marzec.pdf',
+    action: 'Faktury Kosztowe',
+    detail: 'faktura_serwer_marzec.pdf',
     timestamp: '10:15'
   },
   {
     id: 'init-2',
     clientName: 'Agent AI',
-    docLabel: 'System',
-    fileName: 'Pobrano wyciągi bankowe (API)',
+    action: 'System',
+    detail: 'Pobrano wyciągi bankowe (API)',
     timestamp: '09:30'
   },
   {
     id: 'init-3',
     clientName: 'Eko-Budownictwo S.A.',
-    docLabel: 'Kadry',
-    fileName: 'Umowa_zlecenie_Nowak.pdf',
+    action: 'Kadry',
+    detail: 'Umowa_zlecenie_Nowak.pdf',
     timestamp: '08:45'
   }
 ]);
@@ -123,15 +123,15 @@ export default function App() {
   }
 ]);
 
-const addActivity = (clientName: string, docLabel: string, fileName: string) => {
+const addActivity = (clientName: string, action: string, detail: string) => {
   const newActivity: ActivityEntry = {
-    id: Date.now().toString(),
-    clientName: clientName, // Dokładnie taka nazwa pola!
-    docLabel: docLabel,     // Dokładnie taka nazwa pola!
-    fileName: fileName,     // Dokładnie taka nazwa pola!
-    timestamp: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })
+    id: Math.random().toString(36).substr(2, 9),
+    clientName, // to samo co clientName: clientName
+    action,     // to samo co action: action
+    detail,     // to samo co detail: detail
+    timestamp: new Date().toISOString()
   };
-  setActivities(prev => [newActivity, ...prev].slice(0, 10));
+  setActivities(prev => [newActivity, ...prev].slice(0, 20)); // trzymamy 20 ostatnich
 };
 
   const toggleLockClient = (clientId: string) => {
@@ -332,8 +332,8 @@ const addActivity = (clientName: string, docLabel: string, fileName: string) => 
       const newActivity: ActivityEntry = {
         id: Date.now().toString(),
         clientName: client.name,
-        docLabel: 'Wszystkie',
-        fileName: 'Zakończono przesyłanie',
+        action: 'Wszystkie',
+        detail: 'Zakończono przesyłanie',
         timestamp: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })
       };
       setActivities(prev => [newActivity, ...prev].slice(0, 10));
@@ -398,6 +398,7 @@ const addActivity = (clientName: string, docLabel: string, fileName: string) => 
               updateClientStatus={updateClientStatus} 
               addFileToDocument={addFileToDocument} 
               finishUploading={finishUploading} 
+              addActivity={addActivity}
             />
           } />
         </Routes>

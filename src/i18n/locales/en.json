@@ -5,7 +5,12 @@
     "export": "Export to Excel",
     "waiting": "Waiting for documents...",
     "sent": "Sent",
-    "drive": "Drive"
+    "drive": "Drive",
+    "status": "Status",
+    "files_count_one": "file",
+    "files_count_other": "files",
+    "uploading": "Uploading...",
+    "search_placeholder": "Search client..."
   },
   "stats": {
     "all": "All clients",
@@ -25,8 +30,8 @@
     "beach_msg": "Hey, that's a beach photo, not an invoice! Please provide the correct document. 😉",
     "excel_toast": "In the full version, AI extracts all details and saves them to Excel!",
     "beach_photo_msg": "This is a beach photo, not an invoice! Please send the correct document. 😉",
-  "nudge_type_humor": "Humorous Nudge",
-  "toast_header": "Agent AI sent a message"
+    "nudge_type_humor": "Humorous Nudge",
+    "toast_header": "Agent AI sent a message"
   },
   "header": {
     "app_name": "The Missing Link",
@@ -39,7 +44,8 @@
     "w_toku": "In progress",
     "zatwierdzone": "Approved",
     "odrzucone": "Rejected",
-    "do_weryfikacji": "To verify"
+    "do_weryfikacji": "To verify",
+    "zweryfikowano": "Verified"
   },
   "actions": {
     "send": "Send",
@@ -65,7 +71,8 @@
   "inny": "Other",
   "umowa": "Agreement",
   "pelnomocnictwo": "Power of Attorney",
-  "nieznany": "Unknown"
+  "nieznany": "Unknown",
+  "upload": "Upload"
 },
   "table": {
     "client": "Client",
@@ -102,9 +109,20 @@
     "no_files": "No files uploaded.",
     "ready_title": "Ready for this month?",
     "ready_desc": "Click below to inform the office that you have finished uploading.",
-    "finish_btn": "Finish uploading"
+    "finish_btn": "Finish uploading",
+    "finish_success_msg": "Sent! The office has been notified of your document readiness."
+    
   },
   "months": {
     "marzec_2026": "March 2026"
-  }
+  },
+  "activities": {
+  "finished": "Finished uploading documents",
+  "uploaded": "Uploaded new document: {{fileName}}",
+  "ai_nudge": "Sent Smart Nudge: {{msg}}",
+  "rejected": "Document rejected: {{fileName}}",
+  "approved": "Document approved: {{fileName}}",
+  "ai_nudge_sent": "Sent: \"{{msg}}\" to {{client}}"
+  
+}
 }

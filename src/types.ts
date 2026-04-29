@@ -1,10 +1,20 @@
+import { ReactNode } from 'react';
+
 export type DocumentStatus = 'OK' | 'Brak' | 'Spóźnione' | 'W toku' | 'Zatwierdzone';
 export type ClientTier = '1' | '2' | '3' | 'demo';
 
 export interface UploadedFile {
   name: string;
   timestamp: string;
-  rawFile?: File; // TA LINIA JEST KLUCZOWA
+  rawFile?: File;
+}
+
+export interface ActivityEntry {
+  id: string;
+  clientName: string;
+  action: string;    // Tylko te nazwy zostawiamy
+  detail: string;    // Żadnych ReactI18NextChildren
+  timestamp: string;
 }
 
 export interface OCRRecord {
@@ -19,14 +29,6 @@ export interface OCRRecord {
   status: 'Oczekiwanie' | 'Do weryfikacji' | 'Zweryfikowano' | 'Odrzucone';
   documentType: 'Faktura' | 'Nieznany' | 'Oczekiwanie';
   fileName: string;
-}
-
-export interface ActivityEntry {
-  id: string;
-  clientName: string;
-  docLabel: string;
-  fileName: string;
-  timestamp: string;
 }
 
 export interface DocumentItem {
@@ -47,7 +49,7 @@ export interface Client {
   id: string;
   name: string;
   month: string;
-  tier: ClientTier; // Dodajemy informację o pakiecie
+  tier: ClientTier; 
   documents: DocumentGroup[];
   locked?: boolean;
 }

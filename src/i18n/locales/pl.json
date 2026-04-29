@@ -5,7 +5,12 @@
     "export": "Eksport do Excel",
     "waiting": "Oczekiwanie na dokumenty...",
     "sent": "Wysłano",
-    "drive": "Dysk"
+    "drive": "Dysk",
+    "status": "Status",
+    "files_count_one": "plik",
+    "files_count_other": "pliki",
+    "uploading": "Wysyłanie...",
+    "search_placeholder": "Szukaj klienta..."
   },
   "stats": {
     "all": "Wszyscy klienci",
@@ -39,7 +44,8 @@
     "w_toku": "W toku",
     "zatwierdzone": "Zatwierdzone",
     "odrzucone": "Odrzucone",
-    "do_weryfikacji": "Do weryfikacji"
+    "do_weryfikacji": "Do weryfikacji",
+    "zweryfikowano": "Zweryfikowano"
   },
   "actions": {
     "send": "Wyślij",
@@ -65,7 +71,9 @@
   "inny": "Inny",
   "umowa": "Umowa",
   "pelnomocnictwo": "Pełnomocnictwo",
-  "nieznany": "Nieznany"
+  "nieznany": "Nieznany",
+  "upload": "Przesyłanie",
+  "przesylanie": "Przesyłanie..."
 },
 "table": {
     "client": "Klient",
@@ -103,9 +111,18 @@
     "no_files": "Brak przesłanych plików.",
     "ready_title": "Gotowe na ten miesiąc?",
     "ready_desc": "Kliknij poniżej, aby poinformować biuro o zakończeniu przesyłania.",
-    "finish_btn": "Zakończ przesyłanie"
+    "finish_btn": "Zakończ przesyłanie",
+    "finish_success_msg": "Wysłano! Biuro zostało powiadomione o gotowości dokumentów."
   },
   "months": {
     "marzec_2026": "Marzec 2026"
-  }
+  },
+  "activities": {
+  "finished": "Zakończono przesyłanie dokumentów",
+  "uploaded": "Przesłano nowy dokument: {{fileName}}",
+  "ai_nudge": "Wysłano: {{msg}}",
+  "rejected": "Dokument odrzucony: {{fileName}}",
+  "approved": "Dokument zatwierdzony: {{fileName}}",
+  "ai_nudge_sent": "Wysłano: \"{{msg}}\" do {{client}}"
+}
 }
