@@ -16,7 +16,7 @@
   },
   "dashboard": {
     "title": "Smart Document Registry",
-    "subtitle": "Automatic data extraction (OCR)",
+    "subtitle": "Automatic data extraction",
     "demo_alert": "You are in DEMO mode. See how document analysis works!"
   },
   "ai": {

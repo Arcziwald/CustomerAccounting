@@ -16,7 +16,7 @@
   },
   "dashboard": {
     "title": "Inteligentny Rejestr Dokumentów",
-    "subtitle": "Automatyczna ekstrakcja danych (OCR)",
+    "subtitle": "Automatyczna ekstrakcja danych",
     "demo_alert": "Jesteś w trybie DEMO. Zobacz jak działa analiza dokumentów!"
   },
   "ai": {
