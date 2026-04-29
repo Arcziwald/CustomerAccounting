@@ -265,9 +265,9 @@ export default function Dashboard({
             {/* Nagłówek widoczny tylko na dużych ekranach */}
             <thead className="hidden lg:table-header-group bg-slate-50/50 border-b border-slate-100">
               <tr>
-                <th className="px-8 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider">Klient</th>
-                <th className="px-6 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider">Statusy dokumentów</th>
-                <th className="px-8 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider text-right">Akcje</th>
+                <th className="px-8 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('table.client')}</th>
+                <th className="px-6 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('table.doc_statuses')}</th>
+                <th className="px-8 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider text-right">{t('table.actions')}</th>
               </tr>
             </thead>
             
@@ -309,22 +309,24 @@ export default function Dashboard({
       </td>
       
       {/* KOLUMNA STATUSÓW */}
-      <td className="px-4 py-3 lg:px-6 lg:py-6 block lg:table-cell">
-        <div className="flex flex-wrap gap-1.5 lg:gap-2">
-          {client.documents.map((doc) => (
-            <div key={doc.id} className="relative">
-              <button 
-                onClick={() => doc.status === 'W toku' ? setViewingFilesDocId(viewingFilesDocId === `${client.id}-${doc.id}` ? null : `${client.id}-${doc.id}`) : null}
-                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] lg:text-[11px] font-bold uppercase tracking-tight border transition-all ${STATUS_COLORS[doc.status]} ${doc.status === 'W toku' ? 'cursor-pointer hover:shadow-sm' : 'cursor-default'}`}
-              >
-                {doc.label}
-                {doc.files.length > 0 && <span className="bg-white/30 px-1 rounded-sm text-[9px]">{doc.files.length}</span>}
-                {doc.status === 'W toku' && <ChevronDown className={`w-3 h-3 ${viewingFilesDocId === `${client.id}-${doc.id}` ? 'rotate-180' : ''}`} />}
-              </button>
-            </div>
-          ))}
-        </div>
-      </td>
+<td className="px-4 py-3 lg:px-6 lg:py-6 block lg:table-cell">
+  <div className="flex flex-wrap gap-1.5 lg:gap-2">
+    {client.documents.map((doc) => (
+      <div key={doc.id} className="relative">
+        <button 
+          onClick={() => doc.status === 'W toku' ? setViewingFilesDocId(viewingFilesDocId === `${client.id}-${doc.id}` ? null : `${client.id}-${doc.id}`) : null}
+          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] lg:text-[11px] font-bold uppercase tracking-tight border transition-all ${STATUS_COLORS[doc.status]} ${doc.status === 'W toku' ? 'cursor-pointer hover:shadow-sm' : 'cursor-default'}`}
+        >
+          {/* TO JEST KLUCZOWA POPRAWKA PIGUŁKI */}
+          {t(`labels.${doc.label.toLowerCase().replace(/ /g, '_')}`)}
+          
+          {doc.files.length > 0 && <span className="bg-white/30 px-1 rounded-sm text-[9px]">{doc.files.length}</span>}
+          {doc.status === 'W toku' && <ChevronDown className={`w-3 h-3 ${viewingFilesDocId === `${client.id}-${doc.id}` ? 'rotate-180' : ''}`} />}
+        </button>
+      </div>
+    ))}
+  </div>
+</td>
 
       {/* KOLUMNA AKCJI */}
       <td className="px-4 py-2 lg:px-8 lg:py-6 block lg:table-cell">
@@ -482,11 +484,18 @@ export default function Dashboard({
           <div className="w-full overflow-hidden">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="hidden lg:table-row border-b border-slate-50">
-                  <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider">Klient/Dokument</th>
-                  <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider text-right px-8">Szczegóły i Status</th>
-                </tr>
-              </thead>
+  <tr className="hidden lg:table-row bg-slate-50/50 border-b border-slate-100">
+    <th className="px-8 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider">
+      {t('table.client')}
+    </th>
+    <th className="px-6 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider">
+      {t('table.doc_statuses')}
+    </th>
+    <th className="px-8 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider text-right">
+      {t('table.actions')}
+    </th>
+  </tr>
+</thead>
               <tbody className="divide-y divide-slate-100 block lg:table-row-group w-full">
                 {ocrRecords.length === 0 ? (
                   <tr className="block lg:table-row w-full">

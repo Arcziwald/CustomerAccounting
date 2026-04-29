@@ -4,7 +4,8 @@
     "upgrade": "Ulepsz do Pakietu 2",
     "export": "Eksport do Excel",
     "waiting": "Oczekiwanie na dokumenty...",
-    "sent": "Wysłano"
+    "sent": "Wysłano",
+    "drive": "Dysk"
   },
   "stats": {
     "all": "Wszyscy klienci",
@@ -48,5 +49,17 @@
     "preview_title": "Podgląd dokumentu",
     "reject": "Odrzuć",
     "approve": "Zatwierdź"
+  },
+  "labels": {
+  "faktury_kosztowe": "Faktury Kosztowe",
+  "faktury_przychodowe": "Faktury Przychodowe",
+  "wyciagi": "Wyciągi",
+  "zus": "ZUS",
+  "kadry": "Kadry"
+},
+"table": {
+    "client": "Klient",
+    "doc_statuses": "Statusy dokumentów",
+    "actions": "Akcje"
   }
 }

@@ -4,7 +4,8 @@
     "upgrade": "Upgrade to Tier 2",
     "export": "Export to Excel",
     "waiting": "Waiting for documents...",
-    "sent": "Sent"
+    "sent": "Sent",
+    "drive": "Drive"
   },
   "stats": {
     "all": "All clients",
@@ -48,5 +49,17 @@
     "preview_title": "Document preview",
     "reject": "Reject",
     "approve": "Approve"
+  },
+  "labels": {
+  "faktury_kosztowe": "Faktury Kosztowe",
+  "faktury_przychodowe": "Faktury Przychodowe",
+  "wyciagi": "Wyciągi",
+  "zus": "ZUS",
+  "kadry": "Kadry"
+},
+  "table": {
+    "client": "Client",
+    "doc_statuses": "Document Statuses",
+    "actions": "Actions"
   }
 }
