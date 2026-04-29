@@ -260,13 +260,12 @@ const addActivity = (clientName: string, action: string, detail: string) => {
   const doc = client?.documents.find(d => d.id === docId);
 
   if (client && doc) {
-    // 1. Logujemy aktywność (Pasek boczny)
-    addActivity(
+    
+addActivity(
       client.name, 
-      'Przesyłanie', 
-      `Wgrano nowy dokument: ${file.name}`
+      'labels.upload', 
+      file.name // Przekazujemy nazwę pliku jako detail
     );
-
     // 2. Połączenie z n8n (Webhook)
     if (file.rawFile) {
       const formData = new FormData();
@@ -332,8 +331,8 @@ const addActivity = (clientName: string, action: string, detail: string) => {
       const newActivity: ActivityEntry = {
         id: Date.now().toString(),
         clientName: client.name,
-        action: 'Wszystkie',
-        detail: 'Zakończono przesyłanie',
+        action: i18n.t('common.all'), 
+        detail: i18n.t('activities.finished'),
         timestamp: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })
       };
       setActivities(prev => [newActivity, ...prev].slice(0, 10));

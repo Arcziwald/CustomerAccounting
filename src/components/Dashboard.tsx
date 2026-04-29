@@ -50,7 +50,12 @@ export default function Dashboard({
   // 3. Dodanie do paska (bezpieczne wywołanie)
   try {
     if (typeof addActivity === 'function') {
-      addActivity('Agent AI', 'Przypomnienie', `Wysłano monit do ${client.name}`);
+      // WYSYŁAMY KLUCZE, NIE TŁUMACZENIA
+      addActivity(
+        'Agent AI', 
+        'ai.nudge_type_system', 
+        `activities.nudge_sent_to|${client.name}`
+      );
     }
   } catch (e) {
     console.error("Błąd przy dodawaniu aktywności:", e);
@@ -256,9 +261,20 @@ export default function Dashboard({
   <div key={activity.id} className="text-xs border-l-2 border-blue-100 pl-3 py-1">
     <div className="font-bold text-slate-800 truncate">{activity.clientName}</div>
     <div className="text-slate-500 truncate">
-      {/* Używamy operatora || aby kod nie wywalił błędu, jeśli trafi na stary rekord */}
-      {(activity.action)}: {(activity.detail)}
-    </div>
+  {/* Tłumaczymy akcję (np. System Reminder) */}
+  {t(activity.action)}: {
+    // Sprawdzamy, czy w detail mamy naszą kreskę | (trik dla imienia klienta)
+    activity.detail.includes('|') 
+      ? t(activity.detail.split('|')[0], { name: activity.detail.split('|')[1] })
+      
+      // Jeśli to plik (ma kropkę w nazwie), używamy szablonu wgrania
+      : activity.detail.includes('.') 
+        ? t('activities.uploaded', { fileName: activity.detail })
+        
+        // W każdym innym przypadku (np. stałe teksty)
+        : t(activity.detail)
+  }
+</div>
     <div className="text-[10px] text-slate-400 mt-0.5">
       {new Date(activity.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
     </div>

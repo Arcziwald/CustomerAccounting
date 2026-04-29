@@ -189,8 +189,9 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                           return t(`labels.${key}`);
                         })()}
                       </h3>
-                      <span className={`text-sm font-medium ${STATUS_COLORS[doc.status].split(' ')[1]}`}>
-                        {t('common.status')}: {t(`status.${doc.status.toLowerCase().replace(/ /g, '_')}`)}
+                      <span className={`text-sm font-medium ${STATUS_COLORS[doc.status]?.split(' ')[1] || ''}`}>
+                      {/* Usuwamy ryzyko podwójnego "status.status" */}
+                      {t('common.status')}: {t(`status.${doc.status.toLowerCase().replace(/ /g, '_')}`)}
                       </span>
                     </div>
                   </div>

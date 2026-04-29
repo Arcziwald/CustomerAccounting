@@ -30,8 +30,9 @@
     "beach_msg": "To zdjęcie z plaży, a nie faktura! Proszę o właściwy dokument. 😉",
     "excel_toast": "W pełnej wersji AI ekstrahuje wszystkie detale i zapisuje je w Excelu!",
     "beach_photo_msg": "To zdjęcie z plaży, a nie faktura! Proszę o właściwy dokument. 😉",
-    "nudge_type_humor": "Humorystyczny Monit",
-    "toast_header": "Agent AI wysłał wiadomość"
+    "nudge_type_humor": "Monit",
+    "toast_header": "Agent AI wysłał wiadomość",
+    "nudge_type_system": "Systemowe Przypomnienie"
   },
   "header": {
     "app_name": "BRAKOMAT",
@@ -123,6 +124,7 @@
   "ai_nudge": "Wysłano: {{msg}}",
   "rejected": "Dokument odrzucony: {{fileName}}",
   "approved": "Dokument zatwierdzony: {{fileName}}",
+  "nudge_sent_to": "Wysłano przypomnienie do {{name}}",
   "ai_nudge_sent": "Wysłano: \"{{msg}}\" do {{client}}"
 }
 }

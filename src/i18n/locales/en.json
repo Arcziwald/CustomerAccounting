@@ -30,8 +30,9 @@
     "beach_msg": "Hey, that's a beach photo, not an invoice! Please provide the correct document. 😉",
     "excel_toast": "In the full version, AI extracts all details and saves them to Excel!",
     "beach_photo_msg": "This is a beach photo, not an invoice! Please send the correct document. 😉",
-    "nudge_type_humor": "Humorous Nudge",
-    "toast_header": "Agent AI sent a message"
+    "nudge_type_humor": "Smart Nudge",
+    "toast_header": "Agent AI sent a message",
+    "nudge_type_system": "System Reminder"
   },
   "header": {
     "app_name": "The Missing Link",
@@ -122,6 +123,7 @@
   "ai_nudge": "Sent Smart Nudge: {{msg}}",
   "rejected": "Document rejected: {{fileName}}",
   "approved": "Document approved: {{fileName}}",
+  "nudge_sent_to": "Reminder sent to {{name}}",
   "ai_nudge_sent": "Sent: \"{{msg}}\" to {{client}}"
   
 }
