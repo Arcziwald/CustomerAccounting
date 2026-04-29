@@ -23,5 +23,9 @@
     "nudge_msg": "Hello! AI Agent here. 🤖 I see that {{name}} is missing some documents. Let's get this done!",
     "beach_msg": "Hey, that's a beach photo, not an invoice! Please provide the correct document. 😉",
     "excel_toast": "In the full version, AI extracts all details and saves them to Excel!"
+  },
+  "header": {
+    "app_name": "The Missing Link",
+    "description": "Accounting office administrative panel"
   }
 }

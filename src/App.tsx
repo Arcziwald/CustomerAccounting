@@ -9,6 +9,8 @@ import Dashboard from './components/Dashboard';
 import ClientView from './components/ClientView';
 import { Client, DocumentStatus, UploadedFile, ActivityEntry, ClientTier, OCRRecord } from './types';
 import { Toaster } from 'react-hot-toast';
+import { toast } from 'react-hot-toast'; // Dodaj to
+import i18n from './i18n/config'; // Dodaj to (upewnij się, że ścieżka jest poprawna)
 
 const MOCK_CLIENTS: Client[] = [
   {
@@ -156,7 +158,7 @@ const addActivity = (clientName: string, docLabel: string, fileName: string) => 
   setOcrRecords(prev => prev.map(record => {
     if (record.id === recordId) {
 
-      // LOGIKA DLA TWOJEGO SCENARIUSZA "ODRZUCONE"
+      // LOGIKA DLA TWOJEGO SCENARIUSZA "ODRZUCONE" (demo-2)
       if (record.id === 'demo-2') {
         return {
           ...record,
@@ -166,22 +168,40 @@ const addActivity = (clientName: string, docLabel: string, fileName: string) => 
           netAmount: 0,
           vatAmount: 0,
           grossAmount: 0,
-          status: 'Odrzucone',
-          documentType: 'Nieznany',
+          status: 'Odrzucone' as any,
+          documentType: 'Nieznany' as any,
         };
       }
       
-      // A. OBSŁUGA DANYCH DEMO (sztywne ID)
-      if (record.id.startsWith('demo')) {
-        if (record.id === 'demo-1') {
-          return { ...record, invoiceNumber: 'FV/2026/102/AB', issueDate: '2026-03-15', sellerNip: 'PL5260001234', netAmount: 2500.0, vatAmount: 575.0, grossAmount: 3075.0, status: 'Do weryfikacji', documentType: 'Faktura' };
-        }
-        return record;
+      // A. OBSŁUGA DANYCH DEMO (demo-1)
+      if (record.id === 'demo-1') {
+        return { 
+          ...record, 
+          invoiceNumber: 'FV/2026/102/AB', 
+          issueDate: '2026-03-15', 
+          sellerNip: 'PL5260001234', 
+          netAmount: 2500.0, 
+          vatAmount: 575.0, 
+          grossAmount: 3075.0, 
+          status: 'Do weryfikacji' as any, 
+          documentType: 'Faktura' as any 
+        };
       }
 
-      // B. KLUCZOWA POPRAWKA: Jeśli to NIE JEST Faktura (czyli ZUS, Kadry, Wyciąg)
-      // Sprawdzamy co siedzi w record.documentType, który nadałeś przy uploadzie
-      if (record.documentType !== 'Faktura' && record.documentType !== 'Inny') {
+      // B. DOKUMENTY INNE NIŻ FAKTURA (ZUS, Kadry itp.)
+      // Używamy as any dla documentType, żeby TS nie blokował porównania
+      const currentType = record.documentType as any;
+      if (currentType !== 'Faktura' && currentType !== 'Inny') {
+        
+        // Wywołujemy toast używając i18n.t bezpośrednio
+        toast.success(
+          <div className="flex flex-col gap-1">
+            <p className="font-bold text-sm">{i18n.t('dashboard.title')}</p>
+            <p className="text-xs">{i18n.t('ai.excel_toast')}</p>
+          </div>,
+          { duration: 7000, icon: '📊' }
+        );
+
         return {
           ...record,
           invoiceNumber: 'DOK/POTW/2026',
@@ -190,13 +210,12 @@ const addActivity = (clientName: string, docLabel: string, fileName: string) => 
           netAmount: 0,
           vatAmount: 0,
           grossAmount: 0,
-          status: 'Do weryfikacji',
-          // Tutaj NIE wpisujemy "Faktura" - zostawiamy to, co było:
-          documentType: record.documentType 
+          status: 'Do weryfikacji' as any,
+          documentType: currentType as any
         };
       }
 
-      // C. DOMYŚLNA ŚCIEŻKA DLA FAKTUR (Losowanie danych)
+      // C. DOMYŚLNA ŚCIEŻKA DLA FAKTUR
       const net = Math.floor(Math.random() * 3500) + 150;
       const vat = Math.round(net * 0.23);
       
@@ -208,13 +227,15 @@ const addActivity = (clientName: string, docLabel: string, fileName: string) => 
         netAmount: net,
         vatAmount: vat,
         grossAmount: net + vat,
-        status: 'Do weryfikacji',
-        documentType: 'Faktura' // Tu ustawiamy Fakturę tylko jeśli faktycznie nią była
+        status: 'Do weryfikacji' as any,
+        documentType: 'Faktura' as any
       };
     }
     return record;
   }));
 };
+
+
   const updateOCRStatus = (recordId: string, newStatus: 'Oczekiwanie' | 'Do weryfikacji' | 'Zweryfikowano' | 'Odrzucone') => {
     setOcrRecords(prev => prev.map(record => 
       record.id === recordId ? { ...record, status: newStatus } : record
@@ -267,7 +288,7 @@ const addActivity = (clientName: string, docLabel: string, fileName: string) => 
     // 3. Dodajemy rekord do Inteligentnego Rejestru (Tabela na dole)
     // Usunąłem warunek .includes(), żeby w celach DEMO każdy plik tam wpadał
     // Dynamiczne określanie typu dokumentu na podstawie sekcji
-    let detectedType = 'Inny';
+    let detectedType: any = 'Inny';
     if (doc.label.includes('Faktury')) detectedType = 'Faktura';
       else if (doc.label.includes('ZUS')) detectedType = 'ZUS';
       else if (doc.label.includes('Kadry')) detectedType = 'Kadry';

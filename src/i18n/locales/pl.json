@@ -23,5 +23,9 @@
     "nudge_msg": "Dzień dobry! Agent AI z tej strony. 🤖 Widzę, że w firmie {{name}} brakuje dokumentów. Pomóżmy sobie to dokończyć!",
     "beach_msg": "To zdjęcie z plaży, a nie faktura! Proszę o właściwy dokument. 😉",
     "excel_toast": "W pełnej wersji AI ekstrahuje wszystkie detale i zapisuje je w Excelu!"
+  },
+  "header": {
+    "app_name": "BRAKOMAT",
+    "description": "Panel administracyjny biura rachunkowego"
   }
 }

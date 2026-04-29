@@ -142,8 +142,8 @@ export default function Dashboard({
     <div className="max-w-7xl mx-auto px-4 py-8">
       <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">BRAKOMAT</h1>
-          <p className="text-slate-500 text-lg">Panel administracyjny biura rachunkowego</p>
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">{t('header.app_name')}</h1>
+          <p className="text-slate-500 text-lg">{t('header.description')}</p>
           <div className="flex gap-2 mb-4">
           <button onClick={() => i18n.changeLanguage('pl')} className="px-2 py-1 bg-slate-200 rounded text-xs">PL</button>
           <button onClick={() => i18n.changeLanguage('en')} className="px-2 py-1 bg-slate-200 rounded text-xs">EN</button>
