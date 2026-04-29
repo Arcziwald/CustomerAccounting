@@ -511,109 +511,120 @@ export default function Dashboard({
   </tr>
 </thead>
               <tbody className="divide-y divide-slate-100 block lg:table-row-group w-full">
-                {ocrRecords.length === 0 ? (
-                  <tr className="block lg:table-row w-full">
-                    <td colSpan={5} className="py-20 text-center text-slate-400 block lg:table-cell font-medium italic w-full">
-                      <div className="flex flex-col items-center gap-3 w-full">
-                        <Search className="w-10 h-10 opacity-20" />
-                        <p>Oczekiwanie na pierwsze dokumenty do analizy...</p>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  ocrRecords.map((record) => (
-                    <motion.tr 
-                      key={record.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="w-full flex flex-col lg:table-row bg-white hover:bg-slate-50/50 transition-colors p-5 lg:p-0 mb-6 lg:mb-0 border lg:border-none rounded-[2rem] lg:rounded-none shadow-sm lg:shadow-none min-w-full"
+  {ocrRecords.length === 0 ? (
+    <tr className="block lg:table-row w-full">
+      <td colSpan={5} className="py-20 text-center text-slate-400 block lg:table-cell font-medium italic w-full">
+        <div className="flex flex-col items-center gap-3 w-full">
+          <Search className="w-10 h-10 opacity-20" />
+          <p>{t('ocr.waiting_msg')}</p>
+        </div>
+      </td>
+    </tr>
+  ) : (
+    ocrRecords.map((record) => (
+      <motion.tr 
+        key={record.id}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="w-full flex flex-col lg:table-row bg-white hover:bg-slate-50/50 transition-colors p-5 lg:p-0 mb-6 lg:mb-0 border lg:border-none rounded-[2rem] lg:rounded-none shadow-sm lg:shadow-none min-w-full"
+      >
+        {/* 1. KLIENT I NUMER */}
+        <td className="w-full py-2 lg:py-6 lg:px-6 block lg:table-cell">
+          <div className="w-full flex justify-between items-start lg:block">
+            <div className="w-full">
+              <div className="font-black text-slate-900 text-lg lg:text-base leading-tight break-words">{record.clientName}</div>
+              {record.status !== 'Oczekiwanie' && (
+                <button 
+                  onClick={() => setPreviewDoc(record)}
+                  className="text-blue-600 text-sm font-bold hover:underline flex items-center gap-1 mt-2 lg:mt-0.5"
+                >
+                  {record.invoiceNumber} <Eye className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
+        </td>
+
+        {/* 2. DANE DOKUMENTU */}
+        <td className="w-full py-4 lg:py-6 lg:px-6 block lg:table-cell border-t lg:border-none mt-2 lg:mt-0">
+          {record.status !== 'Oczekiwanie' && (
+            <div className="w-full grid grid-cols-1 gap-4">
+              <div className="w-full">
+                <div className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">
+                  {t('ocr.doc_type')}:
+                </div>
+                <div className="text-sm text-slate-700 font-bold">
+                  {/* Tłumaczenie typu dokumentu (Faktura/ZUS itd.) */}
+                  {t(`labels.${record.documentType.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g, '_')}`)}
+                </div>
+              </div>
+              <div className="w-full">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                  <div className="text-sm text-slate-600 font-medium">{record.issueDate}</div>
+                  <div className="text-xs text-slate-500 font-mono font-bold bg-slate-50 px-2 py-0.5 rounded border border-slate-100">{record.sellerNip}</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </td>
+
+        {/* 3. KWOTY I STATUS */}
+        <td className="w-full py-4 lg:py-6 lg:px-8 block lg:table-cell">
+          <div className="w-full flex flex-col lg:items-end gap-4">
+            {record.status !== 'Oczekiwanie' && (
+              <div className="w-full lg:w-48 bg-slate-50 p-4 rounded-2xl flex justify-between items-center lg:block lg:text-right border border-slate-100">
+                <div className="lg:hidden text-[10px] text-slate-400 font-black uppercase">{t('ocr.value')}:</div>
+                <div className="text-right">
+                  <div className="text-sm font-bold text-slate-900">
+                    {record.netAmount.toLocaleString()} {i18n.language === 'en' ? '€' : 'zł'}
+                  </div>
+                  <div className="text-[10px] text-slate-400 font-bold">
+                    {t('ocr.vat')}: {record.vatAmount.toLocaleString()} {i18n.language === 'en' ? '€' : 'zł'}
+                  </div>
+                  <div className="text-base font-black text-blue-600 mt-1">
+                    {record.grossAmount.toLocaleString()} {i18n.language === 'en' ? '€' : 'zł'}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="w-full lg:w-auto">
+              {record.status === 'Oczekiwanie' ? (
+                <button 
+                  onClick={() => analyzeDocument(record.id)}
+                  className="w-full px-8 py-4 lg:py-2.5 bg-indigo-600 text-white rounded-2xl lg:rounded-xl font-black text-sm lg:text-xs hover:bg-indigo-700 transition-all shadow-lg uppercase tracking-wider"
+                >
+                  <Search className="w-5 h-5 lg:w-4 lg:h-4 mr-2 inline" /> {t('ocr.analyze_btn')}
+                </button>
+              ) : (
+                <div className="flex flex-col gap-2 w-full lg:w-auto">
+                  <button 
+                    onClick={() => record.status !== 'Zweryfikowano' && updateOCRStatus(record.id, record.status === 'Odrzucone' ? 'Do weryfikacji' : 'Zweryfikowano')}
+                    className={`w-full px-6 py-3 lg:py-1.5 rounded-xl text-xs font-black transition-all border-2 ${
+                      record.status === 'Zweryfikowano' 
+                        ? 'bg-green-50 text-green-700 border-green-100' 
+                        : record.status === 'Odrzucone' ? 'bg-red-50 text-red-700 border-red-100' : 'bg-yellow-50 text-yellow-700 border-yellow-100'
+                    }`}
+                  >
+                    {t(`status.${record.status.toLowerCase().replace(/ /g, '_')}`).toUpperCase()}
+                  </button>
+                  {record.status === 'Odrzucone' && (
+                    <button 
+                      onClick={() => handleSmartNudge(record)}
+                      className="py-2 text-[10px] text-blue-600 font-black bg-blue-50/50 rounded-lg flex items-center justify-center gap-2"
                     >
-                      {/* 1. KLIENT I NUMER - Pełna szerokość kontenera */}
-                      <td className="w-full py-2 lg:py-6 lg:px-6 block lg:table-cell">
-                        <div className="w-full flex justify-between items-start lg:block">
-                          <div className="w-full">
-                            <div className="font-black text-slate-900 text-lg lg:text-base leading-tight break-words">{record.clientName}</div>
-                            {record.status !== 'Oczekiwanie' && (
-                              <button 
-                                onClick={() => setPreviewDoc(record)}
-                                className="text-blue-600 text-sm font-bold hover:underline flex items-center gap-1 mt-2 lg:mt-0.5"
-                              >
-                                {record.invoiceNumber} <Eye className="w-4 h-4" />
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </td>
-
-                      {/* 2. DANE DOKUMENTU - Rozciągnięte do krawędzi */}
-                      <td className="w-full py-4 lg:py-6 lg:px-6 block lg:table-cell border-t lg:border-none mt-2 lg:mt-0">
-                        {record.status !== 'Oczekiwanie' && (
-                          <div className="w-full grid grid-cols-1 gap-4">
-                            <div className="w-full">
-                              <div className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">Typ dokumentu:</div>
-                              <div className="text-sm text-slate-700 font-bold">{record.documentType}</div>
-                            </div>
-                            <div className="w-full">
-                              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                                <div className="text-sm text-slate-600 font-medium">{record.issueDate}</div>
-                                <div className="text-xs text-slate-500 font-mono font-bold bg-slate-50 px-2 py-0.5 rounded border border-slate-100">{record.sellerNip}</div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </td>
-
-                      {/* 3. KWOTY I STATUS - Pełne wyrównanie */}
-                      <td className="w-full py-4 lg:py-6 lg:px-8 block lg:table-cell">
-                        <div className="w-full flex flex-col lg:items-end gap-4">
-                          {record.status !== 'Oczekiwanie' && (
-                            <div className="w-full lg:w-48 bg-slate-50 p-4 rounded-2xl flex justify-between items-center lg:block lg:text-right border border-slate-100">
-                              <div className="lg:hidden text-[10px] text-slate-400 font-black uppercase">Wartość:</div>
-                              <div className="text-right">
-                                <div className="text-sm font-bold text-slate-900">{record.netAmount.toLocaleString()} zł</div>
-                                <div className="text-[10px] text-slate-400 font-bold">VAT: {record.vatAmount.toLocaleString()} zł</div>
-                                <div className="text-base font-black text-blue-600 mt-1">{record.grossAmount.toLocaleString()} zł</div>
-                              </div>
-                            </div>
-                          )}
-
-                          <div className="w-full lg:w-auto">
-                            {record.status === 'Oczekiwanie' ? (
-                              <button 
-                                onClick={() => analyzeDocument(record.id)}
-                                className="w-full px-8 py-4 lg:py-2.5 bg-indigo-600 text-white rounded-2xl lg:rounded-xl font-black text-sm lg:text-xs hover:bg-indigo-700 transition-all shadow-lg uppercase tracking-wider"
-                              >
-                                <Search className="w-5 h-5 lg:w-4 lg:h-4 mr-2 inline" /> Analizuj
-                              </button>
-                            ) : (
-                              <div className="flex flex-col gap-2 w-full lg:w-auto">
-                                <button 
-                                  onClick={() => record.status !== 'Zweryfikowano' && updateOCRStatus(record.id, record.status === 'Odrzucone' ? 'Do weryfikacji' : 'Zweryfikowano')}
-                                  className={`w-full px-6 py-3 lg:py-1.5 rounded-xl text-xs font-black transition-all border-2 ${
-                                    record.status === 'Zweryfikowano' 
-                                      ? 'bg-green-50 text-green-700 border-green-100' 
-                                      : record.status === 'Odrzucone' ? 'bg-red-50 text-red-700 border-red-100' : 'bg-yellow-50 text-yellow-700 border-yellow-100'
-                                  }`}
-                                >
-                                  {record.status.toUpperCase()}
-                                </button>
-                                {record.status === 'Odrzucone' && (
-                                  <button 
-                                    onClick={() => handleSmartNudge(record)}
-                                    className="py-2 text-[10px] text-blue-600 font-black bg-blue-50/50 rounded-lg flex items-center justify-center gap-2"
-                                  >
-                                    <Bell className="w-3.5 h-3.5" /> SMART NUDGE
-                                  </button>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </td>
-                    </motion.tr>
-                  ))
-                )}
-              </tbody>
+                      <Bell className="w-3.5 h-3.5" /> {t('ocr.smart_nudge')}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </td>
+      </motion.tr>
+    ))
+  )}
+</tbody>
             </table>
           </div>
         </div>

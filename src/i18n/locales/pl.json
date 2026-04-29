@@ -34,7 +34,9 @@
     "brak": "Brak",
     "spoznione": "Spóźnione",
     "w_toku": "W toku",
-    "zatwierdzone": "Zatwierdzone"
+    "zatwierdzone": "Zatwierdzone",
+    "odrzucone": "Odrzucone",
+    "do_weryfikacji": "Do weryfikacji"
   },
   "actions": {
     "send": "Wyślij",
@@ -55,7 +57,12 @@
   "faktury_przychodowe": "Faktury Przychodowe",
   "wyciagi": "Wyciągi",
   "zus": "ZUS",
-  "kadry": "Kadry"
+  "kadry": "Kadry",
+  "faktura": "Faktura",
+  "inny": "Inny",
+  "umowa": "Umowa",
+  "pelnomocnictwo": "Pełnomocnictwo",
+  "nieznany": "Nieznany"
 },
 "table": {
     "client": "Klient",
@@ -65,5 +72,27 @@
   "footer": {
     "system_name": "Brakomat",
     "system_description": "Twój asystent w zarządzaniu dokumentami"
+  },
+  
+  "ocr": {
+    "doc_type": "Typ dokumentu",
+    "waiting_msg": "Oczekiwanie na pierwsze dokumenty do analizy...",
+    "analyze_btn": "Analizuj",
+    "value": "Wartość",
+    "vat": "VAT",
+    "smart_nudge": "SZYBKA DEPESZA"
+  },
+  "client_view": {
+    "back": "Powrót do panelu",
+    "client_zone": "Strefa Klienta",
+    "month_label": "Twoje dokumenty za miesiąc:",
+    "list_title": "Lista wymaganych dokumentów",
+    "check_continuity": "Sprawdź ciągłość",
+    "add_doc": "Dodaj dokument",
+    "uploaded": "Przesłano",
+    "no_files": "Brak przesłanych plików.",
+    "ready_title": "Gotowe na ten miesiąc?",
+    "ready_desc": "Kliknij poniżej, aby poinformować biuro o zakończeniu przesyłania.",
+    "finish_btn": "Zakończ przesyłanie"
   }
 }

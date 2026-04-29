@@ -34,7 +34,9 @@
     "brak": "Missing",
     "spoznione": "Late",
     "w_toku": "In progress",
-    "zatwierdzone": "Approved"
+    "zatwierdzone": "Approved",
+    "odrzucone": "Rejected",
+    "do_weryfikacji": "To verify"
   },
   "actions": {
     "send": "Send",
@@ -55,7 +57,12 @@
   "faktury_przychodowe": "Revenue Invoices",
   "wyciagi": "Bank Statements",
   "zus": "DSP",
-  "kadry": "HR/Payroll"
+  "kadry": "HR/Payroll",
+  "faktura": "Invoice",
+  "inny": "Other",
+  "umowa": "Agreement",
+  "pelnomocnictwo": "Power of Attorney",
+  "nieznany": "Unknown"
 },
   "table": {
     "client": "Client",
@@ -65,5 +72,26 @@
   "footer": {
     "system_name": "Documentation Monitoring System",
     "system_description": "by The Missing Link"
-}
+},
+"ocr": {
+    "doc_type": "Document type",
+    "waiting_msg": "Waiting for the first documents to analyze...",
+    "analyze_btn": "Analyze",
+    "value": "Value",
+    "vat": "VAT",
+    "smart_nudge": "SMART NUDGE"
+  },
+  "client_view": {
+    "back": "Back to panel",
+    "client_zone": "Client Zone",
+    "month_label": "Your documents for:",
+    "list_title": "Required documents list",
+    "check_continuity": "Check continuity",
+    "add_doc": "Add document",
+    "uploaded": "Uploaded",
+    "no_files": "No files uploaded.",
+    "ready_title": "Ready for this month?",
+    "ready_desc": "Click below to inform the office that you have finished uploading.",
+    "finish_btn": "Finish uploading"
+  }
 }
