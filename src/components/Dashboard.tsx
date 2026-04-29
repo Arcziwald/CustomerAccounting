@@ -317,8 +317,8 @@ export default function Dashboard({
           onClick={() => doc.status === 'W toku' ? setViewingFilesDocId(viewingFilesDocId === `${client.id}-${doc.id}` ? null : `${client.id}-${doc.id}`) : null}
           className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] lg:text-[11px] font-bold uppercase tracking-tight border transition-all ${STATUS_COLORS[doc.status]} ${doc.status === 'W toku' ? 'cursor-pointer hover:shadow-sm' : 'cursor-default'}`}
         >
-          {/* TO JEST KLUCZOWA POPRAWKA PIGUŁKI */}
-          {t(`labels.${doc.label.toLowerCase().replace(/ /g, '_')}`)}
+          {/* POPRAWIONA LINIA PONIŻEJ: czyści polskie znaki i spacje */}
+          {t(`labels.${doc.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g, '_')}`)}
           
           {doc.files.length > 0 && <span className="bg-white/30 px-1 rounded-sm text-[9px]">{doc.files.length}</span>}
           {doc.status === 'W toku' && <ChevronDown className={`w-3 h-3 ${viewingFilesDocId === `${client.id}-${doc.id}` ? 'rotate-180' : ''}`} />}

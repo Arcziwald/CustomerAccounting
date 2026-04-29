@@ -51,11 +51,11 @@
     "approve": "Approve"
   },
   "labels": {
-  "faktury_kosztowe": "Faktury Kosztowe",
-  "faktury_przychodowe": "Faktury Przychodowe",
-  "wyciagi": "Wyciągi",
-  "zus": "ZUS",
-  "kadry": "Kadry"
+  "faktury_kosztowe": "Expense Invoices",
+  "faktury_przychodowe": "Revenue Invoices",
+  "wyciagi": "Bank Statements",
+  "zus": "DSP",
+  "kadry": "HR/Payroll"
 },
   "table": {
     "client": "Client",
