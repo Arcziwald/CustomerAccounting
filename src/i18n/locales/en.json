@@ -61,5 +61,9 @@
     "client": "Client",
     "doc_statuses": "Document Statuses",
     "actions": "Actions"
-  }
+  },
+  "footer": {
+    "system_name": "Documentation Monitoring System",
+    "system_description": "by The Missing Link"
+}
 }

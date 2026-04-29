@@ -61,5 +61,9 @@
     "client": "Klient",
     "doc_statuses": "Statusy dokumentów",
     "actions": "Akcje"
+  },
+  "footer": {
+    "system_name": "Brakomat",
+    "system_description": "Twój asystent w zarządzaniu dokumentami"
   }
 }

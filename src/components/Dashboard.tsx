@@ -405,7 +405,7 @@ export default function Dashboard({
             >
               <div className="p-8">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold text-slate-900">Edytuj wymagania</h3>
+                  <h3 className="text-2xl font-bold text-slate-900">{t('modal.edit_title')}</h3>
                   <button onClick={() => setEditingClientId(null)} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
                     <X className="w-6 h-6 text-slate-400" />
                   </button>
@@ -414,45 +414,59 @@ export default function Dashboard({
                 <p className="text-slate-500 mb-6 font-medium">{editingClient.name}</p>
 
                 <div className="space-y-3 mb-8 max-h-[300px] overflow-y-auto pr-2">
-                  {editingClient.documents.map(doc => (
-                    <div key={doc.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100">
-                      <span className="font-semibold text-slate-700">{doc.label}</span>
-                      <button 
-                        onClick={() => removeDocument(editingClient.id, doc.id)}
-                        className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
+  {editingClient.documents.map(doc => (
+    <div key={doc.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100">
+      <span className="font-semibold text-slate-700">
+        {/* POPRAWKA: Tłumaczenie dynamiczne etykiet wewnątrz modala */}
+        {(() => {
+          const labelMap: { [key: string]: string } = {
+            'Faktury Kosztowe': 'faktury_kosztowe',
+            'Faktury Przychodowe': 'faktury_przychodowe',
+            'Wyciągi': 'wyciagi',
+            'ZUS': 'zus',
+            'Kadry': 'kadry'
+          };
+          const key = labelMap[doc.label] || doc.label.toLowerCase().replace(/ /g, '_');
+          return t(`labels.${key}`);
+        })()}
+      </span>
+      <button 
+        onClick={() => removeDocument(editingClient.id, doc.id)}
+        className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+      >
+        <Trash2 className="w-4 h-4" />
+      </button>
+    </div>
+  ))}
+</div>
 
                 <div className="flex gap-2">
-                  <input 
-                    type="text" 
-                    placeholder="Nowy dokument (np. Umowa najmu)" 
-                    className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
-                    value={newDocLabel}
-                    onChange={(e) => setNewDocLabel(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && newDocLabel.trim()) {
-                        addDocument(editingClient.id, newDocLabel.trim());
-                        setNewDocLabel('');
-                      }
-                    }}
-                  />
-                  <button 
-                    onClick={() => {
-                      if (newDocLabel.trim()) {
-                        addDocument(editingClient.id, newDocLabel.trim());
-                        setNewDocLabel('');
-                      }
-                    }}
-                    className="p-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
-                  >
-                    <Plus className="w-6 h-6" />
-                  </button>
-                </div>
+  <input 
+    type="text" 
+    /* POPRAWKA: Usunięty cudzysłów, zostawiamy same klamry */
+    placeholder={t('actions.new_doc_placeholder')} 
+    className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+    value={newDocLabel}
+    onChange={(e) => setNewDocLabel(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' && newDocLabel.trim()) {
+        addDocument(editingClient.id, newDocLabel.trim());
+        setNewDocLabel('');
+      }
+    }}
+  />
+  <button 
+    onClick={() => {
+      if (newDocLabel.trim()) {
+        addDocument(editingClient.id, newDocLabel.trim());
+        setNewDocLabel('');
+      }
+    }}
+    className="p-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
+  >
+    <Plus className="w-6 h-6" />
+  </button>
+</div>
               </div>
             </motion.div>
           </div>
@@ -695,7 +709,7 @@ export default function Dashboard({
       </AnimatePresence>
 
       <footer className="mt-12 text-center text-slate-400 text-sm">
-        &copy; 2026 The Missing Link - System Monitorowania Dokumentacji
+        &copy; 2026 {t('footer.system_name')} - {t('footer.system_description')}
       </footer>
     </div>
 </div>
