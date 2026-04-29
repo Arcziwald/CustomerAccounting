@@ -120,7 +120,7 @@ export default function Dashboard({
     </div>,
     {
       icon: '🤖',
-      duration: 6000, // Dłużej, żeby zdążył przeczytać i się uśmiechnąć
+      duration: 10000, // Dłużej, żeby zdążył przeczytać i się uśmiechnąć
       style: { borderRadius: '15px', border: '1px solid #713abe' }
   });
 
@@ -142,7 +142,7 @@ export default function Dashboard({
     <div className="max-w-7xl mx-auto px-4 py-8">
       <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">The Missing Link</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">BRAKOMAT</h1>
           <p className="text-slate-500 text-lg">Panel administracyjny biura rachunkowego</p>
           <div className="flex gap-2 mb-4">
           <button onClick={() => i18n.changeLanguage('pl')} className="px-2 py-1 bg-slate-200 rounded text-xs">PL</button>
@@ -163,8 +163,8 @@ export default function Dashboard({
       </header>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 mb-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
+        <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
               <Users className="w-6 h-6" />
@@ -238,35 +238,40 @@ export default function Dashboard({
         </div>
       </div>
 
+      {/* Sekcja listy klientów - Responsywna */}
       <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto lg:overflow-visible">
           <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50/50 border-bottom border-slate-100">
+            {/* Nagłówek widoczny tylko na dużych ekranach */}
+            <thead className="hidden lg:table-header-group bg-slate-50/50 border-b border-slate-100">
+              <tr>
                 <th className="px-8 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider">Klient</th>
                 <th className="px-6 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider">Statusy dokumentów</th>
                 <th className="px-8 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider text-right">Akcje</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            
+            {/* Body tabeli - na mobilkach wiersze stają się kartami */}
+            <tbody className="divide-y divide-slate-50 block lg:table-row-group">
               {filteredClients.map((client) => (
                 <motion.tr 
                   key={client.id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="hover:bg-slate-50/30 transition-colors"
+                  className="flex flex-col lg:table-row hover:bg-slate-50/30 transition-colors p-4 lg:p-0 border-b lg:border-none"
                 >
-                  <td className="px-8 py-6">
+                  {/* KOLUMNA KLIENTA */}
+                  <td className="px-4 py-2 lg:px-8 lg:py-6 block lg:table-cell">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400">
+                      <div className="w-10 h-10 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center text-slate-500 shrink-0">
                         <Users className="w-5 h-5" />
                       </div>
-                      <div>
-                        <div className="font-bold text-slate-900 text-lg flex items-center gap-2">
-                          {client.name}
-                          {client.locked && <Lock className="w-4 h-4 text-emerald-600" />}
+                      <div className="min-w-0">
+                        <div className="font-bold text-slate-900 text-base lg:text-lg flex items-center gap-2 flex-wrap">
+                          <span className="truncate">{client.name}</span>
+                          {client.locked && <Lock className="w-4 h-4 text-emerald-600 shrink-0" />}
                         </div>
-                        <div className="text-sm text-slate-400 font-medium flex items-center gap-2">
+                        <div className="text-xs lg:text-sm text-slate-400 font-medium flex items-center gap-2">
                           {client.month}
                           <span className="w-1 h-1 bg-slate-300 rounded-full" />
                           <a 
@@ -275,103 +280,74 @@ export default function Dashboard({
                             rel="noopener noreferrer"
                             className="flex items-center gap-1 text-blue-500 hover:text-blue-700 transition-colors"
                           >
-                            <Folder className="w-3.5 h-3.5" />
-                            Dysk Google
+                            <Folder className="w-3 h-3" />
+                            Dysk
                           </a>
                         </div>
                       </div>
                     </div>
                   </td>
                   
-                  <td className="px-6 py-6">
-                    <div className="flex flex-wrap gap-2">
+                  {/* KOLUMNA STATUSÓW */}
+                  <td className="px-4 py-3 lg:px-6 lg:py-6 block lg:table-cell">
+                    <div className="flex flex-wrap gap-1.5 lg:gap-2">
                       {client.documents.map((doc) => (
-                        <div key={doc.id} className="relative group">
+                        <div key={doc.id} className="relative">
                           <button 
                             onClick={() => doc.status === 'W toku' ? setViewingFilesDocId(viewingFilesDocId === `${client.id}-${doc.id}` ? null : `${client.id}-${doc.id}`) : null}
-                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-tight border transition-all ${STATUS_COLORS[doc.status]} ${doc.status === 'W toku' ? 'cursor-pointer hover:shadow-md' : 'cursor-default'}`}
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] lg:text-[11px] font-bold uppercase tracking-tight border transition-all ${STATUS_COLORS[doc.status]} ${doc.status === 'W toku' ? 'cursor-pointer hover:shadow-sm' : 'cursor-default'}`}
                           >
                             {doc.label}
-                            {doc.files.length > 0 && (
-                              <span className="bg-white/40 px-1.5 rounded-md text-[10px]">
-                                {doc.files.length}
-                              </span>
-                            )}
-                            {doc.status === 'W toku' && <ChevronDown className={`w-3 h-3 transition-transform ${viewingFilesDocId === `${client.id}-${doc.id}` ? 'rotate-180' : ''}`} />}
+                            {doc.files.length > 0 && <span className="bg-white/30 px-1 rounded-sm text-[9px]">{doc.files.length}</span>}
+                            {doc.status === 'W toku' && <ChevronDown className={`w-3 h-3 ${viewingFilesDocId === `${client.id}-${doc.id}` ? 'rotate-180' : ''}`} />}
                           </button>
-
-                          <AnimatePresence>
-                            {viewingFilesDocId === `${client.id}-${doc.id}` && (
-                              <motion.div 
-                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute z-10 top-full mt-2 left-0 w-64 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4"
-                              >
-                                <div className="text-xs font-bold text-slate-900 mb-3 flex items-center justify-between">
-                                  <span>Wgrane pliki ({doc.files.length})</span>
-                                  <button onClick={() => setViewingFilesDocId(null)}><X className="w-3.5 h-3.5 text-slate-400" /></button>
-                                </div>
-                                <div className="space-y-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
-                                  {doc.files.map((file, idx) => (
-                                    <div key={idx} className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border border-slate-100">
-                                      <span className="text-[10px] font-medium text-slate-700 truncate max-w-[120px]">{file.name}</span>
-                                      <span className="text-[9px] text-slate-400">{file.timestamp}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
                         </div>
                       ))}
                     </div>
                   </td>
 
-                  <td className="px-8 py-6 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button
-                        onClick={() => toggleLockClient(client.id)}
-                        className={`p-2 rounded-xl transition-all ${
-                          client.locked 
-                            ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' 
-                            : 'text-slate-400 hover:text-blue-600 hover:bg-blue-50'
-                        }`}
-                        title={client.locked ? "Odblokuj edycję dla klienta" : "Zatwierdź miesiąc i zablokuj edycję"}
-                      >
-                        {client.locked ? <Lock className="w-5 h-5" /> : <Unlock className="w-5 h-5" />}
-                      </button>
+                  {/* KOLUMNA AKCJI */}
+                  <td className="px-4 py-2 lg:px-8 lg:py-6 block lg:table-cell">
+                    <div className="flex items-center justify-between lg:justify-end gap-1 sm:gap-2">
+                      {/* Narzędzia pomocnicze */}
+                      <div className="flex items-center gap-0.5 sm:gap-1">
+                        <button
+                          onClick={() => toggleLockClient(client.id)}
+                          className={`p-2 rounded-xl transition-all ${client.locked ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:bg-blue-50'}`}
+                        >
+                          {client.locked ? <Lock className="w-4 h-4 lg:w-5 lg:h-5" /> : <Unlock className="w-4 h-4 lg:w-5 lg:h-5" />}
+                        </button>
 
-                      <button
-                        onClick={() => setEditingClientId(client.id)}
-                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
-                        title="Edytuj listę dokumentów"
-                      >
-                        <Settings2 className="w-5 h-5" />
-                      </button>
+                        <button
+                          onClick={() => setEditingClientId(client.id)}
+                          className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"
+                        >
+                          <Settings2 className="w-4 h-4 lg:w-5 lg:h-5" />
+                        </button>
 
+                        <Link 
+                          to={`/client/${client.id}`}
+                          className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"
+                        >
+                          <ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" />
+                        </Link>
+                      </div>
+
+                      {/* Główny przycisk Nudge */}
                       <button
                         onClick={() => handleNudge(client)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                        className={`flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl text-xs lg:text-sm font-bold transition-all shrink-0 ${
                           copiedId === client.id 
                             ? 'bg-green-500 text-white shadow-lg shadow-green-200' 
                             : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
                         }`}
                       >
                         {copiedId === client.id ? (
-                          <><Check className="w-4 h-4" /> Wysłano</>
+                          <><Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" /> <span className="hidden xs:inline">Wysłano</span></>
                         ) : (
-                          <><Bell className="w-4 h-4" /> Nudge</>
+                          <><Bell className="w-3.5 h-3.5 lg:w-4 lg:h-4" />Wyślij</>
                         )}
                       </button>
-                      
-                      <Link 
-                        to={`/client/${client.id}`}
-                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
-                        title="Widok klienta"
-                      >
-                        <ExternalLink className="w-5 h-5" />
-                      </Link>
                     </div>
                   </td>
                 </motion.tr>
@@ -382,10 +358,8 @@ export default function Dashboard({
         
         {filteredClients.length === 0 && (
           <div className="py-20 text-center">
-            <div className="text-slate-300 mb-4 flex justify-center">
-              <Search className="w-12 h-12" />
-            </div>
-            <p className="text-slate-500 text-lg">Nie znaleziono klientów spełniających kryteria.</p>
+            <Search className="w-12 h-12 text-slate-200 mx-auto mb-4" />
+            <p className="text-slate-500 text-lg">Nie znaleziono klientów.</p>
           </div>
         )}
       </div>
@@ -464,11 +438,11 @@ export default function Dashboard({
       </AnimatePresence>
       
       {/* Intelligent Document Register Section */}
-      <div className="relative">
-        <div className={`bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 mb-12 transition-all duration-500 ${subscriptionTier === '1' ? 'opacity-40 pointer-events-none select-none blur-[2px]' : ''}`}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div className="w-full mt-12 px-0">
+        <div className={`w-full bg-white rounded-[2rem] p-4 lg:p-8 shadow-sm border border-slate-100 mb-12 transition-all duration-500 ${subscriptionTier === '1' ? 'opacity-40 pointer-events-none select-none blur-[2px]' : ''}`}>
+          <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">
+              <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl shrink-0">
                 <FileText className="w-7 h-7" />
               </div>
               <div>
@@ -478,134 +452,129 @@ export default function Dashboard({
             </div>
             <button 
               onClick={() => alert('Symulacja eksportu do Excel (.xlsx)...')}
-              className="flex items-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-100 transition-all shadow-sm"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-100 transition-all shadow-sm w-full sm:w-auto"
             >
               <Download className="w-5 h-5" />
               Eksport do Excel
             </button>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
+          <div className="w-full overflow-hidden">
+            <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b border-slate-50">
-                  <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider">Klient / Dokument</th>
-                  <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider">Typ / Data / NIP</th>
-                  <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider text-right">Kwoty (Netto / VAT / Brutto)</th>
-                  <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider text-center">Status</th>
-                  <th className="pb-4"></th>
+                <tr className="hidden lg:table-row border-b border-slate-50">
+                  <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider">Klient/Dokument</th>
+                  <th className="pb-4 font-semibold text-slate-400 text-xs uppercase tracking-wider text-right px-8">Szczegóły i Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-50">
+              <tbody className="divide-y divide-slate-100 block lg:table-row-group w-full">
                 {ocrRecords.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="py-16 text-center text-slate-400 italic">
-                      <div className="flex flex-col items-center gap-3">
+                  <tr className="block lg:table-row w-full">
+                    <td colSpan={5} className="py-20 text-center text-slate-400 block lg:table-cell font-medium italic w-full">
+                      <div className="flex flex-col items-center gap-3 w-full">
                         <Search className="w-10 h-10 opacity-20" />
-                        <p>Oczekiwanie na przesłanie dokumentów do analizy...</p>
-                        <p className="text-xs not-italic">Wgraj fakturę w Strefie Klienta, aby zobaczyć magię OCR.</p>
+                        <p>Oczekiwanie na pierwsze dokumenty do analizy...</p>
                       </div>
                     </td>
                   </tr>
                 ) : (
                   ocrRecords.map((record) => (
-                    <tr key={record.id} className="group hover:bg-slate-50/50 transition-colors">
-                      <td className="py-5 px-2">
-                        <div className="font-bold text-slate-900">{record.clientName}</div>
-                        {record.status === 'Oczekiwanie' ? (
-                          <div className="text-slate-400 text-sm italic">Oczekiwanie na analizę...</div>
-                        ) : (
-                          <button 
-                            onClick={() => setPreviewDoc(record)}
-                            className="text-blue-600 text-sm font-medium hover:underline flex items-center gap-1 mt-0.5"
-                          >
-                            {record.invoiceNumber} <Eye className="w-3.5 h-3.5" />
-                          </button>
-                        )}
-                      </td>
-                      <td className="py-5">
-                        {record.status === 'Oczekiwanie' ? (
-                          <div className="text-slate-300 text-xs">---</div>
-                        ) : (
-                          <>
-                            <div className={`text-xs font-bold mb-1 ${record.documentType === 'Nieznany' ? 'text-red-500' : 'text-indigo-500'}`}>
-                              {record.documentType === 'Nieznany' ? '⚠️ BŁĄD: Nieznany dokument' : record.documentType}
-                            </div>
-                            <div className="text-sm text-slate-700 font-medium">{record.issueDate}</div>
-                            <div className="text-xs text-slate-400 font-mono mt-0.5">{record.sellerNip}</div>
-                          </>
-                        )}
-                      </td>
-                      <td className="py-5 text-right">
-                        {record.status === 'Oczekiwanie' ? (
-                          <div className="text-slate-300 text-xs">---</div>
-                        ) : (
-                          <>
-                            <div className="text-sm font-bold text-slate-900">{record.netAmount.toLocaleString()} zł</div>
-                            <div className="text-xs text-slate-400">VAT: {record.vatAmount.toLocaleString()} zł</div>
-                            <div className="text-xs font-black text-blue-600 mt-0.5">Brutto: {record.grossAmount.toLocaleString()} zł</div>
-                          </>
-                        )}
-                      </td>
-                      <td className="py-5 text-center">
-                        <div className="flex flex-col items-center gap-2">
-                          {record.status === 'Oczekiwanie' ? (
-                            <button 
-                              onClick={() => analyzeDocument(record.id)}
-                              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold text-xs hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200"
-                            >
-                              <Search className="w-3.5 h-3.5" /> {t('common.analyze')}
-                            </button> 
-                          ) : (
-                            <>
+                    <motion.tr 
+                      key={record.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="w-full flex flex-col lg:table-row bg-white hover:bg-slate-50/50 transition-colors p-5 lg:p-0 mb-6 lg:mb-0 border lg:border-none rounded-[2rem] lg:rounded-none shadow-sm lg:shadow-none min-w-full"
+                    >
+                      {/* 1. KLIENT I NUMER - Pełna szerokość kontenera */}
+                      <td className="w-full py-2 lg:py-6 lg:px-6 block lg:table-cell">
+                        <div className="w-full flex justify-between items-start lg:block">
+                          <div className="w-full">
+                            <div className="font-black text-slate-900 text-lg lg:text-base leading-tight break-words">{record.clientName}</div>
+                            {record.status !== 'Oczekiwanie' && (
                               <button 
-  onClick={() => {
-    // Jeśli dokument jest już zweryfikowany, nie pozwalamy na powrót
-    if (record.status === 'Zweryfikowano') return; 
+                                onClick={() => setPreviewDoc(record)}
+                                className="text-blue-600 text-sm font-bold hover:underline flex items-center gap-1 mt-2 lg:mt-0.5"
+                              >
+                                {record.invoiceNumber} <Eye className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </td>
 
-    const nextStatus = record.status === 'Odrzucone' ? 'Do weryfikacji' : 'Zweryfikowano';
-    updateOCRStatus(record.id, nextStatus);
-    
-    // Opcjonalnie dodaj activity, żeby było widać kto zatwierdził
-    if (nextStatus === 'Zweryfikowano') {
-      addActivity('Księgowy', 'System', `Zatwierdzono dokument: ${record.invoiceNumber}`);
-    }
-  }}
-  className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm ${
-    record.status === 'Zweryfikowano' 
-      ? 'bg-green-100 text-green-700 border border-green-200 cursor-default opacity-80' // Wyłączamy kursor i lekko przyciemniamy
-      : record.status === 'Odrzucone'
-      ? 'bg-red-100 text-red-700 border border-red-200 cursor-pointer'
-      : 'bg-yellow-100 text-yellow-700 border border-yellow-200 cursor-pointer'
-  }`}
->
-  {record.status === 'Zweryfikowano' ? <Check className="w-3.5 h-3.5" /> : <Info className="w-3.5 h-3.5" />}
-  {record.status}
-</button>
-                              {record.status === 'Odrzucone' && (
-                                <button 
-                                  onClick={() => handleSmartNudge(record)}
-                                  className="text-[10px] text-blue-600 font-bold hover:underline flex items-center gap-1"
-                                >
-                                  <Bell className="w-3 h-3" /> Smart Nudge
-                                </button>
-                              )}
-                            </>
+                      {/* 2. DANE DOKUMENTU - Rozciągnięte do krawędzi */}
+                      <td className="w-full py-4 lg:py-6 lg:px-6 block lg:table-cell border-t lg:border-none mt-2 lg:mt-0">
+                        {record.status !== 'Oczekiwanie' && (
+                          <div className="w-full grid grid-cols-1 gap-4">
+                            <div className="w-full">
+                              <div className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">Typ dokumentu:</div>
+                              <div className="text-sm text-slate-700 font-bold">{record.documentType}</div>
+                            </div>
+                            <div className="w-full">
+                              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                                <div className="text-sm text-slate-600 font-medium">{record.issueDate}</div>
+                                <div className="text-xs text-slate-500 font-mono font-bold bg-slate-50 px-2 py-0.5 rounded border border-slate-100">{record.sellerNip}</div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </td>
+
+                      {/* 3. KWOTY I STATUS - Pełne wyrównanie */}
+                      <td className="w-full py-4 lg:py-6 lg:px-8 block lg:table-cell">
+                        <div className="w-full flex flex-col lg:items-end gap-4">
+                          {record.status !== 'Oczekiwanie' && (
+                            <div className="w-full lg:w-48 bg-slate-50 p-4 rounded-2xl flex justify-between items-center lg:block lg:text-right border border-slate-100">
+                              <div className="lg:hidden text-[10px] text-slate-400 font-black uppercase">Wartość:</div>
+                              <div className="text-right">
+                                <div className="text-sm font-bold text-slate-900">{record.netAmount.toLocaleString()} zł</div>
+                                <div className="text-[10px] text-slate-400 font-bold">VAT: {record.vatAmount.toLocaleString()} zł</div>
+                                <div className="text-base font-black text-blue-600 mt-1">{record.grossAmount.toLocaleString()} zł</div>
+                              </div>
+                            </div>
                           )}
+
+                          <div className="w-full lg:w-auto">
+                            {record.status === 'Oczekiwanie' ? (
+                              <button 
+                                onClick={() => analyzeDocument(record.id)}
+                                className="w-full px-8 py-4 lg:py-2.5 bg-indigo-600 text-white rounded-2xl lg:rounded-xl font-black text-sm lg:text-xs hover:bg-indigo-700 transition-all shadow-lg uppercase tracking-wider"
+                              >
+                                <Search className="w-5 h-5 lg:w-4 lg:h-4 mr-2 inline" /> Analizuj
+                              </button>
+                            ) : (
+                              <div className="flex flex-col gap-2 w-full lg:w-auto">
+                                <button 
+                                  onClick={() => record.status !== 'Zweryfikowano' && updateOCRStatus(record.id, record.status === 'Odrzucone' ? 'Do weryfikacji' : 'Zweryfikowano')}
+                                  className={`w-full px-6 py-3 lg:py-1.5 rounded-xl text-xs font-black transition-all border-2 ${
+                                    record.status === 'Zweryfikowano' 
+                                      ? 'bg-green-50 text-green-700 border-green-100' 
+                                      : record.status === 'Odrzucone' ? 'bg-red-50 text-red-700 border-red-100' : 'bg-yellow-50 text-yellow-700 border-yellow-100'
+                                  }`}
+                                >
+                                  {record.status.toUpperCase()}
+                                </button>
+                                {record.status === 'Odrzucone' && (
+                                  <button 
+                                    onClick={() => handleSmartNudge(record)}
+                                    className="py-2 text-[10px] text-blue-600 font-black bg-blue-50/50 rounded-lg flex items-center justify-center gap-2"
+                                  >
+                                    <Bell className="w-3.5 h-3.5" /> SMART NUDGE
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </td>
-                      <td className="py-5 text-right pr-2">
-                        <div className="text-[10px] text-slate-300 font-mono italic truncate max-w-[120px]" title={record.fileName}>
-                          {record.fileName}
-                        </div>
-                      </td>
-                    </tr>
+                    </motion.tr>
                   ))
                 )}
               </tbody>
             </table>
           </div>
         </div>
+      
 
 
 
@@ -649,7 +618,7 @@ export default function Dashboard({
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/40 backdrop-blur-[2px]">
                     <div className="p-4 bg-white rounded-2xl shadow-xl flex flex-col items-center gap-3">
                       <FileText className="w-12 h-12 text-blue-500" />
-                      <p className="font-bold text-slate-900">Symulacja podglądu OCR</p>
+                      <p className="font-bold text-slate-900">Symulacja podglądu</p>
                       <div className="text-xs text-slate-500 text-center space-y-1">
                         <p>Plik: {previewDoc.fileName}</p>
                         <p>Rozmiar: 1.2 MB</p>
