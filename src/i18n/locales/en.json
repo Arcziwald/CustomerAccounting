@@ -27,5 +27,26 @@
   "header": {
     "app_name": "The Missing Link",
     "description": "Accounting office administrative panel"
+  },
+  "status": {
+    "ok": "OK",
+    "brak": "Missing",
+    "spoznione": "Late",
+    "w_toku": "In progress",
+    "zatwierdzone": "Approved"
+  },
+  "actions": {
+    "send": "Send",
+    "sending": "Sending...",
+    "sent": "Sent",
+    "edit": "Edit requirements",
+    "add": "Add",
+    "new_doc_placeholder": "New document (e.g. Rent agreement)"
+  },
+  "modal": {
+    "edit_title": "Edit requirements",
+    "preview_title": "Document preview",
+    "reject": "Reject",
+    "approve": "Approve"
   }
 }

@@ -27,5 +27,26 @@
   "header": {
     "app_name": "BRAKOMAT",
     "description": "Panel administracyjny biura rachunkowego"
+  },
+  "status": {
+    "ok": "OK",
+    "brak": "Brak",
+    "spoznione": "Spóźnione",
+    "w_toku": "W toku",
+    "zatwierdzone": "Zatwierdzone"
+  },
+  "actions": {
+    "send": "Wyślij",
+    "sending": "Wysyłanie...",
+    "sent": "Wysłano",
+    "edit": "Edytuj wymagania",
+    "add": "Dodaj",
+    "new_doc_placeholder": "Nowy dokument (np. Umowa najmu)"
+  },
+  "modal": {
+    "edit_title": "Edytuj wymagania",
+    "preview_title": "Podgląd dokumentu",
+    "reject": "Odrzuć",
+    "approve": "Zatwierdź"
   }
 }

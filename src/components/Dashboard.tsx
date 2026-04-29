@@ -141,26 +141,46 @@ export default function Dashboard({
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">{t('header.app_name')}</h1>
-          <p className="text-slate-500 text-lg">{t('header.description')}</p>
-          <div className="flex gap-2 mb-4">
-          <button onClick={() => i18n.changeLanguage('pl')} className="px-2 py-1 bg-slate-200 rounded text-xs">PL</button>
-          <button onClick={() => i18n.changeLanguage('en')} className="px-2 py-1 bg-slate-200 rounded text-xs">EN</button>
-        </div>
-        </div>
-        
-        <div className="relative w-full md:w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-          <input 
-            type="text" 
-            placeholder="Szukaj klienta..." 
-            className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </header>
+  <div>
+    <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">{t('header.app_name')}</h1>
+    <p className="text-slate-500 text-lg">{t('header.description')}</p>
+    
+    {/* Powiększony i wyraźniejszy przełącznik języków */}
+    <div className="flex p-1.5 bg-slate-100 rounded-2xl w-fit border border-slate-200/50 mt-6 mb-2">
+      <button 
+        onClick={() => i18n.changeLanguage('pl')} 
+        className={`px-6 py-2 rounded-xl text-sm font-black transition-all duration-200 ${
+          i18n.language === 'pl' 
+            ? 'bg-white text-blue-600 shadow-md ring-1 ring-slate-200' 
+            : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+        }`}
+      >
+        PL
+      </button>
+      <button 
+        onClick={() => i18n.changeLanguage('en')} 
+        className={`px-6 py-2 rounded-xl text-sm font-black transition-all duration-200 ${
+          i18n.language === 'en' 
+            ? 'bg-white text-blue-600 shadow-md ring-1 ring-slate-200' 
+            : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+        }`}
+      >
+        EN
+      </button>
+    </div>
+  </div>
+  
+  <div className="relative w-full md:w-80">
+    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+    <input 
+      type="text" 
+      placeholder="Szukaj klienta..." 
+      className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+  </div>
+</header>
 
       {/* Stats Section */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
@@ -253,106 +273,106 @@ export default function Dashboard({
             
             {/* Body tabeli - na mobilkach wiersze stają się kartami */}
             <tbody className="divide-y divide-slate-50 block lg:table-row-group">
-              {filteredClients.map((client) => (
-                <motion.tr 
-                  key={client.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex flex-col lg:table-row hover:bg-slate-50/30 transition-colors p-4 lg:p-0 border-b lg:border-none"
-                >
-                  {/* KOLUMNA KLIENTA */}
-                  <td className="px-4 py-2 lg:px-8 lg:py-6 block lg:table-cell">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center text-slate-500 shrink-0">
-                        <Users className="w-5 h-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="font-bold text-slate-900 text-base lg:text-lg flex items-center gap-2 flex-wrap">
-                          <span className="truncate">{client.name}</span>
-                          {client.locked && <Lock className="w-4 h-4 text-emerald-600 shrink-0" />}
-                        </div>
-                        <div className="text-xs lg:text-sm text-slate-400 font-medium flex items-center gap-2">
-                          {client.month}
-                          <span className="w-1 h-1 bg-slate-300 rounded-full" />
-                          <a 
-                            href={`https://drive.google.com/drive/search?q=${encodeURIComponent(client.name)}`} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-blue-500 hover:text-blue-700 transition-colors"
-                          >
-                            <Folder className="w-3 h-3" />
-                            Dysk
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  
-                  {/* KOLUMNA STATUSÓW */}
-                  <td className="px-4 py-3 lg:px-6 lg:py-6 block lg:table-cell">
-                    <div className="flex flex-wrap gap-1.5 lg:gap-2">
-                      {client.documents.map((doc) => (
-                        <div key={doc.id} className="relative">
-                          <button 
-                            onClick={() => doc.status === 'W toku' ? setViewingFilesDocId(viewingFilesDocId === `${client.id}-${doc.id}` ? null : `${client.id}-${doc.id}`) : null}
-                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] lg:text-[11px] font-bold uppercase tracking-tight border transition-all ${STATUS_COLORS[doc.status]} ${doc.status === 'W toku' ? 'cursor-pointer hover:shadow-sm' : 'cursor-default'}`}
-                          >
-                            {doc.label}
-                            {doc.files.length > 0 && <span className="bg-white/30 px-1 rounded-sm text-[9px]">{doc.files.length}</span>}
-                            {doc.status === 'W toku' && <ChevronDown className={`w-3 h-3 ${viewingFilesDocId === `${client.id}-${doc.id}` ? 'rotate-180' : ''}`} />}
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </td>
+  {filteredClients.map((client) => (
+    <motion.tr 
+      key={client.id}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex flex-col lg:table-row hover:bg-slate-50/30 transition-colors p-4 lg:p-0 border-b lg:border-none"
+    >
+      {/* KOLUMNA KLIENTA */}
+      <td className="px-4 py-2 lg:px-8 lg:py-6 block lg:table-cell">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center text-slate-500 shrink-0">
+            <Users className="w-5 h-5" />
+          </div>
+          <div className="min-w-0">
+            <div className="font-bold text-slate-900 text-base lg:text-lg flex items-center gap-2 flex-wrap">
+              <span className="truncate">{client.name}</span>
+              {client.locked && <Lock className="w-4 h-4 text-emerald-600 shrink-0" />}
+            </div>
+            <div className="text-xs lg:text-sm text-slate-400 font-medium flex items-center gap-2">
+              {client.month}
+              <span className="w-1 h-1 bg-slate-300 rounded-full" />
+              <a 
+                href={`https://drive.google.com/drive/search?q=${encodeURIComponent(client.name)}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-blue-500 hover:text-blue-700 transition-colors"
+              >
+                <Folder className="w-3 h-3" />
+                {t('common.drive')}
+              </a>
+            </div>
+          </div>
+        </div>
+      </td>
+      
+      {/* KOLUMNA STATUSÓW */}
+      <td className="px-4 py-3 lg:px-6 lg:py-6 block lg:table-cell">
+        <div className="flex flex-wrap gap-1.5 lg:gap-2">
+          {client.documents.map((doc) => (
+            <div key={doc.id} className="relative">
+              <button 
+                onClick={() => doc.status === 'W toku' ? setViewingFilesDocId(viewingFilesDocId === `${client.id}-${doc.id}` ? null : `${client.id}-${doc.id}`) : null}
+                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] lg:text-[11px] font-bold uppercase tracking-tight border transition-all ${STATUS_COLORS[doc.status]} ${doc.status === 'W toku' ? 'cursor-pointer hover:shadow-sm' : 'cursor-default'}`}
+              >
+                {doc.label}
+                {doc.files.length > 0 && <span className="bg-white/30 px-1 rounded-sm text-[9px]">{doc.files.length}</span>}
+                {doc.status === 'W toku' && <ChevronDown className={`w-3 h-3 ${viewingFilesDocId === `${client.id}-${doc.id}` ? 'rotate-180' : ''}`} />}
+              </button>
+            </div>
+          ))}
+        </div>
+      </td>
 
-                  {/* KOLUMNA AKCJI */}
-                  <td className="px-4 py-2 lg:px-8 lg:py-6 block lg:table-cell">
-                    <div className="flex items-center justify-between lg:justify-end gap-1 sm:gap-2">
-                      {/* Narzędzia pomocnicze */}
-                      <div className="flex items-center gap-0.5 sm:gap-1">
-                        <button
-                          onClick={() => toggleLockClient(client.id)}
-                          className={`p-2 rounded-xl transition-all ${client.locked ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:bg-blue-50'}`}
-                        >
-                          {client.locked ? <Lock className="w-4 h-4 lg:w-5 lg:h-5" /> : <Unlock className="w-4 h-4 lg:w-5 lg:h-5" />}
-                        </button>
+      {/* KOLUMNA AKCJI */}
+      <td className="px-4 py-2 lg:px-8 lg:py-6 block lg:table-cell">
+        <div className="flex items-center justify-between lg:justify-end gap-1 sm:gap-2">
+          {/* Narzędzia pomocnicze */}
+          <div className="flex items-center gap-0.5 sm:gap-1">
+            <button
+              onClick={() => toggleLockClient(client.id)}
+              className={`p-2 rounded-xl transition-all ${client.locked ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:bg-blue-50'}`}
+            >
+              {client.locked ? <Lock className="w-4 h-4 lg:w-5 lg:h-5" /> : <Unlock className="w-4 h-4 lg:w-5 lg:h-5" />}
+            </button>
 
-                        <button
-                          onClick={() => setEditingClientId(client.id)}
-                          className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"
-                        >
-                          <Settings2 className="w-4 h-4 lg:w-5 lg:h-5" />
-                        </button>
+            <button
+              onClick={() => setEditingClientId(client.id)}
+              className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"
+            >
+              <Settings2 className="w-4 h-4 lg:w-5 lg:h-5" />
+            </button>
 
-                        <Link 
-                          to={`/client/${client.id}`}
-                          className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"
-                        >
-                          <ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" />
-                        </Link>
-                      </div>
+            <Link 
+              to={`/client/${client.id}`}
+              className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"
+            >
+              <ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" />
+            </Link>
+          </div>
 
-                      {/* Główny przycisk Nudge */}
-                      <button
-                        onClick={() => handleNudge(client)}
-                        className={`flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl text-xs lg:text-sm font-bold transition-all shrink-0 ${
-                          copiedId === client.id 
-                            ? 'bg-green-500 text-white shadow-lg shadow-green-200' 
-                            : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
-                        }`}
-                      >
-                        {copiedId === client.id ? (
-                          <><Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" /> <span className="hidden xs:inline">Wysłano</span></>
-                        ) : (
-                          <><Bell className="w-3.5 h-3.5 lg:w-4 lg:h-4" />Wyślij</>
-                        )}
-                      </button>
-                    </div>
-                  </td>
-                </motion.tr>
-              ))}
-            </tbody>
+          {/* Główny przycisk Nudge */}
+          <button
+            onClick={() => handleNudge(client)}
+            className={`flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl text-xs lg:text-sm font-bold transition-all shrink-0 ${
+              copiedId === client.id 
+                ? 'bg-green-500 text-white shadow-lg shadow-green-200' 
+                : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+            }`}
+          >
+            {copiedId === client.id ? (
+              <><Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" /> <span className="hidden xs:inline">{t('actions.sent')}</span></>
+            ) : (
+              <><Bell className="w-3.5 h-3.5 lg:w-4 lg:h-4" />{t('actions.send')}</>
+            )}
+          </button>
+        </div>
+      </td>
+    </motion.tr>
+  ))}
+</tbody>
           </table>
         </div>
         
