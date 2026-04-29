@@ -1,11 +1,27 @@
 {
   "common": {
     "analyze": "Analyze",
-    "upgrade": "Upgrade to Tier 2"
+    "upgrade": "Upgrade to Tier 2",
+    "export": "Export to Excel",
+    "waiting": "Waiting for documents...",
+    "sent": "Sent"
+  },
+  "stats": {
+    "all": "All clients",
+    "complete": "Complete",
+    "missing": "Missing",
+    "late": "Late",
+    "to_correct": "To correct",
+    "history": "Recent activities"
   },
   "dashboard": {
     "title": "Smart Document Registry",
-    "subtitle": "Automatic data extraction from invoices (OCR)",
+    "subtitle": "Automatic data extraction (OCR)",
     "demo_alert": "You are in DEMO mode. See how document analysis works!"
+  },
+  "ai": {
+    "nudge_msg": "Hello! AI Agent here. 🤖 I see that {{name}} is missing some documents. Let's get this done!",
+    "beach_msg": "Hey, that's a beach photo, not an invoice! Please provide the correct document. 😉",
+    "excel_toast": "In the full version, AI extracts all details and saves them to Excel!"
   }
 }

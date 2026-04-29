@@ -43,7 +43,7 @@ export default function Dashboard({
 
   const handleNudge = async (client: any) => {
 // 1. Treść wiadomości od Agenta
-  const aiMessage = `Dzień dobry! Agent AI z tej strony. 🤖 Widzę, że w firmie ${client.name} brakuje jeszcze kilku dokumentów za ten miesiąc. Pomóżmy sobie to dokończyć`;
+  const aiMessage = t('ai.nudge_msg', { name: client.name });
 
   // 2. Logika wizualna (to co już masz)
   setCopiedId(client.id);
@@ -171,7 +171,7 @@ export default function Dashboard({
             </div>
             <div>
               <div className="text-2xl font-bold text-slate-900">{stats.total}</div>
-              <div className="text-sm text-slate-500 font-medium">Wszyscy klienci</div>
+              <div className="text-sm text-slate-500 font-medium">{t('stats.all')}</div>
             </div>
           </div>
 
@@ -181,19 +181,19 @@ export default function Dashboard({
             </div>
             <div>
               <div className="text-2xl font-bold text-slate-900">{stats.complete}</div>
-              <div className="text-sm text-slate-500 font-medium">Kompletne</div>
+              <div className="text-sm text-slate-500 font-medium">{t('stats.complete')}</div>
             </div>
           </div>
 
           <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600">
-              <Clock className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-slate-900">{stats.missing}</div>
-              <div className="text-sm text-slate-500 font-medium">Brakujące</div>
-            </div>
-          </div>
+  <div className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600">
+    <Clock className="w-6 h-6" />
+  </div>
+  <div>
+    <div className="text-2xl font-bold text-slate-900">{stats.missing}</div>
+    <div className="text-sm text-slate-500 font-medium">{t('stats.missing')}</div> {/* Poprawiony klucz */}
+  </div>
+</div>
 
           <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-red-600">
@@ -201,7 +201,7 @@ export default function Dashboard({
             </div>
             <div>
               <div className="text-2xl font-bold text-slate-900">{stats.late}</div>
-              <div className="text-sm text-slate-500 font-medium">Spóźnione</div>
+              <div className="text-sm text-slate-500 font-medium">{t('stats.late')}</div>
             </div>
           </div>
 
@@ -211,7 +211,7 @@ export default function Dashboard({
             </div>
             <div>
               <div className="text-2xl font-bold text-slate-900">{stats.toCorrect}</div>
-              <div className="text-sm text-slate-500 font-medium">Do poprawki</div>
+              <div className="text-sm text-slate-500 font-medium">{t('stats.to_correct')}</div>
             </div>
           </div>
         </div>
@@ -220,7 +220,7 @@ export default function Dashboard({
         <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col h-full min-h-[140px]">
           <div className="flex items-center gap-2 mb-4 text-slate-900 font-bold">
             <History className="w-5 h-5 text-blue-600" />
-            <span>Ostatnie działania</span>
+            <span>{t('stats.history')}</span>
           </div>
           <div className="space-y-3 overflow-y-auto max-h-[100px] lg:max-h-none scrollbar-hide">
             {activities.length === 0 ? (
@@ -455,7 +455,7 @@ export default function Dashboard({
               className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-100 transition-all shadow-sm w-full sm:w-auto"
             >
               <Download className="w-5 h-5" />
-              Eksport do Excel
+              {t('common.export')}
             </button>
           </div>
 
