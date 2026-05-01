@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { ActivityEntry } from '../types';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
+import Tooltip from './Tooltip';
 
 
 interface DashboardProps {
@@ -321,15 +322,17 @@ export default function Dashboard({
             <div className="text-xs lg:text-sm text-slate-400 font-medium flex items-center gap-2">
               {t(`months.${client.month.toLowerCase().replace(/ /g, '_')}`)}
               <span className="w-1 h-1 bg-slate-300 rounded-full" />
-              <a 
-                href={`https://drive.google.com/drive/search?q=${encodeURIComponent(client.name)}`} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-1 text-blue-500 hover:text-blue-700 transition-colors"
-              >
-                <Folder className="w-3 h-3" />
-                {t('common.drive')}
-              </a>
+              <Tooltip text={t('tooltips.drive')}>
+  <a 
+    href={`https://drive.google.com/drive/search?q=${encodeURIComponent(client.name)}`} 
+    target="_blank" 
+    rel="noopener noreferrer"
+    className="flex items-center gap-1 text-blue-500 hover:text-blue-700 transition-colors"
+  >
+    <Folder className="w-3 h-3" />
+    {t('common.drive')}
+  </a>
+</Tooltip>
             </div>
           </div>
         </div>
@@ -340,16 +343,19 @@ export default function Dashboard({
   <div className="flex flex-wrap gap-1.5 lg:gap-2">
     {client.documents.map((doc) => (
       <div key={doc.id} className="relative">
-        <button 
-          onClick={() => doc.status === 'W toku' ? setViewingFilesDocId(viewingFilesDocId === `${client.id}-${doc.id}` ? null : `${client.id}-${doc.id}`) : null}
-          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] lg:text-[11px] font-bold uppercase tracking-tight border transition-all ${STATUS_COLORS[doc.status]} ${doc.status === 'W toku' ? 'cursor-pointer hover:shadow-sm' : 'cursor-default'}`}
-        >
-          {/* POPRAWIONA LINIA PONIŻEJ: czyści polskie znaki i spacje */}
-          {t(`labels.${doc.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g, '_')}`)}
-          
-          {doc.files.length > 0 && <span className="bg-white/30 px-1 rounded-sm text-[9px]">{doc.files.length}</span>}
-          {doc.status === 'W toku' && <ChevronDown className={`w-3 h-3 ${viewingFilesDocId === `${client.id}-${doc.id}` ? 'rotate-180' : ''}`} />}
-        </button>
+        
+        <Tooltip text={`${t('tooltips.status_info')}: ${doc.files.length > 0 ? t('tooltips.files_uploaded') : t('tooltips.no_files')}`}>
+  <button 
+    onClick={() => doc.status === 'W toku' ? setViewingFilesDocId(viewingFilesDocId === `${client.id}-${doc.id}` ? null : `${client.id}-${doc.id}`) : null}
+    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] lg:text-[11px] font-bold uppercase tracking-tight border transition-all ${STATUS_COLORS[doc.status]} ${doc.status === 'W toku' ? 'cursor-pointer hover:shadow-sm' : 'cursor-default'}`}
+  >
+    {/* POPRAWIONA LINIA PONIŻEJ: czyści polskie znaki i spacje */}
+    {t(`labels.${doc.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/ /g, '_')}`)}
+    
+    {doc.files.length > 0 && <span className="bg-white/30 px-1 rounded-sm text-[9px]">{doc.files.length}</span>}
+    {doc.status === 'W toku' && <ChevronDown className={`w-3 h-3 ${viewingFilesDocId === `${client.id}-${doc.id}` ? 'rotate-180' : ''}`} />}
+  </button>
+</Tooltip>
       </div>
     ))}
   </div>
@@ -360,43 +366,51 @@ export default function Dashboard({
         <div className="flex items-center justify-between lg:justify-end gap-1 sm:gap-2">
           {/* Narzędzia pomocnicze */}
           <div className="flex items-center gap-0.5 sm:gap-1">
-            <button
-              onClick={() => toggleLockClient(client.id)}
-              className={`p-2 rounded-xl transition-all ${client.locked ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:bg-blue-50'}`}
-            >
-              {client.locked ? <Lock className="w-4 h-4 lg:w-5 lg:h-5" /> : <Unlock className="w-4 h-4 lg:w-5 lg:h-5" />}
-            </button>
+            <Tooltip text={t('tooltips.lock')}>
+  <button
+    onClick={() => toggleLockClient(client.id)}
+    className={`p-2 rounded-xl transition-all ${client.locked ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:bg-blue-50'}`}
+  >
+    {client.locked ? <Lock className="w-4 h-4 lg:w-5 lg:h-5" /> : <Unlock className="w-4 h-4 lg:w-5 lg:h-5" />}
+  </button>
+</Tooltip>
 
-            <button
-              onClick={() => setEditingClientId(client.id)}
-              className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"
-            >
-              <Settings2 className="w-4 h-4 lg:w-5 lg:h-5" />
-            </button>
+            <Tooltip text={t('tooltips.settings')}>
+  <button
+    onClick={() => setEditingClientId(client.id)}
+    className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"
+  >
+    <Settings2 className="w-4 h-4 lg:w-5 lg:h-5" />
+  </button>
+</Tooltip>
 
-            <Link 
-              to={`/client/${client.id}`}
-              className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"
-            >
-              <ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" />
-            </Link>
+            <Tooltip text={t('tooltips.client_view')}>
+  <Link 
+    to={`/client/${client.id}`}
+    className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"
+  >
+    <ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" />
+  </Link>
+</Tooltip>
           </div>
 
           {/* Główny przycisk Nudge */}
-          <button
-            onClick={() => handleNudge(client)}
-            className={`flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl text-xs lg:text-sm font-bold transition-all shrink-0 ${
-              copiedId === client.id 
-                ? 'bg-green-500 text-white shadow-lg shadow-green-200' 
-                : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
-            }`}
-          >
-            {copiedId === client.id ? (
-              <><Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" /> <span className="hidden xs:inline">{t('actions.sent')}</span></>
-            ) : (
-              <><Bell className="w-3.5 h-3.5 lg:w-4 lg:h-4" />{t('actions.send')}</>
-            )}
-          </button>
+          <Tooltip text={t('tooltips.nudge')}>
+  <button
+    onClick={() => handleNudge(client)}
+    className={`flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl text-xs lg:text-sm font-bold transition-all shrink-0 ${
+      copiedId === client.id 
+        ? 'bg-green-500 text-white shadow-lg shadow-green-200' 
+        : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+    }`}
+  >
+    {copiedId === client.id ? (
+      <><Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" /> <span className="hidden xs:inline">{t('actions.sent')}</span></>
+    ) : (
+      <><Bell className="w-3.5 h-3.5 lg:w-4 lg:h-4" />{t('actions.send')}</>
+    )}
+  </button>
+</Tooltip>
         </div>
       </td>
     </motion.tr>
@@ -408,7 +422,7 @@ export default function Dashboard({
         {filteredClients.length === 0 && (
           <div className="py-20 text-center">
             <Search className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-            <p className="text-slate-500 text-lg">Nie znaleziono klientów.</p>
+            <p className="text-slate-500 text-lg">{t('common.no_results')}</p>
           </div>
         )}
       </div>
@@ -513,13 +527,15 @@ export default function Dashboard({
                 <p className="text-slate-500">{t('dashboard.subtitle')}</p>
               </div>
             </div>
-            <button 
-              onClick={() => alert('Symulacja eksportu do Excel (.xlsx)...')}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-100 transition-all shadow-sm w-full sm:w-auto"
-            >
-              <Download className="w-5 h-5" />
-              {t('common.export')}
-            </button>
+            <Tooltip text={t('tooltips.export')}>
+  <button 
+    onClick={() => alert('Symulacja eksportu do Excel (.xlsx)...')}
+    className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-100 transition-all shadow-sm w-full sm:w-auto"
+  >
+    <Download className="w-5 h-5" />
+    {t('common.export')}
+  </button>
+</Tooltip>
           </div>
 
           <div className="w-full overflow-hidden">
@@ -617,12 +633,14 @@ export default function Dashboard({
 
             <div className="w-full lg:w-auto">
               {record.status === 'Oczekiwanie' ? (
-                <button 
-                  onClick={() => analyzeDocument(record.id)}
-                  className="w-full px-8 py-4 lg:py-2.5 bg-indigo-600 text-white rounded-2xl lg:rounded-xl font-black text-sm lg:text-xs hover:bg-indigo-700 transition-all shadow-lg uppercase tracking-wider"
-                >
-                  <Search className="w-5 h-5 lg:w-4 lg:h-4 mr-2 inline" /> {t('ocr.analyze_btn')}
-                </button>
+                <Tooltip text={t('tooltips.ocr_analyze')}>
+  <button 
+    onClick={() => analyzeDocument(record.id)}
+    className="w-full px-8 py-4 lg:py-2.5 bg-indigo-600 text-white rounded-2xl lg:rounded-xl font-black text-sm lg:text-xs hover:bg-indigo-700 transition-all shadow-lg uppercase tracking-wider"
+  >
+    <Search className="w-5 h-5 lg:w-4 lg:h-4 mr-2 inline" /> {t('ocr.analyze_btn')}
+  </button>
+</Tooltip>
               ) : (
                 <div className="flex flex-col gap-2 w-full lg:w-auto">
                   <button 
@@ -636,12 +654,14 @@ export default function Dashboard({
                     {t(`status.${record.status.toLowerCase().replace(/ /g, '_')}`).toUpperCase()}
                   </button>
                   {record.status === 'Odrzucone' && (
-                    <button 
-                      onClick={() => handleSmartNudge(record)}
-                      className="py-2 text-[10px] text-blue-600 font-black bg-blue-50/50 rounded-lg flex items-center justify-center gap-2"
-                    >
-                      <Bell className="w-3.5 h-3.5" /> {t('ocr.smart_nudge')}
-                    </button>
+                    <Tooltip text={t('tooltips.ocr_smart_nudge')}>
+                  <button 
+                  onClick={() => handleSmartNudge(record)}
+                  className="py-2 px-4 text-[10px] text-blue-600 font-black bg-blue-50/50 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-100 transition-colors w-full lg:w-auto"
+                  >
+                <Bell className="w-3.5 h-3.5" /> {t('ocr.smart_nudge')}
+                </button>
+                </Tooltip>
                   )}
                 </div>
               )}

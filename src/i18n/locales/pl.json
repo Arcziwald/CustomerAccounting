@@ -10,6 +10,7 @@
     "files_count_one": "plik",
     "files_count_other": "pliki",
     "uploading": "Wysyłanie...",
+    "no_results": "Nie znaleziono klientów spełniających kryteria.",
     "search_placeholder": "Szukaj klienta..."
   },
   "stats": {
@@ -75,8 +76,8 @@
   "nieznany": "Nieznany",
   "upload": "Przesyłanie",
   "przesylanie": "Przesyłanie..."
-},
-"table": {
+  },
+  "table": {
     "client": "Klient",
     "doc_statuses": "Statusy dokumentów",
     "actions": "Akcje"
@@ -111,6 +112,7 @@
     "uploaded": "Przesłano",
     "no_files": "Brak przesłanych plików.",
     "ready_title": "Gotowe na ten miesiąc?",
+    "Podgląd strefy klienta": "Zobacz interfejs strefy klienta, sprawdź postęp przesyłania plików i status powiadomień.",
     "ready_desc": "Kliknij poniżej, aby poinformować biuro o zakończeniu przesyłania.",
     "finish_btn": "Zakończ przesyłanie",
     "finish_success_msg": "Wysłano! Biuro zostało powiadomione o gotowości dokumentów."
@@ -126,5 +128,18 @@
   "approved": "Dokument zatwierdzony: {{fileName}}",
   "nudge_sent_to": "Wysłano przypomnienie do {{name}}",
   "ai_nudge_sent": "Wysłano: \"{{msg}}\" do {{client}}"
-}
+},
+"tooltips": {
+    "drive": "Otwórz dedykowany folder w chmurze dla tego klienta, aby zarządzać plikami źródłowymi.",
+    "nudge": "Wyślij automatyczne przypomnienie na E-mail/WhatsApp do klienta o brakujących dokumentach. Przypomnienia są z góry sprecyzowane i zautomatyzowane - wystarczy nacisnąć ten przycisk 😉",
+    "lock": "Zatwierdź i zablokuj miesiąc. Uniemożliwia klientowi dalszą edycję plików, generuje raporty końcowe i przygotowuje dane do eksportu do systemu księgowego.",
+    "ocr_analyze": "Uruchom analizę w celu ekstrakcji danych z dokumentu, weryfikacji statusu VAT i spójności z rejestrami.",
+    "ocr_smart_nudge": "Szybki kontakt: Agent AI automatycznie przygotuje i wyśle wiadomość do klienta z prośbą o poprawę tego konkretnego dokumentu 😉",
+    "settings": "Konfiguracja klienta: zarządzaj listą wymaganych dokumentów, ustawiaj indywidualne terminy oraz definiuj reguły automatyzacji AI.",
+    "status_info": "Status dokumentacji",
+    "files_uploaded": "Przesłano pliki, oczekują na weryfikację",
+    "no_files": "Brak plików - oczekiwanie na dostarczenie",
+    "client_view": "Podgląd strefy klienta: zobacz interfejs oczami swojego klienta, zweryfikuj postęp przesyłania plików i stan powiadomień.",
+    "export": "Generuj arkusz zbiorczy (.xlsx) ze statystykami wszystkich klientów, statusem dokumentów i danymi z analizy OCR do celów raportowych."
+  }
 }

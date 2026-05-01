@@ -10,6 +10,7 @@
     "files_count_one": "file",
     "files_count_other": "files",
     "uploading": "Uploading...",
+    "no_results": "No clients found matching the criteria.",
     "search_placeholder": "Search client..."
   },
   "stats": {
@@ -74,7 +75,7 @@
   "pelnomocnictwo": "Power of Attorney",
   "nieznany": "Unknown",
   "upload": "Upload"
-},
+  },
   "table": {
     "client": "Client",
     "doc_statuses": "Document Statuses",
@@ -83,8 +84,8 @@
   "footer": {
     "system_name": "Documentation Monitoring System",
     "system_description": "by The Missing Link"
-},
-"ocr": {
+  },
+  "ocr": {
     "doc_type": "Document type",
     "waiting_msg": "Waiting for the first documents to analyze...",
     "analyze_btn": "Analyze",
@@ -112,7 +113,6 @@
     "ready_desc": "Click below to inform the office that you have finished uploading.",
     "finish_btn": "Finish uploading",
     "finish_success_msg": "Sent! The office has been notified of your document readiness."
-    
   },
   "months": {
     "marzec_2026": "March 2026"
@@ -126,5 +126,18 @@
   "nudge_sent_to": "Reminder sent to {{name}}",
   "ai_nudge_sent": "Sent: \"{{msg}}\" to {{client}}"
   
-}
+  },
+  "tooltips": {
+    "drive": "Open the dedicated cloud storage folder for this client to manage source documents.",
+    "nudge": "Send an automated Email/WhatsApp reminder to the client about missing documents. Reminders are pre-defined and fully automated – just press the button 😉",
+    "lock": "Approve and lock the month. Prevents further editing by the client, generates final reports, and prepares data for export to your accounting software.",
+    "ocr_analyze": "Run AI analysis to extract data from the document, verify VAT status, and check business registry consistency.",
+    "ocr_smart_nudge": "Smart AI Contact: The agent will automatically prepare and send a message to the client requesting improvements to this specific document 😉",
+    "settings": "Client configuration: manage the list of required documents, set individual deadlines, and define AI automation rules.",
+    "status_info": "Documentation status",
+    "files_uploaded": "Files uploaded, pending verification",
+    "no_files": "No files - waiting for delivery",
+    "client_view": "Client zone preview: view the interface from your client's perspective, verify file upload progress, and notification status.",
+    "export": "Generate a summary spreadsheet (.xlsx) with all client statistics, document statuses, and OCR analysis data for reporting purposes."
+  }
 }
