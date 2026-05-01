@@ -166,35 +166,47 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className={`p-3 rounded-2xl ${
-                      doc.status === 'OK' || doc.status === 'Zatwierdzone' ? 'bg-green-100 text-green-600' : 
-                      doc.status === 'W toku' ? 'bg-blue-100 text-blue-600' :
-                      doc.status === 'Spóźnione' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'
-                    }`}>
-                      {doc.status === 'OK' || doc.status === 'Zatwierdzone' ? <CheckCircle className="w-6 h-6" /> : 
-                       doc.status === 'W toku' ? <Clock className="w-6 h-6" /> :
-                       doc.status === 'Spóźnione' ? <AlertCircle className="w-6 h-6" /> : <Clock className="w-6 h-6" />}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-slate-900 text-lg">
-                        {(() => {
-                          const labelMap: { [key: string]: string } = {
-                            'Faktury Kosztowe': 'faktury_kosztowe',
-                            'Faktury Przychodowe': 'faktury_przychodowe',
-                            'Wyciągi': 'wyciagi',
-                            'ZUS': 'zus',
-                            'Kadry': 'kadry'
-                          };
-                          const key = labelMap[doc.label] || doc.label.toLowerCase().replace(/ /g, '_');
-                          return t(`labels.${key}`);
-                        })()}
-                      </h3>
-                      <span className={`text-sm font-medium ${STATUS_COLORS[doc.status]?.split(' ')[1] || ''}`}>
-                      {/* Usuwamy ryzyko podwójnego "status.status" */}
-                      {t('common.status')}: {t(`status.${doc.status.toLowerCase().replace(/ /g, '_')}`)}
-                      </span>
-                    </div>
-                  </div>
+  {/* IKONA I KOLOR TŁA */}
+  <div className={`p-3 rounded-2xl ${STATUS_COLORS[doc.status] || 'bg-slate-100 text-slate-600'}`}>
+    {doc.status === 'OK' || doc.status === 'Zatwierdzone' ? <CheckCircle className="w-6 h-6" /> : 
+     doc.status === 'W toku' ? <Clock className="w-6 h-6" /> :
+     doc.status === 'Spóźnione' ? <AlertCircle className="w-6 h-6" /> : <Clock className="w-6 h-6" />}
+  </div>
+
+  {/* TEKST STATUSU (Tu naprawiamy błąd ze screena) */}
+  <div>
+    <h3 className="font-bold text-slate-900 text-lg">
+      {(() => {
+        const labelMap: { [key: string]: string } = {
+          'Faktury Kosztowe': 'faktury_kosztowe',
+          'Faktury Przychodowe': 'faktury_przychodowe',
+          'Wyciągi': 'wyciagi',
+          'ZUS': 'zus',
+          'Kadry': 'kadry'
+        };
+        const key = labelMap[doc.label] || doc.label.toLowerCase().replace(/ /g, '_');
+        return t(`labels.${key}`);
+      })()}
+    </h3>
+    <span className={`text-sm font-medium ${STATUS_COLORS[doc.status]?.split(' ')[1] || 'text-slate-500'}`}>
+  {t('common.status')}: {
+    (() => {
+      // Mapujemy polskie nazwy ze stanu na techniczne klucze JSON
+      const statusMap: { [key: string]: string } = {
+        'OK': 'ok',
+        'Zatwierdzone': 'zatwierdzone',
+        'W toku': 'w_toku',
+        'Spóźnione': 'spoznione',
+        'Brak': 'brak'
+      };
+      
+      const statusKey = statusMap[doc.status] || 'brak';
+      return t(`status.${statusKey}`);
+    })()
+  }
+</span>
+  </div>
+</div>
 
                   <div className="flex items-center gap-3">
                     {doc.label.toLowerCase().includes('faktur') && doc.status !== 'OK' && (
