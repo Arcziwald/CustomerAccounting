@@ -104,13 +104,7 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
     if (id && client) {
       addFileToDocument(id, docId, fileData);
 
-// --- TUTAJ DODAJEMY WPIS DO HISTORII ---
-      addActivity(
-        client.name, 
-        t('labels.upload', { defaultValue: 'Upload' }), 
-        t('activities.uploaded', { fileName: file.name })
-      );
-      // --------------------------------------
+      
 
 
 

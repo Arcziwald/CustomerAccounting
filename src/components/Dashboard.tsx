@@ -193,96 +193,65 @@ export default function Dashboard({
 </header>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
-        <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
-              <Users className="w-6 h-6" />
+      <div className="flex flex-col lg:flex-row gap-8 mb-8 items-start">
+        {/* Lewa strona: Karty Statystyk (5 kart) */}
+        <div className="w-full lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
+          {[
+            { label: t('stats.all'), value: stats.total, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
+            { label: t('stats.complete'), value: stats.complete, icon: Check, color: 'text-green-600', bg: 'bg-green-50' },
+            { label: t('stats.missing'), value: stats.missing, icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50' },
+            { label: t('stats.late'), value: stats.late, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50' },
+            { label: t('stats.to_correct'), value: stats.toCorrect, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50' }
+          ].map((item, idx) => (
+            <div key={idx} className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col h-44 transition-all hover:border-blue-200">
+              <div className={`w-10 h-10 ${item.bg} ${item.color} rounded-xl flex items-center justify-center mb-4 shrink-0`}>
+                <item.icon className="w-5 h-5" />
+              </div>
+              <div className="flex flex-col flex-grow justify-start">
+                <div className="text-3xl font-black text-slate-900 leading-none mb-2">{item.value}</div>
+                <div className="text-[11px] leading-snug text-slate-500 font-bold uppercase tracking-tight break-words">
+                  {item.label}
+                </div>
+              </div>
             </div>
-            <div>
-              <div className="text-2xl font-bold text-slate-900">{stats.total}</div>
-              <div className="text-sm text-slate-500 font-medium">{t('stats.all')}</div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600">
-              <Check className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-slate-900">{stats.complete}</div>
-              <div className="text-sm text-slate-500 font-medium">{t('stats.complete')}</div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
-  <div className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600">
-    <Clock className="w-6 h-6" />
-  </div>
-  <div>
-    <div className="text-2xl font-bold text-slate-900">{stats.missing}</div>
-    <div className="text-sm text-slate-500 font-medium">{t('stats.missing')}</div> {/* Poprawiony klucz */}
-  </div>
-</div>
-
-          <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-red-600">
-              <AlertTriangle className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-slate-900">{stats.late}</div>
-              <div className="text-sm text-slate-500 font-medium">{t('stats.late')}</div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-red-600">
-              <AlertTriangle className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-slate-900">{stats.toCorrect}</div>
-              <div className="text-sm text-slate-500 font-medium">{t('stats.to_correct')}</div>
-            </div>
-          </div>
+          ))}
         </div>
 
-        {/* Activity Feed Sidebar */}
-        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col h-full min-h-[140px]">
-          <div className="flex items-center gap-2 mb-4 text-slate-900 font-bold">
+        {/* Prawa strona: Historia zdarzeń (Pełna treść bez ucinania) */}
+        <div className="w-full lg:w-1/4 bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col h-[450px]">
+          <div className="flex items-center gap-2 mb-4 text-slate-900 font-bold shrink-0">
             <History className="w-5 h-5 text-blue-600" />
             <span>{t('stats.history')}</span>
           </div>
-          <div className="space-y-3 overflow-y-auto max-h-[100px] lg:max-h-none scrollbar-hide">
-  {activities.length === 0 ? (
-    <p className="text-xs text-slate-400 italic">
-      {t('activities.no_activities', { defaultValue: 'No recent activities' })}
-    </p>
-  ) : (
-    activities.map(activity => (
-  <div key={activity.id} className="text-xs border-l-2 border-blue-100 pl-3 py-1">
-    <div className="font-bold text-slate-800 truncate">{activity.clientName}</div>
-    <div className="text-slate-500 truncate">
-  {/* Tłumaczymy akcję (np. System Reminder) */}
-  {t(activity.action)}: {
-    // Sprawdzamy, czy w detail mamy naszą kreskę | (trik dla imienia klienta)
-    activity.detail.includes('|') 
-      ? t(activity.detail.split('|')[0], { name: activity.detail.split('|')[1] })
-      
-      // Jeśli to plik (ma kropkę w nazwie), używamy szablonu wgrania
-      : activity.detail.includes('.') 
-        ? t('activities.uploaded', { fileName: activity.detail })
-        
-        // W każdym innym przypadku (np. stałe teksty)
-        : t(activity.detail)
-  }
-</div>
-    <div className="text-[10px] text-slate-400 mt-0.5">
-      {new Date(activity.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-    </div>
-  </div>
-))
-  )}
-</div>
+          <div className="space-y-4 overflow-y-auto pr-2 scrollbar-hide">
+            {activities.length === 0 ? (
+              <p className="text-xs text-slate-400 italic">
+                {t('activities.no_activities')}
+              </p>
+            ) : (
+              // Filtracja duplikatów: jeśli ten sam klient dodał to samo w tym samym czasie
+              activities
+                .filter((v, i, a) => a.findIndex(t => t.timestamp === v.timestamp && t.clientName === v.clientName) === i)
+                .map(activity => (
+                  <div key={activity.id} className="text-xs border-l-2 border-blue-100 pl-3 py-1 bg-slate-50/30 rounded-r-lg">
+                    <div className="font-bold text-slate-800 mb-0.5">{activity.clientName}</div>
+                    <div className="text-slate-600 leading-normal break-words whitespace-pre-wrap">
+                      {t(activity.action)}: {
+                        activity.detail.includes('|') 
+                          ? t(activity.detail.split('|')[0], { name: activity.detail.split('|')[1] })
+                          : activity.detail.includes('.') 
+                            ? t('activities.uploaded', { fileName: activity.detail })
+                            : t(activity.detail)
+                      }
+                    </div>
+                    <div className="text-[10px] text-slate-400 mt-1.5 flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {new Date(activity.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  </div>
+                ))
+            )}
+          </div>
         </div>
       </div>
 
@@ -323,16 +292,16 @@ export default function Dashboard({
               {t(`months.${client.month.toLowerCase().replace(/ /g, '_')}`)}
               <span className="w-1 h-1 bg-slate-300 rounded-full" />
               <Tooltip text={t('tooltips.drive')}>
-  <a 
-    href={`https://drive.google.com/drive/search?q=${encodeURIComponent(client.name)}`} 
-    target="_blank" 
-    rel="noopener noreferrer"
-    className="flex items-center gap-1 text-blue-500 hover:text-blue-700 transition-colors"
-  >
-    <Folder className="w-3 h-3" />
-    {t('common.drive')}
-  </a>
-</Tooltip>
+            <a 
+              href={`https://drive.google.com/drive/search?q=${encodeURIComponent(client.name)}`} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-blue-500 hover:text-blue-700 transition-colors"
+              >
+            <Folder className="w-3 h-3" />
+              {t('common.drive')}
+              </a>
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -769,4 +738,5 @@ export default function Dashboard({
       </footer>
     </div>
 </div>
-)}
+);
+}
