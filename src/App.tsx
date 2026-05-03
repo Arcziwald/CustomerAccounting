@@ -331,9 +331,9 @@ addActivity(
       const newActivity: ActivityEntry = {
         id: Date.now().toString(),
         clientName: client.name,
-        action: i18n.t('common.all'), 
+        action: 'System', // Zamiast common.all, żeby nie śmieciło
         detail: i18n.t('activities.finished'),
-        timestamp: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })
+        timestamp: new Date().toISOString()
       };
       setActivities(prev => [newActivity, ...prev].slice(0, 10));
     }
@@ -342,6 +342,7 @@ addActivity(
       client.id === clientId 
         ? { 
             ...client, 
+            isFinished: true, // TA LINIA JEST KLUCZOWA - flaga dla Dashboardu
             documents: client.documents.map(doc => 
               doc.status === 'W toku' ? { ...doc, status: 'OK' } : doc
             ) 
@@ -349,7 +350,6 @@ addActivity(
         : client
     ));
   };
-
   const addDocument = (clientId: string, label: string) => {
     setClients(prev => prev.map(client => 
       client.id === clientId 
