@@ -265,25 +265,29 @@ const filters = [
 
   {/* PRAWA: Czarny Przycisk Nudge All */}
   <motion.button
-  whileHover={{ scale: 1.05 }}
-  whileTap={{ scale: 0.95 }}
-  onClick={() => {
-    // Wysyłamy TYLKO do tych, którzy są aktualnie widoczni w filtrze "Spóźnione"
-    const lateClients = clients.filter(c => c.documents.some(d => d.status === 'Spóźnione'));
-    
-    if (lateClients.length > 0) {
-      lateClients.forEach(c => handleNudge(c));
-      toast.success(`Wysłano monity do ${lateClients.length} firm!`, { icon: '🚀' });
-    } else {
-      toast.error("Brak spóźnialskich do pogonienia!");
-    }
-  }}
-  className="flex items-center gap-3 px-6 py-3 bg-[#1e293b] text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.15em] shadow-xl hover:bg-slate-800 transition-all border border-slate-700"
->
-  <Bell className="w-4 h-4 text-yellow-400 animate-pulse" />
-  {/* Tutaj statystyka statyczna z KROKU 1 */}
-  NUDGE ALL ({stats.late})
-</motion.button>
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={() => {
+      // Pobieramy klientów, którzy są OBECNIE widoczni na liście i mają spóźnienia/braki
+      const clientsToNudge = filteredClients.filter(c => 
+        c.documents.some(d => d.status === 'Spóźnione' || d.status === 'Brak')
+      );
+      
+      if (clientsToNudge.length > 0) {
+        clientsToNudge.forEach(c => handleNudge(c));
+        toast.success(`${t('ai.nudge_sent') || 'Wysłano monity do'}: ${clientsToNudge.length}`);
+      } else {
+        toast.error("Brak klientów do ponaglenia w tym widoku");
+      }
+    }}
+    className="flex items-center gap-3 px-6 py-3 bg-[#1e293b] text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.15em] shadow-xl hover:bg-slate-800 transition-all border border-slate-700"
+  >
+    <Bell className="w-4 h-4 text-yellow-400 animate-pulse" />
+    {/* Dynamiczny licznik: pokazuje ile osób z OBECNEGO widoku otrzyma Nudge */}
+    <span>
+      {statusFilter === 'all' ? `NUDGE ALL (${stats.late + stats.missing})` : `NUDGE (${filteredClients.length})`}
+    </span>
+  </motion.button>
 </div>
       <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto lg:overflow-visible">
