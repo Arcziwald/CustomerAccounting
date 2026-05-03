@@ -37,11 +37,11 @@ export default function Dashboard({
   const { t, i18n } = useTranslation();
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'ready' | 'late' | 'missing' | 'correction' | 'locked'>('all');
   const [editingClientId, setEditingClientId] = useState<string | null>(null);
   const [newDocLabel, setNewDocLabel] = useState('');
   const [viewingFilesDocId, setViewingFilesDocId] = useState<string | null>(null);
   const [previewDoc, setPreviewDoc] = useState<OCRRecord | null>(null);
-
   const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
@@ -102,10 +102,6 @@ export default function Dashboard({
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const filteredClients = clients.filter(c => 
-    c.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   const editingClient = clients.find(c => c.id === editingClientId);
 
   const handleSmartNudge = (record: OCRRecord) => {
@@ -129,20 +125,47 @@ export default function Dashboard({
     );
   };
 
-  const stats = {
+ const stats = {
     total: clients.length,
     complete: clients.filter(c => c.documents.every(d => d.status === 'OK' || d.status === 'Zatwierdzone')).length,
+    // SPÓŹNIONE: Klient ma przynajmniej jeden dokument "Spóźnione"
     late: clients.filter(c => c.documents.some(d => d.status === 'Spóźnione')).length,
+    // BRAKUJĄCE: Klient nie ma spóźnień, ale ma przynajmniej jeden dokument "Brak"
     missing: clients.filter(c => 
       !c.documents.some(d => d.status === 'Spóźnione') && 
-      c.documents.some(d => d.status === 'Brak' || d.status === 'W toku')
+      c.documents.some(d => d.status === 'Brak')
     ).length,
-    toCorrect: ocrRecords.filter(r => r.status === 'Odrzucone').length
+    // DO POPRAWKI: Dokumenty odrzucone w OCR dla tego klienta
+    toCorrect: clients.filter(c => ocrRecords.some(r => r.clientName === c.name && r.status === 'Odrzucone')).length
   };
 
-  return (
+const filters = [
+    { id: 'all', label: t('stats.all'), icon: Users, activeClass: 'bg-blue-600 border-blue-600 shadow-blue-100' },
+    { id: 'ready', label: 'Gotowe', icon: Bell, activeClass: 'bg-indigo-600 border-indigo-600 shadow-indigo-100' },
+    { id: 'late', label: t('stats.late'), icon: AlertTriangle, activeClass: 'bg-red-600 border-red-600 shadow-red-100' },
+    { id: 'missing', label: t('stats.missing'), icon: Clock, activeClass: 'bg-orange-600 border-orange-600 shadow-orange-100' },
+    { id: 'correction', label: 'Do poprawki', icon: AlertTriangle, activeClass: 'bg-rose-600 border-rose-600 shadow-rose-100' },
+    { id: 'locked', label: 'Zatwierdzone', icon: Lock, activeClass: 'bg-emerald-600 border-emerald-600 shadow-emerald-100' }
+  ];
+
+  // Logika filtrowania (wykorzystuje statusFilter)
+  const filteredClients = clients.filter(c => {
+    const matchesSearch = c.name.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    if (statusFilter === 'ready') return matchesSearch && (c as any).isFinished && !c.locked;
+    if (statusFilter === 'late') return matchesSearch && c.documents.some(d => d.status === 'Spóźnione');
+    if (statusFilter === 'missing') return matchesSearch && !c.documents.some(d => d.status === 'Spóźnione') && c.documents.some(d => d.status === 'Brak');
+    if (statusFilter === 'correction') return matchesSearch && ocrRecords.some(r => r.clientName === c.name && r.status === 'Odrzucone');
+    if (statusFilter === 'locked') return matchesSearch && c.locked;
+    
+    return matchesSearch;
+  });
+
+   return (
     <div className="min-h-screen bg-[#F8FAFC] max-w-7xl mx-auto px-4 py-8">
       <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+
+      
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">{t('header.app_name')}</h1>
           <p className="text-slate-500 text-lg">{t('header.description')}</p>
@@ -151,12 +174,13 @@ export default function Dashboard({
             <button onClick={() => i18n.changeLanguage('en')} className={`px-6 py-2 rounded-xl text-sm font-black transition-all duration-200 ${i18n.language === 'en' ? 'bg-white text-blue-600 shadow-md ring-1 ring-slate-200' : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'}`}>EN</button>
           </div>
         </div>
+
         <div className="relative w-full md:w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
           <input type="text" placeholder={t('common.search_placeholder', { defaultValue: 'Search client...' })} className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
         </div>
       </header>
-
+    {/* STATYSTYKI */}
       <div className="flex flex-col lg:flex-row gap-8 mb-8 items-start">
         <div className="w-full lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
           {[
@@ -210,7 +234,57 @@ export default function Dashboard({
           </div>
         </div>
       </div>
+{/* KONTENER NAD TABELĄ */}
+<div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 px-4">
+  
+  {/* LEWA: Przyciski Filtrów */}
+  <div className="flex flex-wrap gap-2">
+    {filters.map((f) => (
+      <button
+        key={f.id}
+        onClick={() => setStatusFilter(f.id as any)}
+        className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all border ${
+          statusFilter === f.id 
+            ? `${f.activeClass} text-white shadow-lg` 
+            : 'bg-white text-slate-500 border-slate-100 hover:border-blue-400 shadow-sm'
+        }`}
+      >
+        <f.icon className="w-3.5 h-3.5" />
+        {f.label}
+        {statusFilter === f.id && (
+           <span className="ml-1 bg-white/20 px-1.5 py-0.5 rounded text-[9px]">{filteredClients.length}</span>
+        )}
+      </button>
+    ))}
+    {statusFilter !== 'all' && (
+      <button onClick={() => setStatusFilter('all')} className="text-[10px] font-black text-slate-400 hover:text-red-500 px-2 uppercase">
+        Wyczyść
+      </button>
+    )}
+  </div>
 
+  {/* PRAWA: Czarny Przycisk Nudge All */}
+  <motion.button
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  onClick={() => {
+    // Wysyłamy TYLKO do tych, którzy są aktualnie widoczni w filtrze "Spóźnione"
+    const lateClients = clients.filter(c => c.documents.some(d => d.status === 'Spóźnione'));
+    
+    if (lateClients.length > 0) {
+      lateClients.forEach(c => handleNudge(c));
+      toast.success(`Wysłano monity do ${lateClients.length} firm!`, { icon: '🚀' });
+    } else {
+      toast.error("Brak spóźnialskich do pogonienia!");
+    }
+  }}
+  className="flex items-center gap-3 px-6 py-3 bg-[#1e293b] text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.15em] shadow-xl hover:bg-slate-800 transition-all border border-slate-700"
+>
+  <Bell className="w-4 h-4 text-yellow-400 animate-pulse" />
+  {/* Tutaj statystyka statyczna z KROKU 1 */}
+  NUDGE ALL ({stats.late})
+</motion.button>
+</div>
       <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto lg:overflow-visible">
           <table className="w-full text-left border-collapse">
@@ -309,6 +383,9 @@ export default function Dashboard({
           </table>
         </div>
       </div>
+
+
+      
 
       {/* Edit List Modal */}
       <AnimatePresence>
