@@ -169,7 +169,7 @@ export default function Dashboard({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-[#F8FAFC] max-w-7xl mx-auto px-4 py-8">
       <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
   <div>
     <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">{t('header.app_name')}</h1>
@@ -256,25 +256,55 @@ export default function Dashboard({
             ) : (
               // Filtracja duplikatów: jeśli ten sam klient dodał to samo w tym samym czasie
               activities
-                .filter((v, i, a) => a.findIndex(t => t.timestamp === v.timestamp && t.clientName === v.clientName) === i)
-                .map(activity => (
-                  <div key={activity.id} className="text-xs border-l-2 border-blue-100 pl-3 py-1 bg-slate-50/30 rounded-r-lg">
-                    <div className="font-bold text-slate-800 mb-0.5">{activity.clientName}</div>
-                    <div className="text-slate-600 leading-normal break-words whitespace-pre-wrap">
-                      {t(activity.action)}: {
-                        activity.detail.includes('|') 
-                          ? t(activity.detail.split('|')[0], { name: activity.detail.split('|')[1] })
-                          : activity.detail.includes('.') 
-                            ? t('activities.uploaded', { fileName: activity.detail })
-                            : t(activity.detail)
-                      }
-                    </div>
-                    <div className="text-[10px] text-slate-400 mt-1.5 flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {new Date(activity.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </div>
-                  </div>
-                ))
+  .filter((v, i, a) => a.findIndex(t => t.timestamp === v.timestamp && t.clientName === v.clientName) === i)
+  .map(activity => (
+    <div key={activity.id} className="text-xs border-l-2 border-blue-500/30 pl-4 py-2 bg-slate-50/50 rounded-r-xl group hover:border-blue-500 transition-all">
+      <div className="font-bold text-slate-800 mb-1">{activity.clientName}</div>
+      <div className="text-slate-600 leading-relaxed break-words">
+        {(() => {
+          // 1. Obsługa typu akcji (lewa strona dwukropka)
+          // 1. Obsługa typu akcji (lewa strona dwukropka)
+const actionLabel = (() => {
+  if (activity.action === 'common.all' || activity.action === 'System') {
+    return t('activities.system_action', { defaultValue: 'System' });
+  }
+  return activity.action.includes('.') ? t(activity.action) : activity.action;
+})();
+          
+          // 2. Obsługa detali (prawa strona dwukropka)
+          let detailContent = activity.detail;
+          
+          if (activity.detail.includes('|')) {
+            // Obsługa formatu: klucz|wartość
+            const [key, val] = activity.detail.split('|');
+            detailContent = t(key, { name: val, fileName: val });
+          } else if (activity.detail.includes('.')) {
+            // Jeśli to nazwa pliku (np. image.jpg), nie próbujemy jej tłumaczyć jako klucza
+            // Chyba że to jawny klucz zaczynający się od "activities." lub "status."
+            if (activity.detail.startsWith('activities.') || activity.detail.startsWith('status.')) {
+              detailContent = t(activity.detail);
+            } else {
+              // To jest nazwa pliku - dodajemy przedrostek "Przesłano:"
+              detailContent = `${t('activities.file_label', { defaultValue: 'Plik' })}: ${activity.detail}`;
+            }
+          }
+
+          return (
+            <>
+              <span className="font-medium text-blue-600/70">{actionLabel}:</span>{' '}
+              <span className="text-slate-500">{detailContent}</span>
+            </>
+          );
+        })()}
+      </div>
+      <div className="text-[10px] text-slate-400 mt-2 flex items-center gap-1 font-medium italic">
+        <Clock className="w-3 h-3" />
+        {activity.timestamp && !isNaN(Date.parse(activity.timestamp)) 
+          ? new Date(activity.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : t('common.just_now', { defaultValue: 'Właśnie teraz' })}
+      </div>
+    </div>
+  ))
             )}
           </div>
         </div>

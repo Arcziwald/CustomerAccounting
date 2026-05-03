@@ -124,7 +124,8 @@
   "rejected": "Document rejected: {{fileName}}",
   "approved": "Document approved: {{fileName}}",
   "nudge_sent_to": "Reminder sent to {{name}}",
-  "ai_nudge_sent": "Sent: \"{{msg}}\" to {{client}}"
+  "ai_nudge_sent": "Sent: \"{{msg}}\" to {{client}}",
+  "activities.system_action": "System"
   
   },
   "tooltips": {

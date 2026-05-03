@@ -127,7 +127,8 @@
   "rejected": "Dokument odrzucony: {{fileName}}",
   "approved": "Dokument zatwierdzony: {{fileName}}",
   "nudge_sent_to": "Wysłano przypomnienie do {{name}}",
-  "ai_nudge_sent": "Wysłano: \"{{msg}}\" do {{client}}"
+  "ai_nudge_sent": "Wysłano: \"{{msg}}\" do {{client}}",
+  "activities.system_action": "System"
 },
 "tooltips": {
     "drive": "Otwórz dedykowany folder w chmurze dla tego klienta, aby zarządzać plikami źródłowymi.",
