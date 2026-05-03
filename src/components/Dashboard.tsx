@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Client, STATUS_COLORS, DocumentStatus, OCRRecord } from '../types';
 import { Bell, Copy, Check, ExternalLink, Search, Settings2, Plus, Trash2, X, Users, Clock, AlertTriangle, Folder, Lock, Unlock, History, ChevronDown, Download, Eye, FileText, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,6 +20,7 @@ interface DashboardProps {
   updateOCRStatus: (recordId: string, newStatus: 'Oczekiwanie' | 'Do weryfikacji' | 'Zweryfikowano' | 'Odrzucone') => void;
   analyzeDocument: (recordId: string) => void;
   addActivity: (clientName: string, action: string, detail: string) => void;
+  
 }
 
 export default function Dashboard({ 
@@ -41,6 +42,26 @@ export default function Dashboard({
   const [newDocLabel, setNewDocLabel] = useState('');
   const [viewingFilesDocId, setViewingFilesDocId] = useState<string | null>(null);
   const [previewDoc, setPreviewDoc] = useState<OCRRecord | null>(null);
+
+
+
+// Używamy prostego stanu bez funkcji sprawdzającej wewnątrz useState
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  // Sprawdzamy sesję TYLKO RAZ po pełnym załadowaniu komponentu
+  useEffect(() => {
+    const isDone = sessionStorage.getItem('brakomat_done');
+    if (!isDone) {
+      setShowWelcome(true);
+    }
+  }, []);
+
+  // Funkcja, która fizycznie "ubija" okno i zapisuje ślad
+  const handleFinalClose = () => {
+    sessionStorage.setItem('brakomat_done', 'true');
+    setShowWelcome(false);
+  };
+
 
   const handleNudge = async (client: any) => {
 // 1. Treść wiadomości od Agenta
@@ -197,24 +218,28 @@ export default function Dashboard({
         {/* Lewa strona: Karty Statystyk (5 kart) */}
         <div className="w-full lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
           {[
-            { label: t('stats.all'), value: stats.total, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-            { label: t('stats.complete'), value: stats.complete, icon: Check, color: 'text-green-600', bg: 'bg-green-50' },
-            { label: t('stats.missing'), value: stats.missing, icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50' },
-            { label: t('stats.late'), value: stats.late, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50' },
-            { label: t('stats.to_correct'), value: stats.toCorrect, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50' }
-          ].map((item, idx) => (
-            <div key={idx} className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col h-44 transition-all hover:border-blue-200">
-              <div className={`w-10 h-10 ${item.bg} ${item.color} rounded-xl flex items-center justify-center mb-4 shrink-0`}>
-                <item.icon className="w-5 h-5" />
-              </div>
-              <div className="flex flex-col flex-grow justify-start">
-                <div className="text-3xl font-black text-slate-900 leading-none mb-2">{item.value}</div>
-                <div className="text-[11px] leading-snug text-slate-500 font-bold uppercase tracking-tight break-words">
-                  {item.label}
-                </div>
-              </div>
-            </div>
-          ))}
+  { label: t('stats.all'), value: stats.total, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', border: 'hover:border-blue-400' },
+  { label: t('stats.complete'), value: stats.complete, icon: Check, color: 'text-green-600', bg: 'bg-green-50', border: 'hover:border-green-400' },
+  { label: t('stats.missing'), value: stats.missing, icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50', border: 'hover:border-orange-400' },
+  { label: t('stats.late'), value: stats.late, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50', border: 'hover:border-red-400' },
+  { label: t('stats.to_correct'), value: stats.toCorrect, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50', border: 'hover:border-red-400' }
+].map((item, idx) => (
+  <motion.div 
+    key={idx} 
+    whileHover={{ y: -5, scale: 1.02 }}
+    className={`bg-white/70 backdrop-blur-md p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col h-44 transition-all ${item.border} hover:shadow-xl hover:shadow-slate-200/50 cursor-default`}
+  >
+    <div className={`w-10 h-10 ${item.bg} ${item.color} rounded-xl flex items-center justify-center mb-4 shrink-0 shadow-inner`}>
+      <item.icon className="w-5 h-5" />
+    </div>
+    <div className="flex flex-col flex-grow justify-start">
+      <div className="text-3xl font-black text-slate-900 leading-none mb-2">{item.value}</div>
+      <div className="text-[11px] leading-snug text-slate-500 font-bold uppercase tracking-tight break-words">
+        {item.label}
+      </div>
+    </div>
+  </motion.div>
+))}
         </div>
 
         {/* Prawa strona: Historia zdarzeń (Pełna treść bez ucinania) */}
@@ -737,6 +762,85 @@ export default function Dashboard({
         &copy; ArtWebCraft 2026 | {t('footer.system_name')} - {t('footer.system_description')}
       </footer>
     </div>
+
+<AnimatePresence>
+  {showWelcome && (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[999] flex items-center justify-center p-4 overflow-hidden"
+    >
+      {/* Dynamiczne tło Aurora w ruchu */}
+      <div className="absolute inset-0 bg-[#0f172a]" />
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.2, 1],
+          rotate: [0, 90, 0],
+        }}
+        transition={{ duration: 20, repeat: Infinity }}
+        className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-blue-600/30 rounded-full blur-[120px]"
+      />
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.3, 1],
+          rotate: [0, -90, 0],
+        }}
+        transition={{ duration: 15, repeat: Infinity, delay: 2 }}
+        className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-indigo-600/20 rounded-full blur-[120px]"
+      />
+
+      <motion.div 
+        initial={{ y: 50, opacity: 0, scale: 0.8, rotateX: 20 }}
+        animate={{ y: 0, opacity: 1, scale: 1, rotateX: 0 }}
+        exit={{ y: -50, opacity: 0, scale: 1.1 }}
+        transition={{ type: "spring", damping: 20 }}
+        className="relative max-w-2xl w-full bg-white/10 backdrop-blur-[40px] p-12 rounded-[4rem] shadow-[0_0_80px_rgba(0,0,0,0.5)] border border-white/20 text-center"
+        style={{ transformStyle: 'preserve-3d', perspective: '1000px' }}
+      >
+        {/* Pływający element 3D (Ikona) */}
+        <motion.div 
+          animate={{ y: [0, -15, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="w-24 h-24 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-10 shadow-[0_20px_50px_rgba(37,99,235,0.4)] border border-white/30"
+        >
+          <div className="text-4xl">🚀</div>
+        </motion.div>
+        
+        <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
+          Witaj w <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Przyszłości Księgowości</span>
+        </h2>
+        
+        <div className="space-y-6 text-blue-100/80 text-lg leading-relaxed mb-10">
+          <p>
+            Właśnie uruchomiłeś wersję demonstracyjną <span className="text-white font-bold text-xl uppercase tracking-widest">Brakomatu</span>.
+          </p>
+          <div className="bg-white/5 rounded-2xl p-6 border border-white/10 text-sm text-left italic">
+            <span className="text-blue-400 font-bold">Info:</span> W pełnej wersji systemu, w tym miejscu znajduje się bezpieczny 
+            panel logowania z weryfikacją biometryczną, oddzielny dla Twojej Kancelarii oraz dedykowany Twoim Klientom.
+          </div>
+          <p className="text-base">
+            Przygotowaliśmy dla Ciebie symulację realnych procesów: automatyczne monity, analizę OCR AI oraz inteligentne blokady okresów.
+          </p>
+        </div>
+
+        <motion.button 
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={handleFinalClose} // <--- TO MUSI BYĆ TA NAZWA
+          className="group relative px-12 py-5 bg-blue-600 text-white rounded-full font-black text-xl shadow-xl"
+        >
+          URUCHOM SILNIK DEMO
+        </motion.button>
+
+        <p className="mt-8 text-[10px] text-white/30 uppercase tracking-[0.3em]">
+          Powered by ArtWebCraft AI Engine 2026
+        </p>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
 </div>
 );
 }
