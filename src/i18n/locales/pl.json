@@ -150,6 +150,12 @@
     "client_view": "Podgląd strefy klienta: zobacz interfejs oczami swojego klienta, zweryfikuj postęp przesyłania plików i stan powiadomień.",
     "export": "Generuj arkusz zbiorczy (.xlsx) ze statystykami wszystkich klientów, statusem dokumentów i danymi z analizy OCR do celów raportowych."
   },
-  "progress_title": "Postęp pracy", 
-  "progress_subtitle": "Pozostało {{count}} firm do zatwierdzenia"
+  "welcome": {
+  "title": "Witaj w",
+  "highlight": "Przyszłości Księgowości",
+  "intro": "Właśnie uruchomiłeś wersję demonstracyjną Brakomatu.",
+  "security_note": "W pełnej wersji systemu znajduje się tu bezpieczny panel logowania z weryfikacją dostępu dla Ciebie i osobny dla Twoich klientów.",
+  "description": "Przygotowaliśmy dla Ciebie symulację realnych procesów: automatyczne monity, analizę OCR AI oraz inteligentne blokady okresów.",
+  "button": "URUCHOM SILNIK DEMO"
+}
 }

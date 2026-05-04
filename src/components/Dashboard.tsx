@@ -512,10 +512,74 @@ export default function Dashboard({
       </div>
 
       <AnimatePresence>
-        {showWelcome && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[999] flex items-center justify-center p-4 overflow-hidden"><div className="absolute inset-0 bg-[#0f172a]" /><motion.div animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }} transition={{ duration: 20, repeat: Infinity }} className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-blue-600/30 rounded-full blur-[120px]" /><motion.div animate={{ scale: [1, 1.3, 1], rotate: [0, -90, 0] }} transition={{ duration: 15, repeat: Infinity, delay: 2 }} className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-indigo-600/20 rounded-full blur-[120px]" /><motion.div initial={{ y: 50, opacity: 0, scale: 0.8, rotateX: 20 }} animate={{ y: 0, opacity: 1, scale: 1, rotateX: 0 }} exit={{ y: -50, opacity: 0, scale: 1.1 }} transition={{ type: "spring", damping: 20 }} className="relative max-w-2xl w-full bg-white/10 backdrop-blur-[40px] p-12 rounded-[4rem] shadow-[0_0_80px_rgba(0,0,0,0.5)] border border-white/20 text-center" style={{ transformStyle: 'preserve-3d', perspective: '1000px' }}><motion.div animate={{ y: [0, -15, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="w-24 h-24 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-10 shadow-[0_20px_50px_rgba(37,99,235,0.4)] border border-white/30"><div className="text-4xl">🚀</div></motion.div><h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">Witaj w <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Przyszłości Księgowości</span></h2><div className="space-y-6 text-blue-100/80 text-lg leading-relaxed mb-10"><p>Właśnie uruchomiłeś wersję demonstracyjną <span className="text-white font-bold text-xl uppercase tracking-widest">Brakomatu</span>.</p><div className="bg-white/5 rounded-2xl p-6 border border-white/10 text-sm text-left italic"><span className="text-blue-400 font-bold">Info:</span> W pełnej wersji systemu, w tym miejscu znajduje się bezpieczny panel logowania z weryfikacją biometryczną, oddzielny dla Twojej Kancelarii oraz dedykowany Twoim Klientom.</div><p className="text-base">Przygotowaliśmy dla Ciebie symulację realnych procesów: automatyczne monity, analizę OCR AI oraz inteligentne blokady okresów.</p></div><motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleFinalClose} className="group relative px-12 py-5 bg-blue-600 text-white rounded-full font-black text-xl shadow-xl">URUCHOM SILNIK DEMO</motion.button><p className="mt-8 text-[10px] text-white/30 uppercase tracking-[0.3em]">Powered by ArtWebCraft AI Engine 2026</p></motion.div></motion.div>
-        )}
-      </AnimatePresence>
+  {showWelcome && (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[999] flex items-center justify-center p-4 overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-[#0f172a]" />
+      <motion.div animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }} transition={{ duration: 20, repeat: Infinity }} className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-blue-600/30 rounded-full blur-[120px]" />
+      <motion.div animate={{ scale: [1, 1.3, 1], rotate: [0, -90, 0] }} transition={{ duration: 15, repeat: Infinity, delay: 2 }} className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-indigo-600/20 rounded-full blur-[120px]" />
+
+      <motion.div 
+        initial={{ y: 50, opacity: 0, scale: 0.8, rotateX: 20 }}
+        animate={{ y: 0, opacity: 1, scale: 1, rotateX: 0 }}
+        exit={{ y: -50, opacity: 0, scale: 1.1 }}
+        transition={{ type: "spring", damping: 20 }}
+        className="relative max-w-2xl w-full bg-white/10 backdrop-blur-[40px] p-12 rounded-[4rem] shadow-[0_0_80px_rgba(0,0,0,0.5)] border border-white/20 text-center"
+        style={{ transformStyle: 'preserve-3d', perspective: '1000px' }}
+      >
+        {/* WYBÓR JĘZYKA */}
+        <div className="flex justify-center gap-3 mb-8">
+          {['pl', 'en'].map((lang) => (
+            <button
+              key={lang}
+              onClick={() => i18n.changeLanguage(lang)}
+              className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                i18n.language === lang 
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/50' 
+                  : 'bg-white/10 text-white/50 hover:bg-white/20'
+              }`}
+            >
+              {lang}
+            </button>
+          ))}
+        </div>
+
+        <motion.div animate={{ y: [0, -15, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="w-24 h-24 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-10 shadow-[0_20px_50px_rgba(37,99,235,0.4)] border border-white/30">
+          <div className="text-4xl">🚀</div>
+        </motion.div>
+        
+        <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
+          {t('welcome.title')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">{t('welcome.highlight')}</span>
+        </h2>
+        
+        <div className="space-y-6 text-blue-100/80 text-lg leading-relaxed mb-10">
+          <p>{t('welcome.intro')}</p>
+          <div className="bg-white/5 rounded-2xl p-6 border border-white/10 text-sm text-left italic">
+            <span className="text-blue-400 font-bold">Info:</span> {t('welcome.security_note')}
+          </div>
+          <p className="text-base">{t('welcome.description')}</p>
+        </div>
+
+        <motion.button 
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={handleFinalClose}
+          className="group relative px-12 py-5 bg-blue-600 text-white rounded-full font-black text-xl shadow-xl"
+        >
+          {t('welcome.button')}
+        </motion.button>
+
+        <p className="mt-8 text-[10px] text-white/30 uppercase tracking-[0.3em]">
+          Powered by ArtWebCraft AI Engine 2026
+        </p>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </div>
   );
 }

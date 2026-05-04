@@ -147,5 +147,13 @@
     "no_files": "No files - waiting for delivery",
     "client_view": "Client zone preview: view the interface from your client's perspective, verify file upload progress, and notification status.",
     "export": "Generate a summary spreadsheet (.xlsx) with all client statistics, document statuses, and OCR analysis data for reporting purposes."
-  }
+  },
+  "welcome": {
+  "title": "Welcome to",
+  "highlight": "The Future of Accounting",
+  "intro": "You have just launched the Brakomat demo version.",
+  "security_note": "In the full version of the system, there is a secure login panel with access verification for you and a separate one for your clients.",
+  "description": "We have prepared a simulation of real processes: automated nudges, AI OCR analysis, and intelligent period locking.",
+  "button": "START DEMO ENGINE"
+}
 }
