@@ -521,64 +521,63 @@ export default function Dashboard({
       className="fixed inset-0 z-[999] flex items-center justify-center p-4 overflow-hidden"
     >
       <div className="absolute inset-0 bg-[#0f172a]" />
-      {/* Animacje tła zostają bez zmian... */}
+      {/* BACKGROUND ANIMATIONS */}
       <motion.div animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }} transition={{ duration: 20, repeat: Infinity }} className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-blue-600/30 rounded-full blur-[120px]" />
       <motion.div animate={{ scale: [1, 1.3, 1], rotate: [0, -90, 0] }} transition={{ duration: 15, repeat: Infinity, delay: 2 }} className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-indigo-600/20 rounded-full blur-[120px]" />
 
       <motion.div 
-        initial={{ y: 50, opacity: 0, scale: 0.8, rotateX: 20 }}
-        animate={{ y: 0, opacity: 1, scale: 1, rotateX: 0 }}
-        exit={{ y: -50, opacity: 0, scale: 1.1 }}
-        transition={{ type: "spring", damping: 20 }}
-        className="relative max-w-2xl w-full bg-white/10 backdrop-blur-[40px] p-12 rounded-[4rem] shadow-[0_0_80px_rgba(0,0,0,0.5)] border border-white/20 text-center"
-        style={{ transformStyle: 'preserve-3d', perspective: '1000px' }}
+        initial={{ y: 50, opacity: 0, rotateX: 20 }}
+        animate={{ y: 0, opacity: 1, rotateX: 0 }}
+        className="relative max-w-2xl w-full bg-white/10 backdrop-blur-[30px] p-12 rounded-[4rem] shadow-2xl border border-white/20 text-center"
       >
-        {/* NOWY WYBÓR JĘZYKA Z FLAGAMI - Bardziej widoczny i luxury */}
-        <div className="flex justify-center gap-6 mb-10 pb-6 border-b border-white/10">
+        {/* PURE PNG LANGUAGE SWITCHER */}
+        <div className="flex justify-center gap-10 mb-12">
           {[
-            { lang: 'pl', flag: '/flaga_pl.jpg' }, // Ścieżka prosto do public
-            { lang: 'en', flag: '/flaga_en.jpg' }
+            { lang: 'pl', flag: '/flaga_pl.png' },
+            { lang: 'en', flag: '/flaga_en.png' }
           ].map((item) => (
             <motion.button
               key={item.lang}
-              whileHover={{ scale: 1.1, y: -2 }}
+              whileHover={{ scale: 1.15, y: -5 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => i18n.changeLanguage(item.lang)}
-              className={`relative p-1 rounded-2xl transition-all ${
-                i18n.language === item.lang 
-                  ? 'bg-gradient-to-br from-blue-400 to-indigo-600 shadow-lg shadow-blue-500/30' 
-                  : 'bg-white/5 hover:bg-white/10 border border-white/10'
-              }`}
+              className="relative group p-2"
             >
               <img 
                 src={item.flag} 
                 alt={item.lang.toUpperCase()} 
-                className="w-16 h-10 object-cover rounded-xl shadow-inner border border-black/10"
+                // Czyste PNG z przezroczystością, bez kafelka i obramowania
+                className={`w-20 h-14 object-contain transition-all duration-300 ${
+                  i18n.language === item.lang 
+                    ? 'drop-shadow-[0_10px_25px_rgba(59,130,246,0.6)]' // Niebieski blask dla aktywnego
+                    : 'drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_10px_25px_rgba(255,255,255,0.3)]'
+                }`}
               />
               {i18n.language === item.lang && (
                 <motion.div 
-                  layoutId="activeLang"
-                  className="absolute -bottom-2 -left-2 -right-2 h-1 bg-blue-400 rounded-full"
+                  layoutId="activeFlagBar"
+                  className="absolute -bottom-2 left-4 right-4 h-1 bg-blue-400 rounded-full"
                 />
               )}
             </motion.button>
           ))}
         </div>
 
-        {/* NOWA RAKIETA ZAMIAST EMOJI - W szklanym kontenerze z Twoimi animacjami */}
+        {/* PURE PNG ROCKET - FLOAT ANIMATION */}
         <motion.div 
-          animate={{ y: [0, -15, 0] }} 
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} 
-          className="w-32 h-32 bg-gradient-to-br from-white/5 to-white/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 shadow-2xl border border-white/20 overflow-hidden group"
+          animate={{ y: [0, -18, 0] }} 
+          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }} 
+          className="mx-auto mb-12 drop-shadow-[0_30px_60px_rgba(37,99,235,0.4)]"
         >
           <img 
-            src="/rakieta_2.jpg" 
+            src="/rocket.png" 
             alt="Rocket" 
-            className="w-24 h-24 object-contain group-hover:scale-110 transition-transform duration-500" 
+            // Czyste PNG na przezroczystości, bez tła
+            className="w-40 h-40 object-contain mx-auto" 
           />
         </motion.div>
         
-        {/* Treści tekstowe i przycisk zostają bez zmian... */}
+        {/* TEXTS AND BUTTONS */}
         <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
           {t('welcome.title')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">{t('welcome.highlight')}</span>
         </h2>
@@ -595,7 +594,7 @@ export default function Dashboard({
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleFinalClose}
-          className="group relative px-12 py-5 bg-blue-600 text-white rounded-full font-black text-xl shadow-xl"
+          className="px-12 py-5 bg-blue-600 text-white rounded-full font-black text-xl shadow-xl hover:shadow-blue-500/30 transition-shadow"
         >
           {t('welcome.button')}
         </motion.button>
