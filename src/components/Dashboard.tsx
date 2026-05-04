@@ -220,31 +220,39 @@ export default function Dashboard({
     <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full -mr-20 -mt-20 blur-3xl opacity-50 transition-opacity" />
 </div>
 
-          {/* GRID KART (2 kolumny na mobile, 5 na desktop) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          {/* GRID KART - Naprawiona szerokość i responsywność */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 w-full">
             {[
-              { id: 'all', label: t('stats.all'), value: stats.total, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-              { id: 'ready', label: t('stats.complete'), value: stats.complete, icon: Check, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-              { id: 'missing', label: t('stats.missing'), value: stats.missing, icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50' },
-              { id: 'late', label: t('stats.late'), value: stats.late, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50' },
-              { id: 'correction', label: t('stats.to_correct'), value: stats.toCorrect, icon: Info, color: 'text-rose-600', bg: 'bg-rose-50' }
-            ].map((item) => (
-              <motion.div
-                key={item.id}
-                whileHover={{ y: -4 }}
-                className="bg-white p-4 md:p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between min-h-[130px] md:min-h-[160px] transition-all hover:shadow-md"
-              >
-                <div className={`p-2.5 rounded-xl w-fit ${item.bg} ${item.color}`}>
-                   <item.icon className="w-5 h-5" />
-                </div>
-                <div>
-                   <div className="text-2xl md:text-3xl font-black text-slate-900 mb-0.5">{item.value}</div>
-                   <div className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-wider leading-tight">
-                      {item.label}
-                   </div>
-                </div>
-              </motion.div>
-            ))}
+  { id: 'all', label: t('stats.all'), value: stats.total, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', tip: t('tooltips_stats.all') },
+  { id: 'ready', label: t('stats.complete'), value: stats.complete, icon: Check, color: 'text-emerald-600', bg: 'bg-emerald-50', tip: t('tooltips_stats.ready') },
+  { id: 'missing', label: t('stats.missing'), value: stats.missing, icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50', tip: t('tooltips_stats.missing') },
+  { id: 'late', label: t('stats.late'), value: stats.late, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50', tip: t('tooltips_stats.late') },
+  { id: 'correction', label: t('stats.to_correct'), value: stats.toCorrect, icon: Info, color: 'text-rose-600', bg: 'bg-rose-50', tip: t('tooltips_stats.correction') }
+].map((item) => (
+  <Tooltip key={item.id} text={item.tip}>
+    <motion.div
+      whileHover={{ y: -4 }}
+      onClick={() => setStatusFilter(item.id as any)}
+      className={`cursor-pointer bg-white p-4 md:p-5 rounded-[2rem] border transition-all hover:shadow-md flex flex-col justify-between min-h-[120px] md:min-h-[150px] w-full ${
+        statusFilter === item.id 
+          ? 'border-blue-500 ring-2 ring-blue-500/10 shadow-lg shadow-blue-50' 
+          : 'border-slate-100 shadow-sm'
+      }`}
+    >
+      <div className={`p-2 rounded-xl w-fit ${item.bg} ${item.color}`}>
+        <item.icon className="w-5 h-5 md:w-6 md:h-6" />
+      </div>
+      <div className="mt-4">
+        <div className="text-2xl md:text-3xl font-black text-slate-900 leading-none">
+          {item.value}
+        </div>
+        <div className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1 leading-tight break-words">
+          {item.label}
+        </div>
+      </div>
+    </motion.div>
+  </Tooltip>
+))}
           </div>
         </div>
 

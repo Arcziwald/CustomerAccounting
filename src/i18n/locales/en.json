@@ -179,5 +179,12 @@
   "progress": {
   "title": "WORK PROGRESS",
   "subtitle": "{{count}} companies left to approve"
-  }
+  },
+  "tooltips_stats": {
+  "all": "All clients in your portfolio.",
+  "ready": "Companies that provided all documents and have been approved.",
+  "missing": "Companies with missing documents, but the deadline has not yet passed.",
+  "late": "ALARM: Clients past your deadline (e.g., after the 5th). The system has automatically prepared AI nudges for them.",
+  "correction": "OCR Errors: Blurry or cropped invoices end up here. The client will see error details and the option to re-upload."
+}
 }

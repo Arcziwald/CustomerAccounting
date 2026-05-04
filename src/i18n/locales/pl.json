@@ -181,5 +181,12 @@
   "progress": {
   "title": "POSTĘP PRACY",
   "subtitle": "Pozostało {{count}} firm do zatwierdzenia"
-  }
+  },
+  "tooltips_stats": {
+  "all": "Wszyscy klienci w Twoim portfelu.",
+  "ready": "Firmy, które dostarczyły wszystkie dokumenty i zostały zatwierdzone.",
+  "missing": "Firmy, którym brakuje dokumentów, ale termin jeszcze nie minął.",
+  "late": "ALARM: Klienci po Twoim terminie (np. po 5-tym). System automatycznie przygotował dla nich monity do wysłania przez Agenta AI.",
+  "correction": "Błędy OCR: Tu trafią faktury niewyraźne lub ucięte. W panelu Klient zobaczy informacje o błędach i możliwości ich poprawy."
+}
 }
