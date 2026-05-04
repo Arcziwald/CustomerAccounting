@@ -564,15 +564,73 @@ export default function Dashboard({
         </div>
         <AnimatePresence>
           {previewDoc && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setPreviewDoc(null)} className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" />
-              <motion.div initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }} className="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden">
-                <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50"><div><h3 className="text-xl font-bold text-slate-900">{t('ocr.preview_title')}</h3><p className="text-sm text-slate-500">{previewDoc.invoiceNumber} • {previewDoc.clientName}</p></div><button onClick={() => setPreviewDoc(null)} className="p-2 hover:bg-white rounded-xl transition-colors text-slate-400 hover:text-slate-600 shadow-sm"><X className="w-6 h-6" /></button></div>
-                <div className="p-8"><div className="aspect-[3/4] bg-slate-100 rounded-2xl flex items-center justify-center border-2 border-dashed border-slate-200 overflow-hidden relative group"><img src={`https://picsum.photos/seed/${previewDoc.id}/800/1200`} alt={t('ocr.preview_title')} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" referrerPolicy="no-referrer" /><div className="absolute inset-0 flex flex-col items-center justify-center bg-white/40 backdrop-blur-[2px]"><div className="p-4 bg-white rounded-2xl shadow-xl flex flex-col items-center gap-3"><FileText className="w-12 h-12 text-blue-500" /><p className="font-bold text-slate-900">{t('ocr.simulation_title')}</p><div className="text-xs text-slate-500 text-center space-y-1"><p>{t('ocr.file')}: {previewDoc.fileName}</p><p>{t('ocr.size')}: 1.2 MB</p></div></div></div></div></div>
-                <div className="p-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3"><button onClick={() => { updateOCRStatus(previewDoc.id, 'Odrzucone'); addActivity('Agent AI', 'System', `${t('status.rejected')}: ${previewDoc.clientName}`); toast.error(t('ocr.toast_rejected_msg'), { icon: '📩' }); setPreviewDoc(null); }} className="px-6 py-2.5 bg-red-50 text-red-600 border border-red-100 rounded-xl font-bold hover:bg-red-100 transition-all">{t('ocr.reject_btn')}</button><button onClick={() => { updateOCRStatus(previewDoc.id, 'Zweryfikowano'); setPreviewDoc(null); }} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">{t('ocr.approve_btn')}</button></div>
-              </motion.div>
-            </div>
-          )}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setPreviewDoc(null)} className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }} 
+              animate={{ opacity: 1, scale: 1, y: 0 }} 
+              exit={{ opacity: 0, scale: 0.9, y: 20 }} 
+              // DODANO: max-h-[90vh] oraz flex-col, aby stopka była zawsze na dole okna
+              className="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
+            >
+              {/* Pasek górny - mniejszy padding, żeby oszczędzić miejsce */}
+              <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 shrink-0">
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900">{t('ocr.preview_title')}</h3>
+                  <p className="text-sm text-slate-500">{previewDoc.invoiceNumber} • {previewDoc.clientName}</p>
+                </div>
+                <button onClick={() => setPreviewDoc(null)} className="p-2 hover:bg-white rounded-xl transition-colors text-slate-400 hover:text-slate-600 shadow-sm"><X className="w-6 h-6" /></button>
+              </div>
+
+              {/* Obszar zdjęcia - DODANO: overflow-y-auto oraz ograniczenie wysokości obrazka */}
+              <div className="p-4 md:p-8 overflow-y-auto bg-slate-100 flex-1 flex items-center justify-center">
+                <div className="w-full h-full min-h-[300px] bg-white rounded-2xl flex items-center justify-center border-2 border-dashed border-slate-200 overflow-hidden relative group">
+                  <img 
+                    src={`https://picsum.photos/seed/${previewDoc.id}/800/1200`} 
+                    alt={t('ocr.preview_title')} 
+                    // DODANO: max-h-full i object-contain, żeby nie rozpychało modala
+                    className="max-w-full max-h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity" 
+                    referrerPolicy="no-referrer" 
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/40 backdrop-blur-[2px]">
+                    <div className="p-4 bg-white rounded-2xl shadow-xl flex flex-col items-center gap-3">
+                      <FileText className="w-12 h-12 text-blue-500" />
+                      <p className="font-bold text-slate-900">{t('ocr.simulation_title')}</p>
+                      <div className="text-xs text-slate-500 text-center space-y-1">
+                        <p>{t('ocr.file')}: {previewDoc.fileName}</p>
+                        <p>{t('ocr.size')}: 1.2 MB</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Dolny pasek - Zawsze widoczny (shrink-0) */}
+              <div className="p-5 bg-slate-50 border-t border-slate-100 flex justify-end gap-3 shrink-0">
+                <button 
+                  onClick={() => { 
+                    updateOCRStatus(previewDoc.id, 'Odrzucone'); 
+                    addActivity('Agent AI', 'System', `${t('status.rejected')}: ${previewDoc.clientName}`); 
+                    toast.error(t('ocr.toast_rejected_msg'), { icon: '📩' }); 
+                    setPreviewDoc(null); 
+                  }} 
+                  className="px-6 py-2.5 bg-red-50 text-red-600 border border-red-100 rounded-xl font-bold hover:bg-red-100 transition-all text-sm"
+                >
+                  {t('ocr.reject_btn')}
+                </button>
+                <button 
+                  onClick={() => { 
+                    updateOCRStatus(previewDoc.id, 'Zweryfikowano'); 
+                    setPreviewDoc(null); 
+                  }} 
+                  className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 text-sm"
+                >
+                  {t('ocr.approve_btn')}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
         </AnimatePresence>
         <footer className="mt-12 text-center text-slate-400 text-sm">&copy; ArtWebCraft 2026 | {t('footer.system_name')} - {t('footer.system_description')}</footer>
       </div>
