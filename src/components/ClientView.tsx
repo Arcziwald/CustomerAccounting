@@ -212,18 +212,17 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
     </div>
   </div>
   </div>
-                  {/* SEKCJA PRZYCISKÓW - Odchudzona i elegancka */}
-                  {/* SEKCJA PRZYCISKÓW - Eleganckie, małe i wyśrodkowane */}
-<div className="flex flex-col items-center justify-center gap-2 mt-4 w-full">
+                  {/* SEKCJA PRZYCISKÓW - Czytelna czcionka, kontrolowana szerokość */}
+<div className="flex flex-col items-center justify-center gap-2.5 mt-4 w-full">
   
-  {/* Przycisk Sprawdź ciągłość - mniejszy i subtelny */}
+  {/* Przycisk Sprawdź ciągłość - przywrócony rozmiar text-sm */}
   {doc.label.toLowerCase().includes('faktur') && doc.status !== 'OK' && (
     <button 
       onClick={() => setShowChecker(!showChecker)}
-      className={`w-48 py-1.5 rounded-lg text-[11px] font-bold transition-all border ${
+      className={`w-48 py-2.5 rounded-xl text-sm font-bold transition-all border ${
         showChecker 
           ? 'bg-slate-200 text-slate-800 border-slate-300' 
-          : 'bg-white border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300'
+          : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300'
       }`}
     >
       {t('client_view.check_continuity')}
@@ -241,18 +240,18 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
     }}
   />
   
-  {/* Przycisk Dodaj dokument - smukły i wyśrodkowany */}
+  {/* Przycisk Dodaj dokument - przywrócony rozmiar text-sm i czytelna ikona */}
   <button 
     onClick={() => document.getElementById(`file-upload-${doc.id}`)?.click()}
     disabled={uploading === doc.id || client.locked}
-    className="w-48 py-2 bg-blue-600 text-white rounded-lg text-[11px] font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-100 disabled:opacity-50 disabled:bg-slate-200 flex items-center justify-center gap-2"
+    className="w-48 py-3 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-100 disabled:opacity-50 disabled:bg-slate-200 flex items-center justify-center gap-2"
   >
     {uploading === doc.id ? (
       <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
-        <Upload className="w-3 h-3" />
+        <Upload className="w-4 h-4" />
       </motion.div>
     ) : (
-      <><Plus className="w-3 h-3 stroke-[3px]" />{t('client_view.add_doc')}</>
+      <><Plus className="w-4 h-4 stroke-[3px]" />{t('client_view.add_doc')}</>
     )}
   </button>
 </div>
