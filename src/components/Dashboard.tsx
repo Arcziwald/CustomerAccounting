@@ -139,14 +139,19 @@ export default function Dashboard({
     toCorrect: clients.filter(c => ocrRecords.some(r => r.clientName === c.name && r.status === 'Odrzucone')).length
   };
 
-const filters = [
-    { id: 'all', label: t('stats.all'), icon: Users, activeClass: 'bg-blue-600 border-blue-600 shadow-blue-100' },
-    { id: 'ready', label: 'Gotowe', icon: Bell, activeClass: 'bg-indigo-600 border-indigo-600 shadow-indigo-100' },
-    { id: 'late', label: t('stats.late'), icon: AlertTriangle, activeClass: 'bg-red-600 border-red-600 shadow-red-100' },
-    { id: 'missing', label: t('stats.missing'), icon: Clock, activeClass: 'bg-orange-600 border-orange-600 shadow-orange-100' },
-    { id: 'correction', label: 'Do poprawki', icon: AlertTriangle, activeClass: 'bg-rose-600 border-rose-600 shadow-rose-100' },
-    { id: 'locked', label: 'Zatwierdzone', icon: Lock, activeClass: 'bg-emerald-600 border-emerald-600 shadow-emerald-100' }
-  ];
+  // Procent postępu: stosunek klientów zatwierdzonych (z kłódką) do wszystkich
+  const progressPercent = stats.total > 0 
+    ? Math.round((clients.filter(c => c.locked).length / stats.total) * 100) 
+    : 0;
+
+    const filters = [
+  { id: 'all', label: t('stats.all'), icon: Users, activeClass: 'bg-blue-600 border-blue-600 shadow-blue-100' },
+  { id: 'ready', label: t('stats.ready'), icon: Bell, activeClass: 'bg-indigo-600 border-indigo-600 shadow-indigo-100' },
+  { id: 'late', label: t('stats.late'), icon: AlertTriangle, activeClass: 'bg-red-600 border-red-600 shadow-red-100' },
+  { id: 'missing', label: t('stats.missing'), icon: Clock, activeClass: 'bg-orange-600 border-orange-600 shadow-orange-100' },
+  { id: 'correction', label: t('stats.correction'), icon: AlertTriangle, activeClass: 'bg-rose-600 border-rose-600 shadow-rose-100' },
+  { id: 'locked', label: t('stats.locked'), icon: Lock, activeClass: 'bg-emerald-600 border-emerald-600 shadow-emerald-100' }
+];
 
   // Logika filtrowania (wykorzystuje statusFilter)
   const filteredClients = clients.filter(c => {
@@ -180,6 +185,10 @@ const filters = [
           <input type="text" placeholder={t('common.search_placeholder', { defaultValue: 'Search client...' })} className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
         </div>
       </header>
+
+
+
+      
     {/* STATYSTYKI */}
       <div className="flex flex-col lg:flex-row gap-8 mb-8 items-start">
         <div className="w-full lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
@@ -205,6 +214,7 @@ const filters = [
             <History className="w-5 h-5 text-blue-600" />
             <span>{t('stats.history')}</span>
           </div>
+          
           <div className="space-y-4 overflow-y-auto pr-2 scrollbar-hide">
             {activities.length === 0 ? (<p className="text-xs text-slate-400 italic">{t('activities.no_activities')}</p>) : (
               activities.filter((v, i, a) => a.findIndex(t => t.timestamp === v.timestamp && t.clientName === v.clientName) === i).map(activity => (
@@ -232,6 +242,44 @@ const filters = [
               ))
             )}
           </div>
+        </div>
+      </div>
+
+      {/* SEKCJA POSTĘPU BIURA */}
+      <div className="mb-10 bg-white/50 backdrop-blur-md rounded-[2.5rem] p-8 border border-white shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+          <div>
+            <h2 className="text-xl font-black text-slate-900 tracking-tight uppercase">
+              {t('dashboard.progress_title') || 'Postęp księgowania'}
+            </h2>
+            <p className="text-sm text-slate-500 font-medium">
+              {t('dashboard.progress_subtitle', { count: stats.total - clients.filter(c => c.locked).length }) || `Pozostało ${stats.total - clients.filter(c => c.locked).length} firm do zamknięcia`}
+            </p>
+          </div>
+          <div className="text-right">
+            <span className="text-4xl font-black text-blue-600 italic">
+              {progressPercent}%
+            </span>
+          </div>
+        </div>
+        
+        {/* Główny pasek postępu */}
+        <div className="h-4 w-full bg-slate-200/50 rounded-full overflow-hidden p-1 border border-slate-100 shadow-inner">
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: `${progressPercent}%` }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+          />
+        </div>
+
+        {/* Małe znaczniki pod paskiem */}
+        <div className="flex justify-between mt-3 px-1">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Start</span>
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter text-center flex-1 mx-2 border-x border-slate-200">
+            {t('dashboard.work_in_progress') || 'W trakcie'}
+          </span>
+          <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">Finał</span>
         </div>
       </div>
 {/* KONTENER NAD TABELĄ */}
@@ -285,7 +333,7 @@ const filters = [
     <Bell className="w-4 h-4 text-yellow-400 animate-pulse" />
     {/* Dynamiczny licznik: pokazuje ile osób z OBECNEGO widoku otrzyma Nudge */}
     <span>
-      {statusFilter === 'all' ? `NUDGE ALL (${stats.late + stats.missing})` : `NUDGE (${filteredClients.length})`}
+      {t('ai.nudge_all')} ({stats.late})
     </span>
   </motion.button>
 </div>

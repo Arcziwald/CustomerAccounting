@@ -17,14 +17,19 @@
     "all": "Wszyscy klienci",
     "complete": "Kompletne",
     "missing": "Brakujące",
+    "ready": "Gotowe",
     "late": "Spóźnione",
     "to_correct": "Do poprawki",
-    "history": "Ostatnie działania"
+    "history": "Ostatnie działania",
+    "correction": "Do poprawki",
+    "locked": "Zatwierdzone"
   },
   "dashboard": {
     "title": "Inteligentny Rejestr Dokumentów",
     "subtitle": "Automatyczna ekstrakcja danych",
-    "demo_alert": "Jesteś w trybie DEMO. Zobacz jak działa analiza dokumentów!"
+    "demo_alert": "Jesteś w trybie DEMO. Zobacz jak działa analiza dokumentów!",
+    "progress_title": "Postęp pracy", 
+  "progress_subtitle": "Pozostało {{count}} firm do zatwierdzenia"
   },
   "ai": {
     "nudge_msg": "Dzień dobry! Agent AI z tej strony. 🤖 Widzę, że w firmie {{name}} brakuje dokumentów. Pomóżmy sobie to dokończyć!",
@@ -33,7 +38,9 @@
     "beach_photo_msg": "To zdjęcie z plaży, a nie faktura! Proszę o właściwy dokument. 😉",
     "nudge_type_humor": "Monit",
     "toast_header": "Agent AI wysłał wiadomość",
-    "nudge_type_system": "Systemowe Przypomnienie"
+    "nudge_type_system": "Systemowe Przypomnienie",
+    "nudge_all": "POGOŃ SPÓŹNIALSKICH",
+    "nudge_sent_count": "Wysłano monity do"
   },
   "header": {
     "app_name": "BRAKOMAT",
@@ -142,5 +149,7 @@
     "no_files": "Brak plików - oczekiwanie na dostarczenie",
     "client_view": "Podgląd strefy klienta: zobacz interfejs oczami swojego klienta, zweryfikuj postęp przesyłania plików i stan powiadomień.",
     "export": "Generuj arkusz zbiorczy (.xlsx) ze statystykami wszystkich klientów, statusem dokumentów i danymi z analizy OCR do celów raportowych."
-  }
+  },
+  "progress_title": "Postęp pracy", 
+  "progress_subtitle": "Pozostało {{count}} firm do zatwierdzenia"
 }

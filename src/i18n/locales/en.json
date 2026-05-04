@@ -15,16 +15,21 @@
   },
   "stats": {
     "all": "All clients",
+    "ready": "Ready",
     "complete": "Complete",
     "missing": "Missing",
     "late": "Late",
     "to_correct": "To correct",
-    "history": "Recent activities"
+    "history": "Recent activities",
+    "correction": "To Review",
+    "locked": "Confirmed"
   },
   "dashboard": {
     "title": "Smart Document Registry",
     "subtitle": "Automatic data extraction",
-    "demo_alert": "You are in DEMO mode. See how document analysis works!"
+    "demo_alert": "You are in DEMO mode. See how document analysis works!",
+    "progress_title": "Work Progress", 
+    "progress_subtitle": "{{count}} companies left to close"
   },
   "ai": {
     "nudge_msg": "Hello! AI Agent here. 🤖 I see that {{name}} is missing some documents. Let's get this done!",
@@ -33,7 +38,9 @@
     "beach_photo_msg": "This is a beach photo, not an invoice! Please send the correct document. 😉",
     "nudge_type_humor": "Smart Nudge",
     "toast_header": "Agent AI sent a message",
-    "nudge_type_system": "System Reminder"
+    "nudge_type_system": "System Reminder",
+    "nudge_all": "NUDGE ALL",
+    "nudge_sent_count": "Nudges sent to"
   },
   "header": {
     "app_name": "The Missing Link",
