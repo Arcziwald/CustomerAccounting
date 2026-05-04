@@ -160,14 +160,18 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-  {/* IKONA I KOLOR TŁA */}
-  <div className={`p-3 rounded-2xl ${STATUS_COLORS[doc.status] || 'bg-slate-100 text-slate-600'}`}>
+  {/* IKONA I KOLOR TŁA - Zsynchronizowane z Dashboardem */}
+  <div className={`p-3 rounded-2xl ${
+    doc.status === 'OK' || doc.status === 'Zatwierdzone' ? 'bg-emerald-50 text-emerald-600' : 
+    doc.status === 'Spóźnione' ? 'bg-red-50 text-red-600 animate-pulse' : 
+    'bg-orange-50 text-orange-600'
+  }`}>
     {doc.status === 'OK' || doc.status === 'Zatwierdzone' ? <CheckCircle className="w-6 h-6" /> : 
-     doc.status === 'W toku' ? <Clock className="w-6 h-6" /> :
-     doc.status === 'Spóźnione' ? <AlertCircle className="w-6 h-6" /> : <Clock className="w-6 h-6" />}
+     doc.status === 'Spóźnione' ? <AlertCircle className="w-6 h-6" /> : 
+     <Clock className="w-6 h-6" />}
   </div>
 
-  {/* TEKST STATUSU (Tu naprawiamy błąd ze screena) */}
+  {/* TEKST STATUSU */}
   <div>
     <h3 className="font-bold text-slate-900 text-lg">
       {(() => {
@@ -182,26 +186,32 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
         return t(`labels.${key}`);
       })()}
     </h3>
-    <span className={`text-sm font-medium ${STATUS_COLORS[doc.status]?.split(' ')[1] || 'text-slate-500'}`}>
-  {t('common.status')}: {
-    (() => {
-      // Mapujemy polskie nazwy ze stanu na techniczne klucze JSON
-      const statusMap: { [key: string]: string } = {
-        'OK': 'ok',
-        'Zatwierdzone': 'zatwierdzone',
-        'W toku': 'w_toku',
-        'Spóźnione': 'spoznione',
-        'Brak': 'brak'
-      };
-      
-      const statusKey = statusMap[doc.status] || 'brak';
-      return t(`status.${statusKey}`);
-    })()
-  }
-</span>
+    <div className="flex flex-col">
+      <span className={`text-sm font-black uppercase tracking-wider ${
+        doc.status === 'OK' || doc.status === 'Zatwierdzone' ? 'text-emerald-600' :
+        doc.status === 'Spóźnione' ? 'text-red-600 font-black' : 'text-orange-500'
+      }`}>
+        {(() => {
+          const statusMap: { [key: string]: string } = {
+            'OK': 'ok',
+            'Zatwierdzone': 'zatwierdzone',
+            'W toku': 'w_toku',
+            'Spóźnione': 'spoznione',
+            'Brak': 'brak'
+          };
+          const statusKey = statusMap[doc.status] || 'brak';
+          return t(`status.${statusKey}`);
+        })()}
+      </span>
+      {/* Dodatkowy komunikat dla spóźnionych */}
+      {doc.status === 'Spóźnione' && (
+        <span className="text-[10px] text-red-400 font-medium italic mt-0.5">
+          {t('status.late_notice', { defaultValue: 'Termin minął! Prosimy o pilne uzupełnienie.' })}
+        </span>
+      )}
+    </div>
   </div>
-</div>
-
+  </div>
                   <div className="flex items-center gap-3">
                     {doc.label.toLowerCase().includes('faktur') && doc.status !== 'OK' && (
                       <button 

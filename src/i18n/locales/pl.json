@@ -50,13 +50,14 @@
   },
   "status": {
     "ok": "OK",
-    "brak": "Brak",
+    "brak": "Do przesłania",
     "spoznione": "Spóźnione",
     "w_toku": "W toku",
     "zatwierdzone": "Zatwierdzone",
     "odrzucone": "Odrzucone",
     "do_weryfikacji": "Do weryfikacji",
-    "zweryfikowano": "Zweryfikowano"
+    "zweryfikowano": "Zweryfikowano",
+    "late_notice": "Termin minął! Prosimy o pilne uzupełnienie."
   },
   "actions": {
     "send": "Wyślij",

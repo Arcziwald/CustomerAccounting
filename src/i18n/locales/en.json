@@ -56,7 +56,8 @@
     "zatwierdzone": "Approved",
     "odrzucone": "Rejected",
     "do_weryfikacji": "To verify",
-    "zweryfikowano": "Verified"
+    "zweryfikowano": "Verified",
+    "late_notice": "Deadline passed! Please upload as soon as possible."
   },
   "actions": {
     "send": "Send",
