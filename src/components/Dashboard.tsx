@@ -518,75 +518,70 @@ export default function Dashboard({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[999] flex items-center justify-center p-4 md:p-8"
+      className="fixed inset-0 z-[999] flex items-center justify-center p-2 sm:p-4 md:p-8 overflow-hidden"
     >
-      {/* Tło z lekkim blurem */}
-      <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-slate-950/95 backdrop-blur-md" />
       
       <motion.div 
         initial={{ y: 20, opacity: 0, scale: 0.95 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}
-        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white/5 backdrop-blur-xl p-6 md:p-12 rounded-[2.5rem] md:rounded-[4rem] shadow-2xl border border-white/10 text-center custom-scrollbar"
+        className="relative w-full max-w-2xl max-h-[95vh] flex flex-col bg-white/5 backdrop-blur-2xl p-6 md:p-12 rounded-[2.5rem] md:rounded-[4rem] shadow-2xl border border-white/10 text-center"
       >
-        {/* SEKCJA FLAG - Eleganckie i wycentrowane */}
-        <div className="flex justify-center gap-8 mb-10">
-          {[
-            { lang: 'pl', flag: '/flaga_pl.png' },
-            { lang: 'en', flag: '/flaga_en.png' }
-          ].map((item) => (
-            <motion.button
-              key={item.lang}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => i18n.changeLanguage(item.lang)}
-              className={`relative transition-all duration-300 ${
-                i18n.language === item.lang ? 'opacity-100' : 'opacity-40 hover:opacity-70'
-              }`}
-            >
-              <img 
-                src={item.flag} 
-                alt={item.lang} 
-                className={`w-14 h-auto md:w-16 drop-shadow-lg ${
-                  i18n.language === item.lang ? 'drop-shadow-[0_0_12px_rgba(59,130,246,0.5)]' : ''
-                }`}
-              />
-              {i18n.language === item.lang && (
-                <motion.div layoutId="activeL" className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-2 h-2 bg-blue-500 rounded-full" />
-              )}
-            </motion.button>
-          ))}
-        </div>
-
-        {/* TYTUŁ - Bez rakiety, czysta typografia */}
-        <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight leading-tight">
-          {t('welcome.title')} <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
-            {t('welcome.highlight')}
-          </span>
-        </h2>
-        
-        {/* TREŚĆ - Zmiejszone marginesy dla lepszego fitu */}
-        <div className="space-y-4 md:space-y-6 text-blue-100/80 text-base md:text-lg leading-relaxed mb-8 md:mb-10 px-2">
-          <p>{t('welcome.intro')}</p>
-          <div className="bg-white/5 rounded-2xl p-5 border border-white/10 text-sm text-left italic">
-            <span className="text-blue-400 font-bold italic">Note:</span> {t('welcome.security_note')}
+        {/* Scrollowalna treść, aby przycisk był zawsze na dole, jeśli ekran jest za mały */}
+        <div className="overflow-y-auto custom-scrollbar pr-1 flex-1">
+          
+          {/* SEKCJA FLAG */}
+          <div className="flex justify-center gap-6 mb-6 md:mb-10 pt-2">
+            {[
+              { lang: 'pl', flag: '/flaga_pl.png' },
+              { lang: 'en', flag: '/flaga_en.png' }
+            ].map((item) => (
+              <button
+                key={item.lang}
+                onClick={() => i18n.changeLanguage(item.lang)}
+                className={`relative transition-all ${i18n.language === item.lang ? 'opacity-100 scale-110' : 'opacity-30'}`}
+              >
+                <img src={item.flag} alt={item.lang} className="w-12 md:w-16 h-auto drop-shadow-md" />
+                {i18n.language === item.lang && (
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full" />
+                )}
+              </button>
+            ))}
           </div>
-          <p className="text-sm md:text-base opacity-90">{t('welcome.description')}</p>
+
+          {/* TYTUŁ - dynamiczna wielkość tekstu (text-2xl na mobile) */}
+          <h2 className="text-2xl md:text-5xl font-black text-white mb-4 md:mb-6 tracking-tight leading-tight px-2">
+            {t('welcome.title')} <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+              {t('welcome.highlight')}
+            </span>
+          </h2>
+          
+          {/* TREŚĆ - mniejszy font na mobile (text-sm) */}
+          <div className="space-y-4 text-blue-100/80 text-sm md:text-lg leading-relaxed mb-6 md:mb-10 px-1 md:px-4">
+            <p>{t('welcome.intro')}</p>
+            <div className="bg-white/5 rounded-2xl p-4 md:p-6 border border-white/10 text-xs md:text-sm text-left italic">
+              <span className="text-blue-400 font-bold italic block mb-1">Note:</span> {t('welcome.security_note')}
+            </div>
+            <p className="text-xs md:text-base opacity-70">{t('welcome.description')}</p>
+          </div>
         </div>
 
-        {/* PRZYCISK AKCJI */}
-        <motion.button 
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={handleFinalClose}
-          className="w-full md:w-auto px-12 py-4 md:py-5 bg-blue-600 text-white rounded-full font-black text-lg md:text-xl shadow-xl hover:bg-blue-700 transition-all"
-        >
-          {t('welcome.button')}
-        </motion.button>
+        {/* PRZYCISK - zawsze widoczny na dole, mniejszy padding na mobile */}
+        <div className="mt-4 pt-2">
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleFinalClose}
+            className="w-full md:w-auto px-8 py-3.5 md:px-12 md:py-5 bg-blue-600 text-white rounded-full font-black text-base md:text-xl shadow-xl hover:bg-blue-700 transition-all uppercase tracking-widest"
+          >
+            {t('welcome.button')}
+          </motion.button>
 
-        <p className="mt-8 text-[9px] text-white/20 uppercase tracking-[0.4em]">
-          ArtWebCraft Digital Experience 2026
-        </p>
+          <p className="mt-6 text-[8px] md:text-[9px] text-white/20 uppercase tracking-[0.3em]">
+            ArtWebCraft Digital Experience 2026
+          </p>
+        </div>
       </motion.div>
     </motion.div>
   )}
