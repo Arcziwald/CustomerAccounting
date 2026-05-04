@@ -54,10 +54,22 @@ export interface Client {
   locked?: boolean;
 }
 
-export const STATUS_COLORS: Record<DocumentStatus, string> = {
-  'OK': 'bg-green-100 text-green-700 border-green-200',
-  'Brak': 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  'Spóźnione': 'bg-red-100 text-red-700 border-red-200',
-  'W toku': 'bg-blue-100 text-blue-700 border-blue-200',
-  'Zatwierdzone': 'bg-emerald-600 text-white border-emerald-700',
+export const STATUS_COLORS: Record<string, string> = {
+  // Stan: Brak / Do przesłania (Subtelny pomarańcz zamiast żółtego)
+  'Brak': 'bg-orange-50 text-orange-600 border-orange-100',
+  
+  // Stan: W toku / Do weryfikacji
+  'W toku': 'bg-blue-50 text-blue-600 border-blue-100',
+  'Do weryfikacji': 'bg-indigo-50 text-indigo-600 border-indigo-100',
+  
+  // Stan: Spóźnione (Delikatny róż/czerwień)
+  'Spóźnione': 'bg-red-50 text-red-600 border-red-100',
+  'Odrzucone': 'bg-rose-50 text-rose-600 border-rose-100',
+  
+  // Stan: OK (Pastelowa zieleń)
+  'OK': 'bg-emerald-50 text-emerald-600 border-emerald-100',
+  
+  // STANY FINALNE - Tutaj zostawiamy mocniejszy akcent
+  'Zatwierdzone': 'bg-emerald-500 text-white border-emerald-600 shadow-sm',
+  'Zweryfikowano': 'bg-blue-500 text-white border-blue-600 shadow-sm'
 };
