@@ -212,46 +212,50 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
     </div>
   </div>
   </div>
-                  <div className="flex items-center gap-3">
-                    {doc.label.toLowerCase().includes('faktur') && doc.status !== 'OK' && (
-                      <button 
-                        onClick={() => setShowChecker(!showChecker)}
-                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                          showChecker ? 'bg-slate-200 text-slate-800' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
-                        }`}
-                      >
-                        {t('client_view.check_continuity')}
-                      </button>
-                    )}
-                    
-                    <input 
-                      type="file" 
-                      id={`file-upload-${doc.id}`}
-                      className="hidden" 
-                      accept=".pdf, .jpg, .jpeg, .png"
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        const file = e.target.files?.[0];
-                        if (file) handleUpload(doc.id, doc.label, file);
-                      }}
-                    />
-                    
-                    <button 
-                      onClick={() => document.getElementById(`file-upload-${doc.id}`)?.click()}
-                      disabled={uploading === doc.id || client.locked}
-                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 disabled:opacity-50 disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none"
-                    >
-                      {uploading === doc.id ? (
-                        <span className="flex items-center gap-2">
-                          <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
-                            <Upload className="w-4 h-4" />
-                          </motion.div>
-                          {t('common.uploading', { defaultValue: 'Uploading...' })}
-                        </span>
-                      ) : (
-                        <><Plus className="w-4 h-4" />{t('client_view.add_doc')}</>
-                      )}
-                    </button>
-                  </div>
+                  {/* SEKCJA PRZYCISKÓW - Odchudzona i elegancka */}
+                  {/* SEKCJA PRZYCISKÓW - Eleganckie, małe i wyśrodkowane */}
+<div className="flex flex-col items-center justify-center gap-2 mt-4 w-full">
+  
+  {/* Przycisk Sprawdź ciągłość - mniejszy i subtelny */}
+  {doc.label.toLowerCase().includes('faktur') && doc.status !== 'OK' && (
+    <button 
+      onClick={() => setShowChecker(!showChecker)}
+      className={`w-48 py-1.5 rounded-lg text-[11px] font-bold transition-all border ${
+        showChecker 
+          ? 'bg-slate-200 text-slate-800 border-slate-300' 
+          : 'bg-white border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300'
+      }`}
+    >
+      {t('client_view.check_continuity')}
+    </button>
+  )}
+  
+  <input 
+    type="file" 
+    id={`file-upload-${doc.id}`}
+    className="hidden" 
+    accept=".pdf, .jpg, .jpeg, .png"
+    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) handleUpload(doc.id, doc.label, file);
+    }}
+  />
+  
+  {/* Przycisk Dodaj dokument - smukły i wyśrodkowany */}
+  <button 
+    onClick={() => document.getElementById(`file-upload-${doc.id}`)?.click()}
+    disabled={uploading === doc.id || client.locked}
+    className="w-48 py-2 bg-blue-600 text-white rounded-lg text-[11px] font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-100 disabled:opacity-50 disabled:bg-slate-200 flex items-center justify-center gap-2"
+  >
+    {uploading === doc.id ? (
+      <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
+        <Upload className="w-3 h-3" />
+      </motion.div>
+    ) : (
+      <><Plus className="w-3 h-3 stroke-[3px]" />{t('client_view.add_doc')}</>
+    )}
+  </button>
+</div>
                 </div>
 
                 <div className="pt-4 border-t border-slate-200/50">
