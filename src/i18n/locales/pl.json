@@ -151,11 +151,11 @@
     "export": "Generuj arkusz zbiorczy (.xlsx) ze statystykami wszystkich klientów, statusem dokumentów i danymi z analizy OCR do celów raportowych."
   },
   "welcome": {
-  "title": "Witaj w",
-  "highlight": "Przyszłości Księgowości",
+  "title": "Witaj na",
+  "highlight": "Moście do Księgowości",
   "intro": "Właśnie uruchomiłeś wersję demonstracyjną Brakomatu.",
   "security_note": "W pełnej wersji systemu znajduje się tu bezpieczny panel logowania z weryfikacją dostępu dla Ciebie i osobny dla Twoich klientów.",
-  "description": "Przygotowaliśmy dla Ciebie symulację realnych procesów: automatyczne monity, analizę OCR AI oraz inteligentne blokady okresów.",
+  "description": "Przygotowaliśmy dla Ciebie symulację realnych procesów: automatyczne monity, analizę OCR, inteligentne blokady okresów i mnóstwo innych szalenie przydatnych funkcji.",
   "button": "URUCHOM SILNIK DEMO"
 }
 }

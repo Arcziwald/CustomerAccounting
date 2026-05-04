@@ -518,89 +518,74 @@ export default function Dashboard({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[999] flex items-center justify-center p-4 overflow-hidden"
+      className="fixed inset-0 z-[999] flex items-center justify-center p-4 md:p-8"
     >
-      <div className="absolute inset-0 bg-[#0f172a]" />
-      {/* BACKGROUND ANIMATIONS */}
-      <motion.div animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }} transition={{ duration: 20, repeat: Infinity }} className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-blue-600/30 rounded-full blur-[120px]" />
-      <motion.div animate={{ scale: [1, 1.3, 1], rotate: [0, -90, 0] }} transition={{ duration: 15, repeat: Infinity, delay: 2 }} className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-indigo-600/20 rounded-full blur-[120px]" />
-
+      {/* Tło z lekkim blurem */}
+      <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm" />
+      
       <motion.div 
-        initial={{ y: 50, opacity: 0, rotateX: 20 }}
-        animate={{ y: 0, opacity: 1, rotateX: 0 }}
-        className="relative max-w-2xl w-full bg-white/10 backdrop-blur-[30px] p-12 rounded-[4rem] shadow-2xl border border-white/20 text-center"
+        initial={{ y: 20, opacity: 0, scale: 0.95 }}
+        animate={{ y: 0, opacity: 1, scale: 1 }}
+        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white/5 backdrop-blur-xl p-6 md:p-12 rounded-[2.5rem] md:rounded-[4rem] shadow-2xl border border-white/10 text-center custom-scrollbar"
       >
-        {/* PURE PNG LANGUAGE SWITCHER */}
-        <div className="flex justify-center gap-10 mb-12">
+        {/* SEKCJA FLAG - Eleganckie i wycentrowane */}
+        <div className="flex justify-center gap-8 mb-10">
           {[
             { lang: 'pl', flag: '/flaga_pl.png' },
             { lang: 'en', flag: '/flaga_en.png' }
           ].map((item) => (
             <motion.button
               key={item.lang}
-              whileHover={{ scale: 1.15, y: -5 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => i18n.changeLanguage(item.lang)}
-              className="relative group p-2"
+              className={`relative transition-all duration-300 ${
+                i18n.language === item.lang ? 'opacity-100' : 'opacity-40 hover:opacity-70'
+              }`}
             >
               <img 
                 src={item.flag} 
-                alt={item.lang.toUpperCase()} 
-                // Czyste PNG z przezroczystością, bez kafelka i obramowania
-                className={`w-20 h-14 object-contain transition-all duration-300 ${
-                  i18n.language === item.lang 
-                    ? 'drop-shadow-[0_10px_25px_rgba(59,130,246,0.6)]' // Niebieski blask dla aktywnego
-                    : 'drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_10px_25px_rgba(255,255,255,0.3)]'
+                alt={item.lang} 
+                className={`w-14 h-auto md:w-16 drop-shadow-lg ${
+                  i18n.language === item.lang ? 'drop-shadow-[0_0_12px_rgba(59,130,246,0.5)]' : ''
                 }`}
               />
               {i18n.language === item.lang && (
-                <motion.div 
-                  layoutId="activeFlagBar"
-                  className="absolute -bottom-2 left-4 right-4 h-1 bg-blue-400 rounded-full"
-                />
+                <motion.div layoutId="activeL" className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-2 h-2 bg-blue-500 rounded-full" />
               )}
             </motion.button>
           ))}
         </div>
 
-        {/* PURE PNG ROCKET - FLOAT ANIMATION */}
-        <motion.div 
-          animate={{ y: [0, -18, 0] }} 
-          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }} 
-          className="mx-auto mb-12 drop-shadow-[0_30px_60px_rgba(37,99,235,0.4)]"
-        >
-          <img 
-            src="/rocket.png" 
-            alt="Rocket" 
-            // Czyste PNG na przezroczystości, bez tła
-            className="w-40 h-40 object-contain mx-auto" 
-          />
-        </motion.div>
-        
-        {/* TEXTS AND BUTTONS */}
-        <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
-          {t('welcome.title')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">{t('welcome.highlight')}</span>
+        {/* TYTUŁ - Bez rakiety, czysta typografia */}
+        <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight leading-tight">
+          {t('welcome.title')} <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+            {t('welcome.highlight')}
+          </span>
         </h2>
         
-        <div className="space-y-6 text-blue-100/80 text-lg leading-relaxed mb-10">
+        {/* TREŚĆ - Zmiejszone marginesy dla lepszego fitu */}
+        <div className="space-y-4 md:space-y-6 text-blue-100/80 text-base md:text-lg leading-relaxed mb-8 md:mb-10 px-2">
           <p>{t('welcome.intro')}</p>
-          <div className="bg-white/5 rounded-2xl p-6 border border-white/10 text-sm text-left italic">
-            <span className="text-blue-400 font-bold">Info:</span> {t('welcome.security_note')}
+          <div className="bg-white/5 rounded-2xl p-5 border border-white/10 text-sm text-left italic">
+            <span className="text-blue-400 font-bold italic">Note:</span> {t('welcome.security_note')}
           </div>
-          <p className="text-base">{t('welcome.description')}</p>
+          <p className="text-sm md:text-base opacity-90">{t('welcome.description')}</p>
         </div>
 
+        {/* PRZYCISK AKCJI */}
         <motion.button 
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleFinalClose}
-          className="px-12 py-5 bg-blue-600 text-white rounded-full font-black text-xl shadow-xl hover:shadow-blue-500/30 transition-shadow"
+          className="w-full md:w-auto px-12 py-4 md:py-5 bg-blue-600 text-white rounded-full font-black text-lg md:text-xl shadow-xl hover:bg-blue-700 transition-all"
         >
           {t('welcome.button')}
         </motion.button>
 
-        <p className="mt-8 text-[10px] text-white/30 uppercase tracking-[0.3em]">
-          Powered by ArtWebCraft AI Engine 2026
+        <p className="mt-8 text-[9px] text-white/20 uppercase tracking-[0.4em]">
+          ArtWebCraft Digital Experience 2026
         </p>
       </motion.div>
     </motion.div>
