@@ -23,7 +23,9 @@
     "to_correct": "Do poprawki",
     "history": "Ostatnie działania",
     "correction": "Do poprawki",
-    "locked": "Zatwierdzone"
+    "locked": "Zatwierdzone",
+    "overdue": "Spóźnione",
+    "to_fix": "Do poprawki"
   },
   "dashboard": {
     "title": "Inteligentny Rejestr Dokumentów",
@@ -31,7 +33,10 @@
     "demo_alert": "Jesteś w trybie DEMO. Zobacz jak działa analiza dokumentów!",
     "progress_title": "Postęp pracy", 
     "progress_subtitle": "Pozostało {{count}} firm do zatwierdzenia",
-    "work_in_progress": "W trakcie księgowania"
+    "work_in_progress": "W trakcie księgowania",
+    "welcome_morning": "Dzień dobry",
+    "welcome_evening": "Dobry wieczór",
+    "welcome_sub": "Oto co dzieje się dzisiaj w Twoim biurze."
     },
   "ai": {
     "nudge_msg": "Dzień dobry! Agent AI z tej strony. 🤖 Widzę, że w firmie {{name}} brakuje dokumentów. Pomóżmy sobie to dokończyć!",
@@ -85,7 +90,14 @@
   "pelnomocnictwo": "Pełnomocnictwo",
   "nieznany": "Nieznany",
   "upload": "Przesyłanie",
-  "przesylanie": "Przesyłanie..."
+  "przesylanie": "Przesyłanie...",
+  "delegacje": "Delegacje",
+  "umowy": "Umowy",
+  "paliwo": "Faktury Paliwowe",
+  "reprezentacja": "Koszty Reprezentacji",
+  "leasing": "Leasingi i Raty",
+  "podatki": "Podatki i Deklaracje",
+  "inne": "Pozostałe Dokumenty"
   },
   "table": {
     "client": "Klient",
@@ -160,5 +172,14 @@
   "security_note": "W pełnej wersji systemu znajduje się tu bezpieczny panel logowania z weryfikacją dostępu dla Ciebie i osobny dla Twoich klientów.",
   "description": "Przygotowaliśmy dla Ciebie symulację realnych procesów: automatyczne monity, analizę OCR, inteligentne blokady okresów i mnóstwo innych szalenie przydatnych funkcji.",
   "button": "URUCHOM SILNIK DEMO"
-}
+  },
+  "activity": {
+  "title": "OSTATNIE DZIAŁANIA",
+  "system_notice": "System",
+  "ai_notice": "Agent AI"
+  },
+  "progress": {
+  "title": "POSTĘP PRACY",
+  "subtitle": "Pozostało {{count}} firm do zatwierdzenia"
+  }
 }

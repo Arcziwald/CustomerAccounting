@@ -196,24 +196,29 @@ export default function Dashboard({
         {/* LEWA KOLUMNA: POWITANIE I KARTY (8 kolumn na desktop) */}
         <div className="lg:col-span-8 flex flex-col gap-6">
           
-          {/* Nagłówek powitalny (Wypełniacz desktopowy) */}
-          <div className="hidden lg:flex items-end justify-between bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm overflow-hidden relative group">
-             <div className="relative z-10">
-                <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-                  {new Date().getHours() < 12 ? 'Dzień dobry' : 'Dobry wieczór'}, <span className="text-blue-600">Admin</span>
-                </h1>
-                <p className="text-slate-500 font-medium mt-1">Oto co dzieje się dzisiaj w Twoim biurze.</p>
-             </div>
-             <div className="text-right relative z-10">
-                <div className="text-4xl font-black text-slate-200 uppercase tracking-tighter tabular-nums leading-none">
-                   {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                </div>
-                <div className="text-[10px] font-bold text-blue-500 uppercase tracking-[0.2em] mt-1">
-                   {new Date().toLocaleDateString('pl-PL', {weekday: 'long', day: 'numeric', month: 'long'})}
-                </div>
-             </div>
-             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full -mr-20 -mt-20 blur-3xl opacity-50 transition-opacity" />
-          </div>
+          {/* Nagłówek powitalny (Wypełniacz desktopowy) - JUŻ Z TRANSLACJĄ */}
+<div className="hidden lg:flex items-end justify-between bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm overflow-hidden relative group">
+    <div className="relative z-10">
+      <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+        {/* Dynamiczne powitanie zależne od godziny i języka */}
+        {new Date().getHours() < 12 ? t('dashboard.welcome_morning') : t('dashboard.welcome_evening')}, 
+        <span className="text-blue-600"> Admin</span>
+      </h1>
+      <p className="text-slate-500 font-medium mt-1">
+        {t('dashboard.welcome_sub')}
+      </p>
+    </div>
+    <div className="text-right relative z-10">
+      <div className="text-4xl font-black text-slate-200 uppercase tracking-tighter tabular-nums leading-none">
+        {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+      </div>
+      <div className="text-[10px] font-bold text-blue-500 uppercase tracking-[0.2em] mt-1">
+        {/* Dynamiczny format daty zależny od i18n.language */}
+        {new Date().toLocaleDateString(i18n.language === 'pl' ? 'pl-PL' : 'en-US', {weekday: 'long', day: 'numeric', month: 'long'})}
+      </div>
+    </div>
+    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full -mr-20 -mt-20 blur-3xl opacity-50 transition-opacity" />
+</div>
 
           {/* GRID KART (2 kolumny na mobile, 5 na desktop) */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -427,14 +432,27 @@ export default function Dashboard({
                       {client.documents.map((doc) => (
                         <div key={doc.id} className="relative">
                           <Tooltip text={`${t('tooltips.status_info')}: ${doc.files.length > 0 ? t('tooltips.files_uploaded') : t('tooltips.no_files')}`}>
-                            <button 
-                              onClick={() => doc.files.length > 0 ? setViewingFilesDocId(viewingFilesDocId === `${client.id}-${doc.id}` ? null : `${client.id}-${doc.id}`) : null}
-                              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] lg:text-[11px] font-bold uppercase tracking-tight border transition-all ${STATUS_COLORS[doc.status]} ${doc.files.length > 0 ? 'cursor-pointer hover:shadow-sm' : 'cursor-default'}`}
-                            >
-                              {t(`labels.${doc.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/ /g, '_')}`)}
-                              {doc.files.length > 0 && <span className="bg-white/30 px-1 rounded-sm text-[9px]">{doc.files.length}</span>}
-                              {doc.files.length > 0 && <ChevronDown className={`w-3 h-3 transition-transform ${viewingFilesDocId === `${client.id}-${doc.id}` ? 'rotate-180' : ''}`} />}
-                            </button>
+<button 
+  onClick={() => {
+    const uniqueId = `${client.id}-${doc.id}`;
+    setViewingFilesDocId(viewingFilesDocId === uniqueId ? null : uniqueId);
+  }}
+  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight border transition-all ${STATUS_COLORS[doc.status] || 'bg-slate-50 text-slate-400 border-slate-100'}`}
+>
+  {(() => {
+    // 1. Przygotowujemy techniczny klucz (małe litery, bez spacji)
+    const technicalKey = doc.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/ /g, '_');
+    const translationKey = `labels.${technicalKey}`;
+    
+    // 2. Sprawdzamy czy tłumaczenie istnieje w i18n
+    const translated = t(translationKey);
+    
+    // 3. Jeśli t() zwróciło klucz (czyli brak tłumaczenia), pokazujemy oryginalny label
+    return translated === translationKey ? doc.label : translated;
+  })()}
+  
+  {doc.files.length > 0 && <span className="bg-white/30 px-1 rounded-sm text-[9px]">{doc.files.length}</span>}
+</button>
                           </Tooltip>
 
                           {/* SZKLANY PANEL PODGLĄDU PLIKÓW (Pojawia się pod kafelkiem) */}

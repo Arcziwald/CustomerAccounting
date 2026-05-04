@@ -174,18 +174,22 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
   {/* TEKST STATUSU */}
   <div>
     <h3 className="font-bold text-slate-900 text-lg">
-      {(() => {
-        const labelMap: { [key: string]: string } = {
-          'Faktury Kosztowe': 'faktury_kosztowe',
-          'Faktury Przychodowe': 'faktury_przychodowe',
-          'Wyciągi': 'wyciagi',
-          'ZUS': 'zus',
-          'Kadry': 'kadry'
-        };
-        const key = labelMap[doc.label] || doc.label.toLowerCase().replace(/ /g, '_');
-        return t(`labels.${key}`);
-      })()}
-    </h3>
+  {(() => {
+    // 1. Tworzymy klucz techniczny z nazwy (np. "Delegacje" -> "delegacje")
+    const technicalKey = doc.label
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/ /g, '_');
+    
+    const translationKey = `labels.${technicalKey}`;
+    const translated = t(translationKey);
+
+    // 2. Jeśli t() zwróci klucz (brak tłumaczenia), pokaż doc.label. 
+    // Jeśli tłumaczenie istnieje, pokaż przetłumaczone.
+    return translated === translationKey ? doc.label : translated;
+  })()}
+</h3>
     <div className="flex flex-col">
       <span className={`text-sm font-black uppercase tracking-wider ${
         doc.status === 'OK' || doc.status === 'Zatwierdzone' ? 'text-emerald-600' :

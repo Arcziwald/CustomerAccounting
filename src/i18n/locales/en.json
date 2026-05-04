@@ -23,7 +23,9 @@
     "to_correct": "To correct",
     "history": "Recent activities",
     "correction": "To Review",
-    "locked": "Confirmed"
+    "locked": "Confirmed",
+    "overdue": "Overdue",
+    "to_fix": "To fix"
   },
   "dashboard": {
     "title": "Smart Document Registry",
@@ -31,7 +33,10 @@
     "demo_alert": "You are in DEMO mode. See how document analysis works!",
     "progress_title": "Work Progress", 
     "progress_subtitle": "{{count}} companies left to close",
-    "work_in_progress": "Work in progress"
+    "work_in_progress": "Work in progress",
+    "welcome_morning": "Good morning",
+    "welcome_evening": "Good evening",
+    "welcome_sub": "Here's what's happening in your office today."
   },
   "ai": {
     "nudge_msg": "Hello! AI Agent here. 🤖 I see that {{name}} is missing some documents. Let's get this done!",
@@ -84,7 +89,14 @@
   "umowa": "Agreement",
   "pelnomocnictwo": "Power of Attorney",
   "nieznany": "Unknown",
-  "upload": "Upload"
+  "upload": "Upload",
+  "delegacje": "Business Travel",
+  "umowy": "Contracts",
+  "paliwo": "Fuel Invoices",
+  "reprezentacja": "Representation Costs",
+  "leasing": "Leasing & Installments",
+  "podatki": "Taxes & Declarations",
+  "inne": "Other Documents"
   },
   "table": {
     "client": "Client",
@@ -158,5 +170,14 @@
   "security_note": "In the full version of the system, there is a secure login panel with access verification for you and a separate one for your clients.",
   "description": "We have prepared a simulation of real processes: automated nudges, AI OCR analysis, intelligent period locking, and many other extremely useful features.",
   "button": "START DEMO ENGINE"
-}
+  },
+  "activity": {
+  "title": "RECENT ACTIVITY",
+  "system_notice": "System",
+  "ai_notice": "AI Agent"
+  },
+  "progress": {
+  "title": "WORK PROGRESS",
+  "subtitle": "{{count}} companies left to approve"
+  }
 }

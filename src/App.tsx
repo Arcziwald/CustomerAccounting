@@ -23,7 +23,8 @@ const MOCK_CLIENTS: Client[] = [
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Brak', files: [] },
       { id: 'wyciagi', label: 'Wyciągi', status: 'Brak', files: [] },
       { id: 'zus', label: 'ZUS', status: 'OK', files: [] },
-      { id: 'kadry', label: 'Kadry', status: 'OK', files: [] }
+      { id: 'kadry', label: 'Kadry', status: 'OK', files: [] },
+      { id: 'inne', label: 'Inne', status: 'Brak', files: [] },
     ]
   },
   {
@@ -36,7 +37,8 @@ const MOCK_CLIENTS: Client[] = [
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Brak', files: [] },
       { id: 'wyciagi', label: 'Wyciągi', status: 'Brak', files: [] },
       { id: 'zus', label: 'ZUS', status: 'Spóźnione', files: [] },
-      { id: 'kadry', label: 'Kadry', status: 'OK', files: [] }
+      { id: 'kadry', label: 'Kadry', status: 'OK', files: [] },
+      { id: 'inne', label: 'Inne', status: 'Brak', files: [] }
     ]
   },
   {
@@ -49,7 +51,8 @@ const MOCK_CLIENTS: Client[] = [
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'OK', files: [] },
       { id: 'wyciagi', label: 'Wyciągi', status: 'OK', files: [] },
       { id: 'zus', label: 'ZUS', status: 'OK', files: [] },
-      { id: 'kadry', label: 'Kadry', status: 'OK', files: [] }
+      { id: 'kadry', label: 'Kadry', status: 'OK', files: [] },
+      { id: 'inne', label: 'Inne', status: 'OK', files: [] }
     ]
   },
   {
@@ -62,7 +65,8 @@ const MOCK_CLIENTS: Client[] = [
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Spóźnione', files: [] },
       { id: 'wyciagi', label: 'Wyciągi', status: 'OK', files: [] },
       { id: 'zus', label: 'ZUS', status: 'Brak', files: [] },
-      { id: 'kadry', label: 'Kadry', status: 'Brak', files: [] }
+      { id: 'kadry', label: 'Kadry', status: 'Brak', files: [] },
+      { id: 'inne', label: 'Inne', status: 'Brak', files: [] }
     ]
   }
 ];
