@@ -156,7 +156,7 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
               <motion.div 
                 key={doc.id}
                 layout
-                className="p-6 bg-slate-50 rounded-3xl border border-slate-100 flex flex-col gap-4"
+                className="p-4 sm:p-6 bg-slate-50 rounded-3xl border border-slate-100 flex flex-col gap-4"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
@@ -282,9 +282,9 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
           </div>
         </div>
 
-        <div className="mt-12 p-10 bg-blue-600 rounded-[3rem] text-white text-center shadow-2xl shadow-blue-200">
-          <h3 className="text-3xl font-bold mb-3">{t('client_view.ready_title')}</h3>
-          <p className="text-blue-100 mb-8 text-lg max-w-md mx-auto">{t('client_view.ready_desc')}</p>
+        <div className="mt-8 md:mt-12 p-6 md:p-10 bg-blue-600 rounded-[2rem] md:rounded-[3rem] text-white text-center shadow-2xl shadow-blue-200">
+  <h3 className="text-2xl md:text-3xl font-bold mb-3">{t('client_view.ready_title')}</h3>
+  <p className="text-blue-100 mb-6 md:mb-8 text-base md:text-lg max-w-md mx-auto">{t('client_view.ready_desc')}</p>
           <button 
     onClick={() => {
       if (id && !client.locked) {
@@ -305,7 +305,7 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
       }
     }}
     disabled={client.locked}
-    className="inline-flex items-center gap-3 px-10 py-5 bg-white text-blue-600 rounded-2xl font-bold text-xl hover:bg-blue-50 transition-all shadow-xl disabled:opacity-50"
+    className="w-full md:w-auto inline-flex items-center justify-center gap-3 px-6 py-4 md:px-10 md:py-5 bg-white text-blue-600 rounded-2xl font-bold text-lg md:text-xl hover:bg-blue-50 transition-all shadow-xl disabled:opacity-50"
   >
     <Send className="w-6 h-6" />
     {client.locked ? t('status.zatwierdzone') : t('client_view.finish_btn')}
