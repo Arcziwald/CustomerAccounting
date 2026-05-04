@@ -11,7 +11,8 @@
     "files_count_other": "pliki",
     "uploading": "Wysyłanie...",
     "no_results": "Nie znaleziono klientów spełniających kryteria.",
-    "search_placeholder": "Szukaj klienta..."
+    "search_placeholder": "Szukaj klienta...",
+    "just_now": "Właśnie teraz"
   },
   "stats": {
     "all": "Wszyscy klienci",
@@ -29,8 +30,9 @@
     "subtitle": "Automatyczna ekstrakcja danych",
     "demo_alert": "Jesteś w trybie DEMO. Zobacz jak działa analiza dokumentów!",
     "progress_title": "Postęp pracy", 
-  "progress_subtitle": "Pozostało {{count}} firm do zatwierdzenia"
-  },
+    "progress_subtitle": "Pozostało {{count}} firm do zatwierdzenia",
+    "work_in_progress": "W trakcie księgowania"
+    },
   "ai": {
     "nudge_msg": "Dzień dobry! Agent AI z tej strony. 🤖 Widzę, że w firmie {{name}} brakuje dokumentów. Pomóżmy sobie to dokończyć!",
     "beach_msg": "To zdjęcie z plaży, a nie faktura! Proszę o właściwy dokument. 😉",

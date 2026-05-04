@@ -11,7 +11,8 @@
     "files_count_other": "files",
     "uploading": "Uploading...",
     "no_results": "No clients found matching the criteria.",
-    "search_placeholder": "Search client..."
+    "search_placeholder": "Search client...",
+    "just_now": "Just now"
   },
   "stats": {
     "all": "All clients",
@@ -29,7 +30,8 @@
     "subtitle": "Automatic data extraction",
     "demo_alert": "You are in DEMO mode. See how document analysis works!",
     "progress_title": "Work Progress", 
-    "progress_subtitle": "{{count}} companies left to close"
+    "progress_subtitle": "{{count}} companies left to close",
+    "work_in_progress": "Work in progress"
   },
   "ai": {
     "nudge_msg": "Hello! AI Agent here. 🤖 I see that {{name}} is missing some documents. Let's get this done!",

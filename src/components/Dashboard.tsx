@@ -190,62 +190,110 @@ export default function Dashboard({
 
 
       
-    {/* STATYSTYKI */}
-      <div className="flex flex-col lg:flex-row gap-8 mb-8 items-start">
-        <div className="w-full lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
-          {[
-            { label: t('stats.all'), value: stats.total, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', border: 'hover:border-blue-400' },
-            { label: t('stats.complete'), value: stats.complete, icon: Check, color: 'text-green-600', bg: 'bg-green-50', border: 'hover:border-green-400' },
-            { label: t('stats.missing'), value: stats.missing, icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50', border: 'hover:border-orange-400' },
-            { label: t('stats.late'), value: stats.late, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50', border: 'hover:border-red-400' },
-            { label: t('stats.to_correct'), value: stats.toCorrect, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50', border: 'hover:border-red-400' }
-          ].map((item, idx) => (
-            <motion.div key={idx} whileHover={{ y: -5, scale: 1.02 }} className={`bg-white/70 backdrop-blur-md p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col h-44 transition-all ${item.border} hover:shadow-xl hover:shadow-slate-200/50 cursor-default`}>
-              <div className={`w-10 h-10 ${item.bg} ${item.color} rounded-xl flex items-center justify-center mb-4 shrink-0 shadow-inner`}><item.icon className="w-5 h-5" /></div>
-              <div className="flex flex-col flex-grow justify-start">
-                <div className="text-3xl font-black text-slate-900 leading-none mb-2">{item.value}</div>
-                <div className="text-[11px] leading-snug text-slate-500 font-bold uppercase tracking-tight break-words">{item.label}</div>
-              </div>
-            </motion.div>
-          ))}
+    {/* GŁÓWNY UKŁAD GÓRNY: STATYSTYKI + POWITANIE + HISTORIA */}
+      <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 mb-10">
+        
+        {/* LEWA KOLUMNA: POWITANIE I KARTY (8 kolumn na desktop) */}
+        <div className="lg:col-span-8 flex flex-col gap-6">
+          
+          {/* Nagłówek powitalny (Wypełniacz desktopowy) */}
+          <div className="hidden lg:flex items-end justify-between bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm overflow-hidden relative group">
+             <div className="relative z-10">
+                <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+                  {new Date().getHours() < 12 ? 'Dzień dobry' : 'Dobry wieczór'}, <span className="text-blue-600">Admin</span>
+                </h1>
+                <p className="text-slate-500 font-medium mt-1">Oto co dzieje się dzisiaj w Twoim biurze.</p>
+             </div>
+             <div className="text-right relative z-10">
+                <div className="text-4xl font-black text-slate-200 uppercase tracking-tighter tabular-nums leading-none">
+                   {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                </div>
+                <div className="text-[10px] font-bold text-blue-500 uppercase tracking-[0.2em] mt-1">
+                   {new Date().toLocaleDateString('pl-PL', {weekday: 'long', day: 'numeric', month: 'long'})}
+                </div>
+             </div>
+             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full -mr-20 -mt-20 blur-3xl opacity-50 transition-opacity" />
+          </div>
+
+          {/* GRID KART (2 kolumny na mobile, 5 na desktop) */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {[
+              { id: 'all', label: t('stats.all'), value: stats.total, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
+              { id: 'ready', label: t('stats.complete'), value: stats.complete, icon: Check, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+              { id: 'missing', label: t('stats.missing'), value: stats.missing, icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50' },
+              { id: 'late', label: t('stats.late'), value: stats.late, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50' },
+              { id: 'correction', label: t('stats.to_correct'), value: stats.toCorrect, icon: Info, color: 'text-rose-600', bg: 'bg-rose-50' }
+            ].map((item) => (
+              <motion.div
+                key={item.id}
+                whileHover={{ y: -4 }}
+                className="bg-white p-4 md:p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between min-h-[130px] md:min-h-[160px] transition-all hover:shadow-md"
+              >
+                <div className={`p-2.5 rounded-xl w-fit ${item.bg} ${item.color}`}>
+                   <item.icon className="w-5 h-5" />
+                </div>
+                <div>
+                   <div className="text-2xl md:text-3xl font-black text-slate-900 mb-0.5">{item.value}</div>
+                   <div className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-wider leading-tight">
+                      {item.label}
+                   </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
-        <div className="w-full lg:w-1/4 bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col h-[450px]">
-          <div className="flex items-center gap-2 mb-4 text-slate-900 font-bold shrink-0">
-            <History className="w-5 h-5 text-blue-600" />
-            <span>{t('stats.history')}</span>
-          </div>
-          
-          <div className="space-y-4 overflow-y-auto pr-2 scrollbar-hide">
-            {activities.length === 0 ? (<p className="text-xs text-slate-400 italic">{t('activities.no_activities')}</p>) : (
-              activities.filter((v, i, a) => a.findIndex(t => t.timestamp === v.timestamp && t.clientName === v.clientName) === i).map(activity => (
-                <div key={activity.id} className="text-xs border-l-2 border-blue-500/30 pl-4 py-2 bg-slate-50/50 rounded-r-xl group hover:border-blue-500 transition-all">
-                  <div className="font-bold text-slate-800 mb-1">{activity.clientName}</div>
-                  <div className="text-slate-600 leading-relaxed break-words">
-                    {(() => {
-                      const actionLabel = activity.action === 'common.all' || activity.action === 'System' ? t('activities.system_action', { defaultValue: 'System' }) : (activity.action.includes('.') ? t(activity.action) : activity.action);
-                      let detailContent = activity.detail;
-                      if (activity.detail.includes('|')) {
-                        const [key, val] = activity.detail.split('|');
-                        detailContent = t(key, { name: val, fileName: val });
-                      } else if (activity.detail.includes('.')) {
-                        if (activity.detail.startsWith('activities.') || activity.detail.startsWith('status.')) {
-                          detailContent = t(activity.detail);
-                        } else {
-                          detailContent = `${t('activities.file_label', { defaultValue: 'Plik' })}: ${activity.detail}`;
-                        }
-                      }
-                      return (<><span className="font-medium text-blue-600/70">{actionLabel}:</span>{' '}<span className="text-slate-500">{detailContent}</span></>);
-                    })()}
-                  </div>
-                  <div className="text-[10px] text-slate-400 mt-2 flex items-center gap-1 font-medium italic"><Clock className="w-3 h-3" />{activity.timestamp && !isNaN(Date.parse(activity.timestamp)) ? new Date(activity.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : t('common.just_now', { defaultValue: 'Właśnie teraz' })}</div>
-                </div>
-              ))
-            )}
-          </div>
+        {/* PRAWA KOLUMNA: HISTORIA - Naprawiona wysokość */}
+        <div className="lg:col-span-4 h-full">
+           <div className="bg-white rounded-[2.5rem] p-6 border border-slate-100 shadow-sm flex flex-col h-full lg:max-h-[350px]">
+              <div className="flex items-center gap-3 mb-6 shrink-0">
+                 <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><History className="w-5 h-5" /></div>
+                 <h3 className="font-black text-slate-900 uppercase tracking-tight text-sm">{t('stats.history')}</h3>
+              </div>
+              
+              {/* Tutaj dzieje się magia: overflow-y-auto sprawia, że lista się nie rozciąga */}
+              <div className="space-y-3 flex-1 overflow-y-auto pr-2 custom-scrollbar focus:outline-none">
+                 {activities.length === 0 ? (
+                   <p className="text-xs text-slate-400 italic">{t('activities.no_activities')}</p>
+                 ) : (
+                   activities.map((activity) => (
+                    <div key={activity.id} className="text-[10px] md:text-[11px] border-l-2 border-blue-500/30 pl-3 py-2 bg-slate-50/50 rounded-r-xl group hover:border-blue-500 transition-all">
+                       <div className="font-bold text-slate-800 leading-tight">{activity.clientName}</div>
+                       <div className="text-slate-500 leading-snug mt-0.5">
+                          {(() => {
+                            const actionLabel = activity.action.includes('.') ? t(activity.action) : activity.action;
+                            let detailContent = activity.detail;
+                            
+                            if (detailContent.includes('|')) {
+                              const [key, val] = detailContent.split('|');
+                              detailContent = t(key, { name: val, fileName: val });
+                            } else if (detailContent.includes('.')) {
+                              if (!detailContent.includes('activities.')) {
+                                detailContent = `${t('activities.file_label', { defaultValue: 'Plik' })}: ${detailContent}`;
+                              } else { detailContent = t(detailContent); }
+                            } else if (detailContent.includes('labels.')) {
+                              detailContent = t(detailContent);
+                            }
+
+                            return (
+                              <>
+                                <span className="font-semibold text-blue-600/80">{actionLabel}:</span>{' '}
+                                <span className="opacity-90">{detailContent}</span>
+                              </>
+                            );
+                          })()}
+                       </div>
+                       <div className="text-[9px] text-slate-400 mt-1 flex items-center gap-1 font-medium italic">
+                          <Clock className="w-2.5 h-2.5" /> 
+                          {t('common.just_now')}
+                       </div>
+                    </div>
+                   ))
+                 )}
+              </div>
+           </div>
         </div>
       </div>
-
       {/* SEKCJA POSTĘPU BIURA */}
       <div className="mb-10 bg-white/50 backdrop-blur-md rounded-[2.5rem] p-8 border border-white shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
@@ -314,29 +362,28 @@ export default function Dashboard({
 
   {/* PRAWA: Czarny Przycisk Nudge All */}
   <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={() => {
-      // Pobieramy klientów, którzy są OBECNIE widoczni na liście i mają spóźnienia/braki
-      const clientsToNudge = filteredClients.filter(c => 
-        c.documents.some(d => d.status === 'Spóźnione' || d.status === 'Brak')
-      );
-      
-      if (clientsToNudge.length > 0) {
-        clientsToNudge.forEach(c => handleNudge(c));
-        toast.success(`${t('ai.nudge_sent') || 'Wysłano monity do'}: ${clientsToNudge.length}`);
-      } else {
-        toast.error("Brak klientów do ponaglenia w tym widoku");
-      }
-    }}
-    className="flex items-center gap-3 px-6 py-3 bg-[#1e293b] text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.15em] shadow-xl hover:bg-slate-800 transition-all border border-slate-700"
-  >
-    <Bell className="w-4 h-4 text-yellow-400 animate-pulse" />
-    {/* Dynamiczny licznik: pokazuje ile osób z OBECNEGO widoku otrzyma Nudge */}
-    <span>
-      {t('ai.nudge_all')} ({stats.late})
-    </span>
-  </motion.button>
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  onClick={() => {
+    // Nudge wysyłamy do WSZYSTKICH spóźnionych, nie tylko tych przefiltrowanych
+    const clientsWithLateDocs = clients.filter(c => 
+      c.documents.some(d => d.status === 'Spóźnione')
+    );
+    
+    if (clientsWithLateDocs.length > 0) {
+      clientsWithLateDocs.forEach(c => handleNudge(c));
+      toast.success(`${t('ai.nudge_sent')}: ${clientsWithLateDocs.length}`);
+    } else {
+      toast.error("Brak spóźnionych klientów");
+    }
+  }}
+  className="flex items-center gap-3 px-6 py-3 bg-[#1e293b] text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.15em] shadow-xl hover:bg-slate-800 transition-all border border-slate-700"
+>
+  <Bell className="w-4 h-4 text-yellow-400 animate-pulse" />
+  <span>
+    {t('ai.nudge_all')} ({stats.late})
+  </span>
+</motion.button>
 </div>
       <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto lg:overflow-visible">
