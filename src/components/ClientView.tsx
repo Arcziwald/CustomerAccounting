@@ -114,7 +114,7 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-3xl mx-auto px-6 py-12">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 md:py-12">
         <Link to="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors mb-8 group">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           {t('client_view.back')}
