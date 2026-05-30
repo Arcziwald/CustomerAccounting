@@ -19,11 +19,19 @@ const MOCK_CLIENTS: Client[] = [
     month: 'Marzec 2026',
     tier: '2',
     documents: [
-      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [] },
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [
+        { name: 'FV_MediaMarkt_032026.pdf', timestamp: '08:12', isApproved: false },
+        { name: 'FV_T-Mobile_032026.pdf', timestamp: '08:14', isApproved: false },
+        { name: 'FV_OVH_hosting_marzec.pdf', timestamp: '09:02', isApproved: false },
+      ]},
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Brak', files: [] },
       { id: 'wyciagi', label: 'Wyciągi', status: 'Brak', files: [] },
-      { id: 'zus', label: 'ZUS', status: 'OK', files: [] },
-      { id: 'kadry', label: 'Kadry', status: 'OK', files: [] },
+      { id: 'zus', label: 'ZUS', status: 'OK', files: [
+        { name: 'ZUS_DRA_2026_03.pdf', timestamp: '07:55', isApproved: true },
+      ]},
+      { id: 'kadry', label: 'Kadry', status: 'OK', files: [
+        { name: 'lista_plac_032026.xlsx', timestamp: '07:50', isApproved: true },
+      ]},
       { id: 'inne', label: 'Inne', status: 'Brak', files: [] },
     ]
   },
@@ -37,7 +45,9 @@ const MOCK_CLIENTS: Client[] = [
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Brak', files: [] },
       { id: 'wyciagi', label: 'Wyciągi', status: 'Spóźnione', files: [] },
       { id: 'zus', label: 'ZUS', status: 'Spóźnione', files: [] },
-      { id: 'kadry', label: 'Kadry', status: 'OK', files: [] },
+      { id: 'kadry', label: 'Kadry', status: 'OK', files: [
+        { name: 'umowy_pracownicy_marzec.pdf', timestamp: '10:30', isApproved: true },
+      ]},
       { id: 'inne', label: 'Inne', status: 'Brak', files: [] }
     ]
   },
@@ -48,11 +58,23 @@ const MOCK_CLIENTS: Client[] = [
     tier: '2',
     locked: true,
     documents: [
-      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Zatwierdzone', files: [] },
-      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Zatwierdzone', files: [] },
-      { id: 'wyciagi', label: 'Wyciągi', status: 'Zatwierdzone', files: [] },
-      { id: 'zus', label: 'ZUS', status: 'Zatwierdzone', files: [] },
-      { id: 'kadry', label: 'Kadry', status: 'Zatwierdzone', files: [] },
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Zatwierdzone', files: [
+        { name: 'FV_2026_023_hosting.pdf', timestamp: '14:22', isApproved: true },
+        { name: 'FV_2026_024_sprint.pdf', timestamp: '14:23', isApproved: true },
+      ]},
+      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Zatwierdzone', files: [
+        { name: 'FV_SPRZED_2026_011.pdf', timestamp: '14:15', isApproved: true },
+        { name: 'FV_SPRZED_2026_012.pdf', timestamp: '14:16', isApproved: true },
+      ]},
+      { id: 'wyciagi', label: 'Wyciągi', status: 'Zatwierdzone', files: [
+        { name: 'wyciag_mBank_03_2026.pdf', timestamp: '13:50', isApproved: true },
+      ]},
+      { id: 'zus', label: 'ZUS', status: 'Zatwierdzone', files: [
+        { name: 'ZUS_DRA_032026.pdf', timestamp: '13:45', isApproved: true },
+      ]},
+      { id: 'kadry', label: 'Kadry', status: 'Zatwierdzone', files: [
+        { name: 'lista_plac_032026.pdf', timestamp: '13:40', isApproved: true },
+      ]},
     ]
   },
   {
@@ -61,7 +83,9 @@ const MOCK_CLIENTS: Client[] = [
     month: 'Marzec 2026',
     tier: '2',
     documents: [
-      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Spóźnione', files: [] },
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Spóźnione', files: [
+        { name: 'FV_material_bud_001.pdf', timestamp: '11:05', isApproved: false },
+      ]},
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Spóźnione', files: [] },
       { id: 'wyciagi', label: 'Wyciągi', status: 'Brak', files: [] },
       { id: 'zus', label: 'ZUS', status: 'Brak', files: [] },
@@ -87,11 +111,25 @@ const MOCK_CLIENTS: Client[] = [
     month: 'Marzec 2026',
     tier: '2',
     documents: [
-      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'W toku', files: [] },
-      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'OK', files: [] },
-      { id: 'wyciagi', label: 'Wyciągi', status: 'W toku', files: [] },
-      { id: 'zus', label: 'ZUS', status: 'OK', files: [] },
-      { id: 'kadry', label: 'Kadry', status: 'OK', files: [] },
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'W toku', files: [
+        { name: 'FV_sprzet_med_032026.pdf', timestamp: '09:40', isApproved: false },
+        { name: 'FV_Medicover_032026.pdf', timestamp: '09:42', isApproved: false },
+      ]},
+      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'OK', files: [
+        { name: 'FV_NFZ_032026_01.pdf', timestamp: '08:30', isApproved: false },
+        { name: 'FV_NFZ_032026_02.pdf', timestamp: '08:31', isApproved: false },
+        { name: 'FV_pacjent_prywatny.pdf', timestamp: '08:35', isApproved: false },
+      ]},
+      { id: 'wyciagi', label: 'Wyciągi', status: 'W toku', files: [
+        { name: 'wyciag_PKO_032026.pdf', timestamp: '09:20', isApproved: false },
+      ]},
+      { id: 'zus', label: 'ZUS', status: 'OK', files: [
+        { name: 'ZUS_DRA_032026.pdf', timestamp: '07:45', isApproved: true },
+      ]},
+      { id: 'kadry', label: 'Kadry', status: 'OK', files: [
+        { name: 'lista_plac_032026.pdf', timestamp: '07:40', isApproved: true },
+        { name: 'umowa_zlecenie_dr_nowak.pdf', timestamp: '07:42', isApproved: false },
+      ]},
     ]
   },
   {
@@ -100,10 +138,16 @@ const MOCK_CLIENTS: Client[] = [
     month: 'Marzec 2026',
     tier: '1',
     documents: [
-      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [] },
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [
+        { name: 'FV_Adobe_CC_032026.pdf', timestamp: '10:05', isApproved: true },
+        { name: 'FV_Google_Ads_032026.pdf', timestamp: '10:07', isApproved: false },
+        { name: 'FV_Canva_Pro_032026.pdf', timestamp: '10:09', isApproved: false },
+      ]},
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Spóźnione', files: [] },
       { id: 'wyciagi', label: 'Wyciągi', status: 'Brak', files: [] },
-      { id: 'zus', label: 'ZUS', status: 'OK', files: [] },
+      { id: 'zus', label: 'ZUS', status: 'OK', files: [
+        { name: 'ZUS_DRA_032026.pdf', timestamp: '07:30', isApproved: true },
+      ]},
       { id: 'kadry', label: 'Kadry', status: 'Brak', files: [] },
     ]
   },
@@ -113,9 +157,18 @@ const MOCK_CLIENTS: Client[] = [
     month: 'Marzec 2026',
     tier: '2',
     documents: [
-      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [] },
-      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'OK', files: [] },
-      { id: 'wyciagi', label: 'Wyciągi', status: 'W toku', files: [] },
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [
+        { name: 'FV_034_ATE_czesc.pdf', timestamp: '09:15', isApproved: true },
+        { name: 'FV_035_lakiernia.pdf', timestamp: '09:18', isApproved: false },
+      ]},
+      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'OK', files: [
+        { name: 'FV_SPRZED_089.pdf', timestamp: '09:00', isApproved: true },
+        { name: 'FV_SPRZED_090.pdf', timestamp: '09:01', isApproved: true },
+        { name: 'FV_SPRZED_091.pdf', timestamp: '09:03', isApproved: false },
+      ]},
+      { id: 'wyciagi', label: 'Wyciągi', status: 'W toku', files: [
+        { name: 'wyciag_Santander_032026.pdf', timestamp: '10:20', isApproved: false },
+      ]},
       { id: 'zus', label: 'ZUS', status: 'Brak', files: [] },
       { id: 'kadry', label: 'Kadry', status: 'Brak', files: [] },
       { id: 'paliwo', label: 'Paliwo', status: 'Brak', files: [] },
@@ -128,11 +181,23 @@ const MOCK_CLIENTS: Client[] = [
     tier: '2',
     locked: true,
     documents: [
-      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Zatwierdzone', files: [] },
-      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Zatwierdzone', files: [] },
-      { id: 'wyciagi', label: 'Wyciągi', status: 'Zatwierdzone', files: [] },
-      { id: 'zus', label: 'ZUS', status: 'Zatwierdzone', files: [] },
-      { id: 'kadry', label: 'Kadry', status: 'Zatwierdzone', files: [] },
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Zatwierdzone', files: [
+        { name: 'FV_Amazon_logistics_03.pdf', timestamp: '15:10', isApproved: true },
+        { name: 'FV_DHL_032026.pdf', timestamp: '15:12', isApproved: true },
+        { name: 'FV_Allegro_prowizja.pdf', timestamp: '15:14', isApproved: true },
+      ]},
+      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Zatwierdzone', files: [
+        { name: 'FV_sklep_032026_zbiorowa.pdf', timestamp: '15:05', isApproved: true },
+      ]},
+      { id: 'wyciagi', label: 'Wyciągi', status: 'Zatwierdzone', files: [
+        { name: 'wyciag_mBank_032026.pdf', timestamp: '14:55', isApproved: true },
+      ]},
+      { id: 'zus', label: 'ZUS', status: 'Zatwierdzone', files: [
+        { name: 'ZUS_DRA_032026.pdf', timestamp: '14:50', isApproved: true },
+      ]},
+      { id: 'kadry', label: 'Kadry', status: 'Zatwierdzone', files: [
+        { name: 'lista_plac_032026.xlsx', timestamp: '14:45', isApproved: true },
+      ]},
     ]
   },
   {

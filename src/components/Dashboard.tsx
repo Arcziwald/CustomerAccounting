@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Client, STATUS_COLORS, DocumentStatus, OCRRecord } from '../types';
 // DODANE IKONY: FileText, Download, X (były już w Twoim kodzie, ale upewniam się, że są użyte)
-import { Bell, Copy, Check, ExternalLink, Search, Settings2, Plus, Trash2, X, Users, Clock, AlertTriangle, Folder, Lock, Unlock, History, ChevronDown, Download, Eye, FileText, Info, Zap, MessageSquare, Users2, Archive, BarChart3, ShieldCheck, ChevronRight, Sparkles } from 'lucide-react';
+import { Bell, Copy, Check, ExternalLink, Search, Settings2, Plus, Trash2, X, Users, Clock, AlertTriangle, Folder, Lock, Unlock, History, ChevronDown, Download, Eye, FileText, Info, Zap, MessageSquare, Users2, Archive, BarChart3, ShieldCheck, ChevronRight, Sparkles, Paperclip } from 'lucide-react';
 import LeadModal from './LeadModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -46,6 +46,10 @@ export default function Dashboard({
   const [previewDoc, setPreviewDoc] = useState<OCRRecord | null>(null);
   const [showWelcome, setShowWelcome] = useState(false);
   const [showLeadModal, setShowLeadModal] = useState(false);
+  const [approvedFiles, setApprovedFiles] = useState<Set<string>>(new Set());
+  const [rejectedFiles, setRejectedFiles] = useState<Set<string>>(new Set());
+  const [addedScans, setAddedScans] = useState<Record<string, string[]>>({});
+  const [verifyingClientId, setVerifyingClientId] = useState<string | null>(null);
 
   useEffect(() => {
     const isDone = sessionStorage.getItem('brakomat_done');
@@ -115,6 +119,38 @@ export default function Dashboard({
   };
 
   const editingClient = clients.find(c => c.id === editingClientId);
+
+  const isFileApproved = (clientId: string, docId: string, idx: number, initialApproved?: boolean) => {
+    const key = `${clientId}-${docId}-${idx}`;
+    return (initialApproved && !rejectedFiles.has(key)) || approvedFiles.has(key);
+  };
+  const isFileRejected = (clientId: string, docId: string, idx: number) =>
+    rejectedFiles.has(`${clientId}-${docId}-${idx}`);
+
+  const toggleApproveFile = (key: string) => {
+    setApprovedFiles(prev => { const n = new Set(prev); n.has(key) ? n.delete(key) : n.add(key); return n; });
+    setRejectedFiles(prev => { const n = new Set(prev); n.delete(key); return n; });
+  };
+  const toggleRejectFile = (key: string, fileName: string) => {
+    const wasRejected = rejectedFiles.has(key);
+    setRejectedFiles(prev => { const n = new Set(prev); n.has(key) ? n.delete(key) : n.add(key); return n; });
+    setApprovedFiles(prev => { const n = new Set(prev); n.delete(key); return n; });
+    if (!wasRejected) toast(`Odrzucono: ${fileName} — klient zostanie powiadomiony`, { icon: '📩', duration: 2500 });
+  };
+
+  const handleAddScan = (clientId: string, docId: string, docLabel: string) => {
+    const key = `${clientId}-${docId}`;
+    const n = (addedScans[key]?.length ?? 0) + 1;
+    const name = `skan_biuro_${new Date().toISOString().slice(5,10).replace('-','')}_${n}.pdf`;
+    setAddedScans(prev => ({ ...prev, [key]: [...(prev[key] ?? []), name] }));
+    toast.success(`Skan dodany do: ${docLabel} → kolejka OCR`, { icon: '📎' });
+    addActivity('Biuro', 'Skan dodany', name);
+  };
+
+  const getDocFiles = (clientId: string, docId: string, baseFiles: {name: string; timestamp: string; isApproved?: boolean}[]) => {
+    const extra = (addedScans[`${clientId}-${docId}`] ?? []).map(name => ({ name, timestamp: 'teraz', isApproved: false }));
+    return [...baseFiles, ...extra];
+  };
 
   const handleSmartNudge = (record: OCRRecord) => {
     const aiMessage = t('ai.beach_photo_msg');
@@ -491,30 +527,65 @@ export default function Dashboard({
 </button>
                           </Tooltip>
 
-                          {/* SZKLANY PANEL PODGLĄDU PLIKÓW (Pojawia się pod kafelkiem) */}
+                          {/* SZKLANY PANEL PODGLĄDU PLIKÓW */}
                           <AnimatePresence>
-                            {viewingFilesDocId === `${client.id}-${doc.id}` && (
-                              <motion.div 
+                            {viewingFilesDocId === `${client.id}-${doc.id}` && (() => {
+                              const allFiles = getDocFiles(client.id, doc.id, doc.files);
+                              return (
+                              <motion.div
                                 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 5 }} exit={{ opacity: 0, y: -10 }}
-                                className="absolute left-0 top-full z-[50] mt-2 w-64 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-100 p-3"
+                                className="absolute left-0 top-full z-[50] mt-2 w-72 bg-white/98 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-100 p-3"
                               >
                                 <div className="flex items-center justify-between mb-3 px-1">
-                                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pliki ({doc.files.length})</span>
+                                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pliki ({allFiles.length})</span>
                                   <button onClick={() => setViewingFilesDocId(null)} className="text-slate-400 hover:text-slate-600"><X className="w-3 h-3" /></button>
                                 </div>
-                                <div className="space-y-2 max-h-48 overflow-y-auto pr-1 scrollbar-hide">
-                                  {doc.files.map((file, fIdx) => (
-                                    <div key={fIdx} className="flex items-center justify-between p-2 rounded-xl bg-slate-50/50 border border-slate-100 hover:bg-blue-50 transition-colors">
-                                      <div className="flex items-center gap-2 min-w-0">
-                                        <FileText className="w-3.5 h-3.5 text-blue-500 shrink-0" />
-                                        <span className="text-[11px] font-bold text-slate-700 truncate w-32">{file.name}</span>
-                                      </div>
-                                      <a href="#" onClick={(e) => e.preventDefault()} className="p-1 text-slate-400 hover:text-blue-600"><Download className="w-3 h-3" /></a>
-                                    </div>
-                                  ))}
+
+                                {allFiles.length === 0 ? (
+                                  <div className="py-4 text-center">
+                                    <p className="text-[11px] text-slate-400 font-medium">Brak przesłanych plików</p>
+                                    <p className="text-[10px] text-slate-300 mt-0.5">Klient przesyła przez portal</p>
+                                  </div>
+                                ) : (
+                                  <div className="space-y-1.5 max-h-52 overflow-y-auto pr-1">
+                                    {allFiles.map((file, fIdx) => {
+                                      const key = `${client.id}-${doc.id}-${fIdx}`;
+                                      const approved = isFileApproved(client.id, doc.id, fIdx, file.isApproved);
+                                      const rejected = isFileRejected(client.id, doc.id, fIdx);
+                                      return (
+                                        <div key={fIdx} className={`flex items-center justify-between p-2 rounded-xl border transition-colors ${approved ? 'bg-emerald-50/70 border-emerald-100' : rejected ? 'bg-red-50/70 border-red-100' : 'bg-slate-50 border-slate-100'}`}>
+                                          <div className="flex items-center gap-1.5 min-w-0">
+                                            <FileText className={`w-3.5 h-3.5 shrink-0 ${approved ? 'text-emerald-500' : rejected ? 'text-red-400' : 'text-blue-500'}`} />
+                                            <div className="min-w-0">
+                                              <span className="text-[11px] font-bold text-slate-700 truncate block w-28">{file.name}</span>
+                                              {file.timestamp && <span className="text-[9px] text-slate-400">{file.timestamp}</span>}
+                                            </div>
+                                          </div>
+                                          <div className="flex items-center gap-0.5 shrink-0">
+                                            <button onClick={() => toggleApproveFile(key)} title="Zatwierdź" className={`p-1.5 rounded-lg transition-all ${approved ? 'bg-emerald-100 text-emerald-600' : 'text-slate-300 hover:text-emerald-500 hover:bg-emerald-50'}`}>
+                                              <Check className="w-3 h-3" />
+                                            </button>
+                                            <button onClick={() => toggleRejectFile(key, file.name)} title="Odrzuć" className={`p-1.5 rounded-lg transition-all ${rejected ? 'bg-red-100 text-red-500' : 'text-slate-300 hover:text-red-400 hover:bg-red-50'}`}>
+                                              <X className="w-3 h-3" />
+                                            </button>
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+
+                                <div className="mt-2.5 pt-2.5 border-t border-slate-100">
+                                  <button
+                                    onClick={() => handleAddScan(client.id, doc.id, doc.label)}
+                                    className="flex items-center justify-center gap-1.5 w-full py-2 rounded-xl text-[11px] font-bold bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all"
+                                  >
+                                    <Paperclip className="w-3 h-3" /> Dodaj skan
+                                  </button>
                                 </div>
                               </motion.div>
-                            )}
+                              );
+                            })()}
                           </AnimatePresence>
                         </div>
                       ))}
@@ -525,7 +596,8 @@ export default function Dashboard({
                     <div className="flex items-center justify-between lg:justify-end gap-1 sm:gap-2">
                       <div className="flex items-center gap-0.5 sm:gap-1">
                         <Tooltip text={t('tooltips.lock')}><button onClick={() => handleToggleLock(client.id)} className={`p-2 rounded-xl transition-all ${client.locked ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:bg-blue-50'}`}>{client.locked ? <Lock className="w-4 h-4 lg:w-5 lg:h-5" /> : <Unlock className="w-4 h-4 lg:w-5 lg:h-5" />}</button></Tooltip>
-                        <Tooltip text={t('tooltips.settings')}><button onClick={() => setEditingClientId(client.id)} className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"><Settings2 className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
+                        <Tooltip text={t('tooltips.settings')}><button onClick={() => setEditingClientId(client.id)} className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl transition-all"><Settings2 className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
+                        <Tooltip text="Weryfikuj dokumenty klienta"><button onClick={() => setVerifyingClientId(client.id)} className="p-2 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-all"><Eye className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
                         <Tooltip text={t('tooltips.client_view')}><button onClick={() => toast('Portal klienta — w pełnej wersji klient loguje się przez dedykowany link 🔗', { icon: '👤', duration: 3000 })} className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"><ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
                       </div>
                       <Tooltip text={t('tooltips.nudge')}><button onClick={() => handleNudge(client)} className={`flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl text-xs lg:text-sm font-bold transition-all shrink-0 ${copiedId === client.id ? 'bg-green-500 text-white shadow-lg shadow-green-200' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}>{copiedId === client.id ? (<><Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" /> <span className="hidden xs:inline">{t('actions.sent')}</span></>) : (<><Bell className="w-3.5 h-3.5 lg:w-4 lg:h-4" />{t('actions.send')}</>)}</button></Tooltip>
@@ -571,6 +643,95 @@ export default function Dashboard({
         )}
       </AnimatePresence>
       
+      {/* MODAL WERYFIKACJI DOKUMENTÓW */}
+      <AnimatePresence>
+        {verifyingClientId && (() => {
+          const vClient = clients.find(c => c.id === verifyingClientId);
+          if (!vClient) return null;
+          const totalFiles = vClient.documents.reduce((sum, d) => sum + getDocFiles(vClient.id, d.id, d.files).length, 0);
+          const totalApproved = vClient.documents.reduce((sum, d) =>
+            sum + getDocFiles(vClient.id, d.id, d.files).filter((f, idx) => isFileApproved(vClient.id, d.id, idx, f.isApproved)).length, 0);
+          return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setVerifyingClientId(null)} className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" />
+              <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-2xl bg-white rounded-[2.5rem] shadow-2xl max-h-[85vh] flex flex-col overflow-hidden">
+                {/* Header */}
+                <div className="p-6 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50/50">
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900">{vClient.name}</h3>
+                    <p className="text-sm text-slate-500 mt-0.5">Weryfikacja dokumentów • {vClient.month} • <span className="font-semibold text-blue-600">{totalApproved}/{totalFiles} zatwierdzonych</span></p>
+                  </div>
+                  <button onClick={() => setVerifyingClientId(null)} className="p-2 hover:bg-white rounded-xl transition-colors text-slate-400 hover:text-slate-600 shadow-sm"><X className="w-5 h-5" /></button>
+                </div>
+
+                {/* Body */}
+                <div className="p-6 overflow-y-auto flex-1 space-y-6">
+                  {vClient.documents.map(doc => {
+                    const allFiles = getDocFiles(vClient.id, doc.id, doc.files);
+                    const appCount = allFiles.filter((f, i) => isFileApproved(vClient.id, doc.id, i, f.isApproved)).length;
+                    return (
+                      <div key={doc.id}>
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <Folder className="w-4 h-4 text-slate-400" />
+                            <span className="font-bold text-slate-800 text-sm">{doc.label}</span>
+                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase border ${STATUS_COLORS[doc.status] || 'bg-slate-50 text-slate-400 border-slate-100'}`}>{doc.status}</span>
+                          </div>
+                          {allFiles.length > 0 && (
+                            <span className="text-[10px] text-slate-400 font-medium">{appCount}/{allFiles.length} zatw.</span>
+                          )}
+                        </div>
+                        {allFiles.length === 0 ? (
+                          <p className="text-[11px] text-slate-300 italic pl-6 py-2">Brak przesłanych plików</p>
+                        ) : (
+                          <div className="space-y-2 pl-6">
+                            {allFiles.map((file, fIdx) => {
+                              const key = `${vClient.id}-${doc.id}-${fIdx}`;
+                              const approved = isFileApproved(vClient.id, doc.id, fIdx, file.isApproved);
+                              const rejected = isFileRejected(vClient.id, doc.id, fIdx);
+                              return (
+                                <div key={fIdx} className={`flex items-center justify-between p-3 rounded-2xl border transition-all ${approved ? 'bg-emerald-50 border-emerald-100' : rejected ? 'bg-red-50 border-red-100' : 'bg-slate-50 border-slate-100 hover:bg-blue-50/30'}`}>
+                                  <div className="flex items-center gap-2.5 min-w-0">
+                                    <FileText className={`w-4 h-4 shrink-0 ${approved ? 'text-emerald-500' : rejected ? 'text-red-400' : 'text-blue-500'}`} />
+                                    <div className="min-w-0">
+                                      <p className="text-sm font-semibold text-slate-800 truncate">{file.name}</p>
+                                      {file.timestamp && <p className="text-[10px] text-slate-400">{file.timestamp}</p>}
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-1 shrink-0 ml-3">
+                                    <button onClick={() => toast('Podgląd — w pełnej wersji otwiera oryginalny plik', { icon: '👁', duration: 2000 })} className="p-1.5 text-slate-300 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all">
+                                      <Eye className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button onClick={() => toggleApproveFile(key)} title="Zatwierdź" className={`p-1.5 rounded-lg transition-all ${approved ? 'bg-emerald-100 text-emerald-600' : 'text-slate-300 hover:text-emerald-500 hover:bg-emerald-50'}`}>
+                                      <Check className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button onClick={() => toggleRejectFile(key, file.name)} title="Odrzuć" className={`p-1.5 rounded-lg transition-all ${rejected ? 'bg-red-100 text-red-500' : 'text-slate-300 hover:text-red-400 hover:bg-red-50'}`}>
+                                      <X className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Footer */}
+                <div className="p-5 border-t border-slate-100 bg-slate-50/50 shrink-0 flex items-center justify-between">
+                  <p className="text-[11px] text-slate-400">✓ Zatwierdź — ✕ Odrzuć i powiadom klienta</p>
+                  <button onClick={() => setVerifyingClientId(null)} className="px-6 py-2.5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 text-sm">
+                    Zamknij
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          );
+        })()}
+      </AnimatePresence>
+
       <div className="w-full mt-12 px-0">
         <div className={`w-full bg-white rounded-[2rem] p-4 lg:p-8 shadow-sm border border-slate-100 mb-12 transition-all duration-500 ${subscriptionTier === '1' ? 'opacity-40 pointer-events-none select-none blur-[2px]' : ''}`}>
           <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">

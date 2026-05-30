@@ -7,6 +7,7 @@ export interface UploadedFile {
   name: string;
   timestamp: string;
   rawFile?: File;
+  isApproved?: boolean;
 }
 
 export interface ActivityEntry {
