@@ -217,6 +217,26 @@
     "bottom_desc": "Wdrożymy go dla Twojego biura rachunkowego — z Twoimi danymi i logo.",
     "bottom_btn": "Chcę Brakomat dla swojego biura →"
   },
+  "premium": {
+    "section_title": "Pełna wersja Brakomatu",
+    "section_desc": "Funkcje dostępne po wdrożeniu dla Twojego biura rachunkowego",
+    "get_access": "Uzyskaj dostęp →",
+    "badge": "Pełna wersja",
+    "learn_more": "Dowiedz się więcej",
+    "client_portal_toast": "Portal klienta — w pełnej wersji klient loguje się przez dedykowany link 🔗",
+    "ksef_title": "Integracja KSeF",
+    "ksef_desc": "Faktury elektroniczne pobierane automatycznie z Krajowego Systemu e-Faktur co dobę. Zero ręcznej pracy.",
+    "vies_title": "VIES & Biała lista VAT",
+    "vies_desc": "Każdy kontrahent weryfikowany automatycznie w VIES i Białej liście MF — z podglądem rachunku bankowego.",
+    "portal_title": "Portal klienta",
+    "portal_desc": "Twoi klienci logują się na własną podstronę i sami wgrywają dokumenty. Ty tylko zatwierdzasz.",
+    "cron_title": "Auto-przypomnienia (cron)",
+    "cron_desc": "System sam wysyła przypomnienia email/SMS/WhatsApp według Twoich reguł — bez klikania.",
+    "archive_title": "Archiwum miesięcy",
+    "archive_desc": "Pełna historia dokumentów z każdego zamkniętego miesiąca. Szybkie przeszukiwanie i pobieranie.",
+    "team_title": "Zarządzanie zespołem",
+    "team_desc": "Dodaj pracowników biura, przydzielaj im klientów i śledź postęp pracy całego zespołu."
+  },
   "client_view": {
     "back": "Powrót do panelu",
     "client_zone": "Strefa Klienta",

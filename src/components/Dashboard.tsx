@@ -708,7 +708,7 @@ export default function Dashboard({
                         <Tooltip text={t('tooltips.lock')}><button onClick={() => handleToggleLock(client.id)} className={`p-2 rounded-xl transition-all ${client.locked ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:bg-blue-50'}`}>{client.locked ? <Lock className="w-4 h-4 lg:w-5 lg:h-5" /> : <Unlock className="w-4 h-4 lg:w-5 lg:h-5" />}</button></Tooltip>
                         <Tooltip text={t('tooltips.settings')}><button onClick={() => setEditingClientId(client.id)} className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl transition-all"><Settings2 className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
                         <Tooltip text="Weryfikuj dokumenty klienta"><button onClick={() => setVerifyingClientId(client.id)} className="p-2 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-all"><Eye className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
-                        <Tooltip text={t('tooltips.client_view')}><button onClick={() => toast('Portal klienta — w pełnej wersji klient loguje się przez dedykowany link 🔗', { icon: '👤', duration: 3000 })} className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"><ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
+                        <Tooltip text={t('tooltips.client_view')}><button onClick={() => toast(t('premium.client_portal_toast'), { icon: '👤', duration: 3000 })} className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"><ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
                       </div>
                       <Tooltip text={t('tooltips.nudge')}><button onClick={() => handleNudge(client)} className={`flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl text-xs lg:text-sm font-bold transition-all shrink-0 ${copiedId === client.id ? 'bg-green-500 text-white shadow-lg shadow-green-200' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}>{copiedId === client.id ? (<><Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" /> <span className="hidden xs:inline">{t('actions.sent')}</span></>) : (<><Bell className="w-3.5 h-3.5 lg:w-4 lg:h-4" />{t('actions.send')}</>)}</button></Tooltip>
                     </div>
@@ -1115,16 +1115,16 @@ export default function Dashboard({
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <Lock className="w-5 h-5 text-amber-500" />
-                <h2 className="text-xl font-black text-slate-900">Pełna wersja Brakomatu</h2>
+                <h2 className="text-xl font-black text-slate-900">{t('premium.section_title')}</h2>
               </div>
-              <p className="text-sm text-slate-500">Funkcje dostępne po wdrożeniu dla Twojego biura rachunkowego</p>
+              <p className="text-sm text-slate-500">{t('premium.section_desc')}</p>
             </div>
             <button
               onClick={() => setShowLeadModal(true)}
               className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-wider hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 whitespace-nowrap"
             >
               <Sparkles className="w-4 h-4" />
-              Uzyskaj dostęp →
+              {t('premium.get_access')}
             </button>
           </div>
 
@@ -1133,38 +1133,38 @@ export default function Dashboard({
               {
                 icon: Zap,
                 color: 'text-amber-600', bg: 'bg-amber-50',
-                title: 'Integracja KSeF',
-                desc: 'Faktury elektroniczne pobierane automatycznie z Krajowego Systemu e-Faktur co dobę. Zero ręcznej pracy.',
+                title: t('premium.ksef_title'),
+                desc: t('premium.ksef_desc'),
               },
               {
                 icon: ShieldCheck,
                 color: 'text-emerald-600', bg: 'bg-emerald-50',
-                title: 'VIES & Biała lista VAT',
-                desc: 'Każdy kontrahent weryfikowany automatycznie w VIES i Białej liście MF — z podglądem rachunku bankowego.',
+                title: t('premium.vies_title'),
+                desc: t('premium.vies_desc'),
               },
               {
                 icon: Users2,
                 color: 'text-blue-600', bg: 'bg-blue-50',
-                title: 'Portal klienta',
-                desc: 'Twoi klienci logują się na własną podstronę i sami wgrywają dokumenty. Ty tylko zatwierdzasz.',
+                title: t('premium.portal_title'),
+                desc: t('premium.portal_desc'),
               },
               {
                 icon: MessageSquare,
                 color: 'text-violet-600', bg: 'bg-violet-50',
-                title: 'Auto-przypomnienia (cron)',
-                desc: 'System sam wysyła przypomnienia email/SMS/WhatsApp według Twoich reguł — bez klikania.',
+                title: t('premium.cron_title'),
+                desc: t('premium.cron_desc'),
               },
               {
                 icon: Archive,
                 color: 'text-rose-600', bg: 'bg-rose-50',
-                title: 'Archiwum miesięcy',
-                desc: 'Pełna historia dokumentów z każdego zamkniętego miesiąca. Szybkie przeszukiwanie i pobieranie.',
+                title: t('premium.archive_title'),
+                desc: t('premium.archive_desc'),
               },
               {
                 icon: BarChart3,
                 color: 'text-indigo-600', bg: 'bg-indigo-50',
-                title: 'Zarządzanie zespołem',
-                desc: 'Dodaj pracowników biura, przydzielaj im klientów i śledź postęp pracy całego zespołu.',
+                title: t('premium.team_title'),
+                desc: t('premium.team_desc'),
               },
             ].map((feature) => (
               <motion.div
@@ -1175,7 +1175,7 @@ export default function Dashboard({
               >
                 <div className="absolute top-4 right-4">
                   <span className="flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-600 border border-amber-100 rounded-full text-[9px] font-black uppercase tracking-wider">
-                    <Lock className="w-2.5 h-2.5" /> Pełna wersja
+                    <Lock className="w-2.5 h-2.5" /> {t('premium.badge')}
                   </span>
                 </div>
                 <div className={`p-3 rounded-2xl w-fit ${feature.bg} ${feature.color} mb-4`}>
@@ -1184,7 +1184,7 @@ export default function Dashboard({
                 <h3 className="font-black text-slate-900 mb-2 pr-8">{feature.title}</h3>
                 <p className="text-sm text-slate-500 leading-relaxed">{feature.desc}</p>
                 <div className="mt-4 flex items-center gap-1 text-blue-600 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                  Dowiedz się więcej <ChevronRight className="w-3.5 h-3.5" />
+                  {t('premium.learn_more')} <ChevronRight className="w-3.5 h-3.5" />
                 </div>
               </motion.div>
             ))}

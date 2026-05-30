@@ -215,6 +215,26 @@
     "bottom_desc": "We'll set it up for your accounting office — with your data and branding.",
     "bottom_btn": "I want Brakomat for my office →"
   },
+  "premium": {
+    "section_title": "Full version of Brakomat",
+    "section_desc": "Features available after deployment for your accounting office",
+    "get_access": "Get access →",
+    "badge": "Full version",
+    "learn_more": "Learn more",
+    "client_portal_toast": "Client portal — in the full version clients log in via their own dedicated link 🔗",
+    "ksef_title": "KSeF Integration",
+    "ksef_desc": "Electronic invoices fetched automatically from the National e-Invoice System daily. Zero manual work.",
+    "vies_title": "VIES & VAT Whitelist",
+    "vies_desc": "Every counterparty automatically verified in VIES and the MF VAT Whitelist — with bank account preview.",
+    "portal_title": "Client portal",
+    "portal_desc": "Your clients log in to their own page and upload documents themselves. You just approve.",
+    "cron_title": "Auto-reminders (cron)",
+    "cron_desc": "The system automatically sends email/SMS/WhatsApp reminders according to your rules — no clicking needed.",
+    "archive_title": "Month archive",
+    "archive_desc": "Full document history from every closed month. Fast search and download.",
+    "team_title": "Team management",
+    "team_desc": "Add office employees, assign clients to them and track the progress of the entire team."
+  },
   "client_view": {
     "back": "Back to panel",
     "client_zone": "Client Zone",
