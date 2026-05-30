@@ -12,7 +12,7 @@ const WEBHOOK_URL = 'https://n8n.srv1151721.hstgr.cloud/webhook/brakomat-lead';
 
 export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
   const { t } = useTranslation();
-  const [form, setForm] = useState({ name: '', email: '', phone: '', clients: '', employees: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', clients: '', employees: '', offices: '' });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -34,7 +34,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
 
   const handleClose = () => {
     setSuccess(false);
-    setForm({ name: '', email: '', phone: '', clients: '', employees: '' });
+    setForm({ name: '', email: '', phone: '', clients: '', employees: '', offices: '' });
     onClose();
   };
 
@@ -157,6 +157,23 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
                         <option value="15+">{t('lead_modal.employees_15plus')}</option>
                       </select>
                     </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-1.5">
+                      {t('lead_modal.offices_label')}
+                    </label>
+                    <select
+                      value={form.offices}
+                      onChange={e => setForm(p => ({ ...p, offices: e.target.value }))}
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm"
+                    >
+                      <option value="">{t('lead_modal.how_many')}</option>
+                      <option value="1">{t('lead_modal.offices_1')}</option>
+                      <option value="2-3">{t('lead_modal.offices_2_3')}</option>
+                      <option value="4-10">{t('lead_modal.offices_4_10')}</option>
+                      <option value="10+">{t('lead_modal.offices_10plus')}</option>
+                    </select>
                   </div>
 
                   <button
