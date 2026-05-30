@@ -349,7 +349,9 @@ export default function App() {
     grossAmount: 1476.00,
     status: 'Do weryfikacji',
     documentType: 'Faktura',
-    fileName: 'FV_035_lakiernia.pdf'
+    fileName: 'FV_035_lakiernia.pdf',
+    wrongCategory: true,
+    suggestedCategory: 'Usługi obce',
   },
   {
     id: 'demo-6',

@@ -11,6 +11,70 @@ import toast from 'react-hot-toast';
 import Tooltip from './Tooltip';
 
 
+// ─── Fake NIP verification data ───────────────────────────────────────────
+const NIP_DATA: Record<string, { type: 'bl' | 'vies'; aktywny?: boolean; valid?: boolean; name?: string; konto?: string; country?: string }> = {
+  '5260001234': { type: 'vies', valid: true,  name: 'Microsoft Ireland Operations Ltd', country: 'IE' },
+  '7272800001': { type: 'bl',   aktywny: true,  konto: '12 1020 1234 5678 9012 3456 7890' },
+  '6760000012': { type: 'bl',   aktywny: true,  konto: '07 1140 2017 0000 4802 1234 5678' },
+  '5240099887': { type: 'bl',   aktywny: false },
+  '6388047':    { type: 'vies', valid: true,  name: 'Adobe Systems Software Ireland Ltd', country: 'IE' },
+  '5213456789': { type: 'bl',   aktywny: true,  konto: '89 1050 0012 6789 3456 7890 1234' },
+  '5213987654': { type: 'bl',   aktywny: true,  konto: '34 1160 0003 4567 8901 2345 6789' },
+  '5262012345': { type: 'bl',   aktywny: true,  konto: '67 1090 1234 5678 9012 3456 7890' },
+  '6340123456': { type: 'bl',   aktywny: true,  konto: '45 1870 1234 5678 9012 3456 7890' },
+};
+function normNip(nip: string) { return nip.replace(/[\s-]/g, '').replace(/^[A-Za-z]{2}/, ''); }
+
+function NipBadge({ nip }: { nip: string }) {
+  const [open, setOpen] = useState(false);
+  const data = NIP_DATA[normNip(nip)];
+
+  if (!data) return (
+    <button className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-400 hover:bg-slate-200 transition-colors" title="Zweryfikuj NIP">···</button>
+  );
+
+  const isVat = data.type === 'bl';
+  const ok = isVat ? data.aktywny : data.valid;
+  const badge = ok
+    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+    : 'bg-rose-50 text-rose-700 border border-rose-200';
+  const label = ok ? (isVat ? '✓ VAT' : '✓ VIES') : (isVat ? '✗ VAT' : '✗ VIES');
+
+  return (
+    <div className="relative inline-block">
+      <button onClick={() => setOpen(o => !o)} className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold ${badge} hover:opacity-80 transition-opacity`}>{label}</button>
+      {open && (
+        <div className="absolute left-0 top-full mt-1 z-[60] w-64 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Weryfikacja NIP</span>
+            <button onClick={() => setOpen(false)}><X className="w-3 h-3 text-slate-400" /></button>
+          </div>
+          <p className="text-[10px] font-mono text-slate-600 mb-3 bg-slate-50 px-2 py-1 rounded-lg">{nip}</p>
+          {data.name && <p className="text-sm font-bold text-slate-800 mb-2 leading-tight">{data.name}</p>}
+          <div className={`flex items-start gap-2 p-2.5 rounded-xl mb-2 ${ok ? 'bg-emerald-50' : 'bg-rose-50'}`}>
+            <span className="text-base mt-0.5">{ok ? '✓' : '✗'}</span>
+            <div>
+              <p className={`text-xs font-bold ${ok ? 'text-emerald-700' : 'text-rose-700'}`}>
+                {isVat ? `Biała Lista VAT MF — ${ok ? 'aktywny' : 'NIEAKTYWNY!'}` : `VIES EU — ${ok ? 'aktywny' : 'nieaktywny'}`}
+              </p>
+              {!ok && isVat && <p className="text-[10px] text-rose-600 font-semibold mt-0.5">⚠ Ryzyko podatkowe! Sprawdź przed płatnością.</p>}
+              {data.country && <p className="text-[10px] text-slate-500 mt-0.5">Kraj rejestracji: {data.country}</p>}
+            </div>
+          </div>
+          {data.konto && (
+            <div className="p-2.5 bg-slate-50 rounded-xl">
+              <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1">Nr konta (Biała Lista)</p>
+              <p className="text-[10px] font-mono text-slate-700 break-all">{data.konto}</p>
+            </div>
+          )}
+          <button onClick={() => setOpen(false)} className="mt-3 w-full py-1.5 text-[10px] font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all">Odśwież dane</button>
+        </div>
+      )}
+    </div>
+  );
+}
+// ──────────────────────────────────────────────────────────────────────────
+
 interface DashboardProps {
   clients: Client[];
   subscriptionTier: string;
@@ -810,7 +874,10 @@ export default function Dashboard({
                               <div>
                                 <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">Sprzedawca</p>
                                 {record.sellerName && <p className="text-sm font-bold text-slate-800 leading-tight">{record.sellerName}</p>}
-                                <p className="text-[10px] text-slate-500 font-mono">NIP: {record.sellerNip}</p>
+                                <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+                                  <p className="text-[10px] text-slate-500 font-mono">NIP: {record.sellerNip}</p>
+                                  <NipBadge nip={record.sellerNip} />
+                                </div>
                               </div>
                               {record.buyerName && (
                                 <div className="border-t border-slate-100 pt-1.5">
@@ -850,6 +917,15 @@ export default function Dashboard({
                                     <Bell className="w-3 h-3" /> Smart Nudge AI
                                   </button>
                                 </Tooltip>
+                              )}
+                              {record.wrongCategory && (
+                                <div className="mt-1 flex items-center gap-1.5 px-2.5 py-1.5 bg-orange-50 border border-orange-200 rounded-xl">
+                                  <svg className="w-3 h-3 text-orange-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /></svg>
+                                  <span className="text-[10px] font-bold text-orange-700">Zła kategoria?</span>
+                                  {record.suggestedCategory && (
+                                    <span className="text-[10px] text-orange-600">→ <span className="font-semibold">{record.suggestedCategory}</span></span>
+                                  )}
+                                </div>
                               )}
                             </div>
                           )}

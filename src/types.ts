@@ -35,6 +35,8 @@ export interface OCRRecord {
   status: 'Oczekiwanie' | 'Do weryfikacji' | 'Zweryfikowano' | 'Odrzucone';
   documentType: 'Faktura' | 'Nieznany' | 'Oczekiwanie';
   fileName: string;
+  wrongCategory?: boolean;
+  suggestedCategory?: string;
 }
 
 export interface DocumentItem {
