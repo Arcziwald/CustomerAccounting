@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface LeadModalProps {
   isOpen: boolean;
@@ -10,7 +11,8 @@ interface LeadModalProps {
 const WEBHOOK_URL = 'https://n8n.srv1151721.hstgr.cloud/webhook/brakomat-lead';
 
 export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', clients: '' });
+  const { t } = useTranslation();
+  const [form, setForm] = useState({ name: '', email: '', phone: '', clients: '', employees: '' });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -32,7 +34,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
 
   const handleClose = () => {
     setSuccess(false);
-    setForm({ name: '', email: '', phone: '', clients: '' });
+    setForm({ name: '', email: '', phone: '', clients: '', employees: '' });
     onClose();
   };
 
@@ -68,43 +70,56 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
                       <Sparkles className="w-4 h-4" />
                     </div>
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-200">
-                      Brakomat dla Twojego biura
+                      {t('lead_modal.badge')}
                     </span>
                   </div>
                   <h2 className="text-2xl font-black leading-tight mb-2">
-                    Chcę to wdrożyć<br />
-                    <span className="text-blue-200">u siebie</span>
+                    {t('lead_modal.title')}<br />
+                    <span className="text-blue-200">{t('lead_modal.title_highlight')}</span>
                   </h2>
                   <p className="text-blue-100/80 text-sm">
-                    Zostaw kontakt — odezwiemy się w ciągu 24h
+                    {t('lead_modal.subtitle')}
                   </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-8 space-y-4">
                   <div>
                     <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-1.5">
-                      Imię i nazwisko *
+                      {t('lead_modal.name_label')}
                     </label>
                     <input
                       type="text"
                       required
                       value={form.name}
                       onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
-                      placeholder="Anna Kowalska"
+                      placeholder={t('lead_modal.name_placeholder')}
                       className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm"
                     />
                   </div>
 
                   <div>
                     <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-1.5">
-                      Email służbowy *
+                      {t('lead_modal.email_label')}
                     </label>
                     <input
                       type="email"
                       required
                       value={form.email}
                       onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
-                      placeholder="anna@biuro-rachunkowe.pl"
+                      placeholder={t('lead_modal.email_placeholder')}
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-1.5">
+                      {t('lead_modal.phone_label')}
+                    </label>
+                    <input
+                      type="tel"
+                      value={form.phone}
+                      onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
+                      placeholder={t('lead_modal.phone_placeholder')}
                       className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm"
                     />
                   </div>
@@ -112,30 +127,34 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-1.5">
-                        Telefon
-                      </label>
-                      <input
-                        type="tel"
-                        value={form.phone}
-                        onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
-                        placeholder="+48 600 000 000"
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-1.5">
-                        Liczba klientów
+                        {t('lead_modal.clients_label')}
                       </label>
                       <select
                         value={form.clients}
                         onChange={e => setForm(p => ({ ...p, clients: e.target.value }))}
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm h-[50px]"
                       >
-                        <option value="">Ile?</option>
-                        <option value="<20">Mniej niż 20</option>
-                        <option value="20-50">20–50</option>
-                        <option value="50-100">50–100</option>
-                        <option value="100+">100+</option>
+                        <option value="">{t('lead_modal.how_many')}</option>
+                        <option value="<20">{t('lead_modal.clients_lt20')}</option>
+                        <option value="20-50">{t('lead_modal.clients_20_50')}</option>
+                        <option value="50-100">{t('lead_modal.clients_50_100')}</option>
+                        <option value="100+">{t('lead_modal.clients_100plus')}</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-1.5">
+                        {t('lead_modal.employees_label')}
+                      </label>
+                      <select
+                        value={form.employees}
+                        onChange={e => setForm(p => ({ ...p, employees: e.target.value }))}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm h-[50px]"
+                      >
+                        <option value="">{t('lead_modal.how_many')}</option>
+                        <option value="1">{t('lead_modal.employees_solo')}</option>
+                        <option value="2-5">{t('lead_modal.employees_2_5')}</option>
+                        <option value="6-15">{t('lead_modal.employees_6_15')}</option>
+                        <option value="15+">{t('lead_modal.employees_15plus')}</option>
                       </select>
                     </div>
                   </div>
@@ -145,11 +164,11 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
                     disabled={loading}
                     className="w-full py-4 bg-blue-600 text-white rounded-xl font-black text-sm uppercase tracking-wider hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-200/60 disabled:opacity-60 mt-2"
                   >
-                    {loading ? 'Wysyłanie...' : 'Wyślij zapytanie →'}
+                    {loading ? t('lead_modal.submitting') : t('lead_modal.submit')}
                   </button>
 
                   <p className="text-[10px] text-slate-400 text-center pt-1">
-                    Dane chronione zgodnie z RODO. Nie wysyłamy spamu.
+                    {t('lead_modal.rodo')}
                   </p>
                 </form>
               </>
@@ -158,16 +177,15 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
                 <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
                   <CheckCircle className="w-8 h-8 text-emerald-500" />
                 </div>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Gotowe!</h3>
-                <p className="text-slate-500 text-sm leading-relaxed mb-8">
-                  Twoje zapytanie dotarło do nas.<br />
-                  Odezwiemy się w ciągu <strong>24h</strong> roboczych.
+                <h3 className="text-2xl font-black text-slate-900 mb-2">{t('lead_modal.success_title')}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed mb-8" style={{ whiteSpace: 'pre-line' }}>
+                  {t('lead_modal.success_desc')}
                 </p>
                 <button
                   onClick={handleClose}
                   className="px-8 py-3 bg-slate-900 text-white rounded-xl font-black text-sm hover:bg-slate-700 transition-all"
                 >
-                  Wróć do demo
+                  {t('lead_modal.success_btn')}
                 </button>
               </div>
             )}
