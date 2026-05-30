@@ -50,6 +50,8 @@ export default function Dashboard({
   const [rejectedFiles, setRejectedFiles] = useState<Set<string>>(new Set());
   const [addedScans, setAddedScans] = useState<Record<string, string[]>>({});
   const [verifyingClientId, setVerifyingClientId] = useState<string | null>(null);
+  const [expandedOcrClients, setExpandedOcrClients] = useState<Set<string>>(() => new Set(ocrRecords.map(r => r.clientName)));
+  const [nudgeRecord, setNudgeRecord] = useState<OCRRecord | null>(null);
 
   useEffect(() => {
     const isDone = sessionStorage.getItem('brakomat_done');
@@ -152,7 +154,18 @@ export default function Dashboard({
     return [...baseFiles, ...extra];
   };
 
+  const groupedOcr = React.useMemo(() => {
+    const map = new Map<string, OCRRecord[]>();
+    ocrRecords.forEach(r => { const arr = map.get(r.clientName) ?? []; arr.push(r); map.set(r.clientName, arr); });
+    return Array.from(map.entries()).map(([clientName, records]) => ({ clientName, records }));
+  }, [ocrRecords]);
+
+  const toggleOcrClient = (name: string) => {
+    setExpandedOcrClients(prev => { const n = new Set(prev); n.has(name) ? n.delete(name) : n.add(name); return n; });
+  };
+
   const handleSmartNudge = (record: OCRRecord) => {
+    setNudgeRecord(record);
     const aiMessage = t('ai.beach_photo_msg');
     addActivity(
       'Agent AI', 
@@ -742,23 +755,181 @@ export default function Dashboard({
             <Tooltip text={t('tooltips.export')}><button onClick={() => toast('Eksport Excel — w pełnej wersji generuje arkusz ze wszystkimi danymi OCR 📊', { icon: '📥', duration: 3000 })} className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-100 transition-all shadow-sm w-full sm:w-auto"><Download className="w-5 h-5" />{t('common.export')}</button></Tooltip>
           </div>
 
-          <div className="w-full overflow-hidden">
-            <table className="w-full border-collapse">
-              <thead><tr className="hidden lg:table-row bg-slate-50/50 border-b border-slate-100"><th className="px-8 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('table.client')}</th><th className="px-6 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('table.doc_statuses')}</th><th className="px-8 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider text-right">{t('table.actions')}</th></tr></thead>
-              <tbody className="divide-y divide-slate-100 block lg:table-row-group w-full">
-                {ocrRecords.length === 0 ? (<tr className="block lg:table-row w-full"><td colSpan={5} className="py-20 text-center text-slate-400 block lg:table-cell font-medium italic w-full"><div className="flex flex-col items-center gap-3 w-full"><Search className="w-10 h-10 opacity-20" /><p>{t('ocr.waiting_msg')}</p></div></td></tr>) : (
-                  ocrRecords.map((record) => (
-                    <motion.tr key={record.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full flex flex-col lg:table-row bg-white hover:bg-slate-50/50 transition-colors p-5 lg:p-0 mb-6 lg:mb-0 border lg:border-none rounded-[2rem] lg:rounded-none shadow-sm lg:shadow-none min-w-full">
-                      <td className="w-full py-2 lg:py-6 lg:px-6 block lg:table-cell"><div className="w-full flex justify-between items-start lg:block"><div className="w-full"><div className="font-black text-slate-900 text-lg lg:text-base leading-tight break-words">{record.clientName}</div>{record.status !== 'Oczekiwanie' && (<button onClick={() => setPreviewDoc(record)} className="text-blue-600 text-sm font-bold hover:underline flex items-center gap-1 mt-2 lg:mt-0.5">{record.invoiceNumber} <Eye className="w-4 h-4" /></button>)}</div></div></td>
-                      <td className="w-full py-4 lg:py-6 lg:px-6 block lg:table-cell border-t lg:border-none mt-2 lg:mt-0">{record.status !== 'Oczekiwanie' && (<div className="w-full grid grid-cols-1 gap-4"><div className="w-full"><div className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">{t('ocr.doc_type')}:</div><div className="text-sm text-slate-700 font-bold">{t(`labels.${record.documentType.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g, '_')}`)}</div></div><div className="w-full"><div className="flex flex-wrap items-center gap-x-4 gap-y-2"><div className="text-sm text-slate-600 font-medium">{record.issueDate}</div><div className="text-xs text-slate-500 font-mono font-bold bg-slate-50 px-2 py-0.5 rounded border border-slate-100">{record.sellerNip}</div></div></div></div>)}</td>
-                      <td className="w-full py-4 lg:py-6 lg:px-8 block lg:table-cell"><div className="w-full flex flex-col lg:items-end gap-4">{record.status !== 'Oczekiwanie' && (<div className="w-full lg:w-48 bg-slate-50 p-4 rounded-2xl flex justify-between items-center lg:block lg:text-right border border-slate-100"><div className="lg:hidden text-[10px] text-slate-400 font-black uppercase">{t('ocr.value')}:</div><div className="text-right"><div className="text-sm font-bold text-slate-900">{record.netAmount.toLocaleString()} {i18n.language === 'en' ? '€' : 'zł'}</div><div className="text-[10px] text-slate-400 font-bold">{t('ocr.vat')}: {record.vatAmount.toLocaleString()} {i18n.language === 'en' ? '€' : 'zł'}</div><div className="text-base font-black text-blue-600 mt-1">{record.grossAmount.toLocaleString()} {i18n.language === 'en' ? '€' : 'zł'}</div></div></div>)}<div className="w-full lg:w-auto">{record.status === 'Oczekiwanie' ? (<Tooltip text={t('tooltips.ocr_analyze')}><button onClick={() => handleAnalyzeDocument(record.id)} className="w-full px-8 py-4 lg:py-2.5 bg-indigo-600 text-white rounded-2xl lg:rounded-xl font-black text-sm lg:text-xs hover:bg-indigo-700 transition-all shadow-lg uppercase tracking-wider"><Search className="w-5 h-5 lg:w-4 lg:h-4 mr-2 inline" /> {t('ocr.analyze_btn')}</button></Tooltip>) : (<div className="flex flex-col gap-2 w-full lg:w-auto"><button onClick={() => record.status !== 'Zweryfikowano' && updateOCRStatus(record.id, record.status === 'Odrzucone' ? 'Do weryfikacji' : 'Zweryfikowano')} className={`w-full px-6 py-3 lg:py-1.5 rounded-xl text-xs font-black transition-all border-2 ${record.status === 'Zweryfikowano' ? 'bg-green-50 text-green-700 border-green-100' : record.status === 'Odrzucone' ? 'bg-red-50 text-red-700 border-red-100' : 'bg-yellow-50 text-yellow-700 border-yellow-100'}`}>{t(`status.${record.status.toLowerCase().replace(/ /g, '_')}`).toUpperCase()}</button>{record.status === 'Odrzucone' && (<Tooltip text={t('tooltips.ocr_smart_nudge')}><button onClick={() => handleSmartNudge(record)} className="py-2 px-4 text-[10px] text-blue-600 font-black bg-blue-50/50 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-100 transition-colors w-full lg:w-auto"><Bell className="w-3.5 h-3.5" /> {t('ocr.smart_nudge')}</button></Tooltip>)}</div>)}</div></div></td>
-                    </motion.tr>
-                  ))
+          {/* NOWA TABELA OCR — grouped accordion + 4 kolumny */}
+          <div className="w-full space-y-3">
+            {ocrRecords.length === 0 ? (
+              <div className="py-16 text-center text-slate-400 font-medium italic flex flex-col items-center gap-3">
+                <Search className="w-10 h-10 opacity-20" />
+                <p>{t('ocr.waiting_msg')}</p>
+              </div>
+            ) : groupedOcr.map(({ clientName, records }) => (
+              <div key={clientName} className="rounded-[1.5rem] overflow-hidden border border-slate-100 shadow-sm">
+                {/* Nagłówek klienta — accordion */}
+                <button
+                  onClick={() => toggleOcrClient(clientName)}
+                  className="w-full flex items-center gap-3 px-5 py-3 bg-slate-800 hover:bg-slate-700 text-white transition-colors text-left"
+                >
+                  <span className="font-black text-sm uppercase tracking-wide flex-1">{clientName}</span>
+                  <span className="text-[10px] font-bold bg-white/20 px-2 py-0.5 rounded-lg">{records.length}</span>
+                  <span className="text-slate-400 text-xs">{expandedOcrClients.has(clientName) ? '▲' : '▼'}</span>
+                </button>
+
+                {expandedOcrClients.has(clientName) && (
+                  <div className="divide-y divide-slate-50 bg-white">
+                    <div className="hidden lg:grid grid-cols-[6rem,1fr,1fr,10rem] gap-4 px-5 py-2 bg-slate-50/80 border-b border-slate-100">
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Nr / Plik</span>
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Kontrahent</span>
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Opis AI / Status</span>
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">Kwoty</span>
+                    </div>
+                    {records.map((record) => (
+                      <motion.div
+                        key={record.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="flex flex-col lg:grid lg:grid-cols-[6rem,1fr,1fr,10rem] gap-4 px-5 py-4 hover:bg-slate-50/60 transition-colors"
+                      >
+                        {/* Kol 1: Nr + Eye */}
+                        <div className="flex flex-row lg:flex-col items-center lg:items-start gap-2 lg:gap-1">
+                          {record.status !== 'Oczekiwanie' ? (
+                            <>
+                              <button onClick={() => setPreviewDoc(record)} className="p-1.5 text-slate-300 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all shrink-0">
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <span className="text-[11px] font-bold text-slate-600 font-mono leading-tight break-all">{record.invoiceNumber}</span>
+                            </>
+                          ) : (
+                            <span className="text-[10px] text-slate-400 italic truncate">{record.fileName}</span>
+                          )}
+                        </div>
+
+                        {/* Kol 2: Sprzedawca / Nabywca */}
+                        <div className="flex flex-col gap-1.5">
+                          {record.status !== 'Oczekiwanie' ? (
+                            <>
+                              <div>
+                                <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">Sprzedawca</p>
+                                {record.sellerName && <p className="text-sm font-bold text-slate-800 leading-tight">{record.sellerName}</p>}
+                                <p className="text-[10px] text-slate-500 font-mono">NIP: {record.sellerNip}</p>
+                              </div>
+                              {record.buyerName && (
+                                <div className="border-t border-slate-100 pt-1.5">
+                                  <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">Nabywca</p>
+                                  <p className="text-xs font-medium text-slate-600 leading-tight">{record.buyerName}</p>
+                                  {record.buyerNip && <p className="text-[10px] text-slate-400 font-mono">NIP: {record.buyerNip}</p>}
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <span className="text-xs text-slate-300 italic">Oczekuje na analizę AI…</span>
+                          )}
+                        </div>
+
+                        {/* Kol 3: Opis AI + status */}
+                        <div className="flex flex-col gap-2">
+                          {record.subject && (
+                            <p className="text-sm font-semibold text-slate-700 leading-snug">{record.subject}</p>
+                          )}
+                          {record.status === 'Oczekiwanie' ? (
+                            <Tooltip text={t('tooltips.ocr_analyze')}>
+                              <button onClick={() => handleAnalyzeDocument(record.id)} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-black text-xs hover:bg-indigo-700 transition-all shadow-md uppercase tracking-wider w-fit">
+                                <Search className="w-3.5 h-3.5" /> Analizuj AI
+                              </button>
+                            </Tooltip>
+                          ) : (
+                            <div className="flex flex-col gap-1.5">
+                              <button
+                                onClick={() => record.status !== 'Zweryfikowano' && updateOCRStatus(record.id, record.status === 'Odrzucone' ? 'Do weryfikacji' : 'Zweryfikowano')}
+                                className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all border-2 w-fit ${record.status === 'Zweryfikowano' ? 'bg-green-50 text-green-700 border-green-100' : record.status === 'Odrzucone' ? 'bg-red-50 text-red-700 border-red-100' : 'bg-yellow-50 text-yellow-700 border-yellow-100'}`}
+                              >
+                                {record.status.toUpperCase()}
+                              </button>
+                              {record.status === 'Odrzucone' && (
+                                <Tooltip text={t('tooltips.ocr_smart_nudge')}>
+                                  <button onClick={() => handleSmartNudge(record)} className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] text-blue-600 font-black bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors w-fit">
+                                    <Bell className="w-3 h-3" /> Smart Nudge AI
+                                  </button>
+                                </Tooltip>
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Kol 4: Kwoty + daty */}
+                        <div className="flex flex-col items-end gap-1">
+                          {record.status !== 'Oczekiwanie' ? (
+                            <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 text-right w-full lg:w-auto">
+                              <p className="text-xs text-slate-500">Netto: <span className="font-bold text-slate-700">{record.netAmount.toLocaleString()} zł</span></p>
+                              <p className="text-[10px] text-slate-400">VAT: {record.vatAmount.toLocaleString()} zł</p>
+                              <p className="text-base font-black text-blue-600 mt-0.5">{record.grossAmount.toLocaleString()} zł</p>
+                              <div className="mt-1.5 pt-1.5 border-t border-slate-100 space-y-0.5">
+                                {record.issueDate !== '---' && <p className="text-[9px] text-slate-400">Wystawienie: {record.issueDate}</p>}
+                                {record.saleDate && <p className="text-[9px] text-slate-400">Sprzedaż: {record.saleDate}</p>}
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-slate-200 text-xs">—</span>
+                          )}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                 )}
-              </tbody>
-            </table>
+              </div>
+            ))}
           </div>
         </div>
+        {/* MODAL SMART NUDGE AI */}
+        <AnimatePresence>
+          {nudgeRecord && (() => {
+            const isUnknown = nudgeRecord.documentType === 'Nieznany' || nudgeRecord.invoiceNumber === '---';
+            const deadline = new Date(Date.now() + 2*24*60*60*1000).toLocaleDateString('pl-PL');
+            const emailSubject = isUnknown
+              ? `Nieprawidłowy dokument — ${nudgeRecord.clientName}`
+              : `Weryfikacja dokumentu ${nudgeRecord.invoiceNumber}`;
+            const emailBody = isUnknown
+              ? `Dzień dobry,\n\nSystem AI przeanalizował przesłany plik:\n"${nudgeRecord.fileName}"\n\nNiestety nie udało się rozpoznać go jako dokument księgowy. Proszę o ponowne przesłanie właściwej faktury lub wyciągu bankowego.\n\nTermin: ${deadline}\n\nZ poważaniem,\nBiuro Rachunkowe`
+              : `Dzień dobry,\n\nSystem AI zidentyfikował dokument do weryfikacji:\n\n• Dokument: ${nudgeRecord.subject || nudgeRecord.invoiceNumber}\n• Sprzedawca: ${nudgeRecord.sellerName || nudgeRecord.sellerNip}\n• Kwota brutto: ${nudgeRecord.grossAmount.toLocaleString()} zł\n• Data wystawienia: ${nudgeRecord.issueDate}\n\nProsimy o potwierdzenie, że powyższa faktura dotyczy działalności firmowej.\n\nTermin odpowiedzi: ${deadline}\n\nZ poważaniem,\nBiuro Rachunkowe`;
+            return (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setNudgeRecord(null)} className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" />
+                <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden">
+                  <div className="p-6 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-indigo-50 flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2.5 bg-blue-600 text-white rounded-xl"><Bell className="w-5 h-5" /></div>
+                      <div>
+                        <h3 className="font-black text-slate-900">Smart Nudge AI</h3>
+                        <p className="text-xs text-slate-500 mt-0.5">Wygenerowany szkic emaila do klienta</p>
+                      </div>
+                    </div>
+                    <button onClick={() => setNudgeRecord(null)} className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-white rounded-xl transition-all"><X className="w-5 h-5" /></button>
+                  </div>
+                  <div className="p-6 space-y-4">
+                    <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Odbiorca</p>
+                      <p className="text-sm font-bold text-slate-800">{nudgeRecord.clientName}</p>
+                    </div>
+                    <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Temat</p>
+                      <p className="text-sm font-semibold text-slate-800">{emailSubject}</p>
+                    </div>
+                    <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Treść</p>
+                      <pre className="text-xs text-slate-700 whitespace-pre-wrap font-sans leading-relaxed">{emailBody}</pre>
+                    </div>
+                  </div>
+                  <div className="p-5 border-t border-slate-100 flex gap-3 justify-end">
+                    <button onClick={() => setNudgeRecord(null)} className="px-5 py-2.5 text-slate-500 border border-slate-200 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all">Anuluj</button>
+                    <button onClick={() => { setNudgeRecord(null); toast.success(`Email wysłany do: ${nudgeRecord.clientName}`, { icon: '✉️', duration: 3000 }); addActivity(nudgeRecord.clientName, 'Smart Nudge AI', emailSubject); }} className="px-6 py-2.5 bg-blue-600 text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+                      Wyślij email ✉️
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            );
+          })()}
+        </AnimatePresence>
+
         <AnimatePresence>
           {previewDoc && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

@@ -24,6 +24,11 @@ export interface OCRRecord {
   invoiceNumber: string;
   issueDate: string;
   sellerNip: string;
+  sellerName?: string;
+  buyerName?: string;
+  buyerNip?: string;
+  subject?: string;
+  saleDate?: string;
   netAmount: number;
   vatAmount: number;
   grossAmount: number;

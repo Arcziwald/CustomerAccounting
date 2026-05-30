@@ -302,26 +302,72 @@ export default function App() {
     clientName: 'MedCare Clinic Sp. z o.o.',
     invoiceNumber: 'FV/2026/0312',
     issueDate: '2026-03-08',
-    sellerNip: 'PL7272800001',
+    saleDate: '2026-03-01',
+    sellerNip: '7272800001',
+    sellerName: 'Medicover Polska Sp. z o.o.',
+    buyerName: 'MedCare Clinic Sp. z o.o.',
+    buyerNip: '5213987654',
+    subject: 'Pakiet medycyny pracy — 12 pracowników, marzec 2026',
     netAmount: 4200.00,
     vatAmount: 966.00,
     grossAmount: 5166.00,
     status: 'Do weryfikacji',
     documentType: 'Faktura',
-    fileName: 'faktura_sprzet_medyczny.pdf'
+    fileName: 'FV_sprzet_med_032026.pdf'
   },
   {
     id: 'demo-4',
     clientName: 'AutoService Marek Nowak',
     invoiceNumber: 'FV/2026/0089',
     issueDate: '2026-03-05',
-    sellerNip: 'PL6760000012',
+    saleDate: '2026-03-04',
+    sellerNip: '6760000012',
+    sellerName: 'ATE Polska Sp. z o.o.',
+    buyerName: 'AutoService Marek Nowak',
+    buyerNip: '6340123456',
+    subject: 'Części zamienne — zestaw filtrów silnikowych (36 szt.)',
     netAmount: 3850.00,
     vatAmount: 885.50,
     grossAmount: 4735.50,
     status: 'Zweryfikowano',
     documentType: 'Faktura',
-    fileName: 'faktura_czesc_silnik.pdf'
+    fileName: 'FV_034_ATE_czesc.pdf'
+  },
+  {
+    id: 'demo-5',
+    clientName: 'AutoService Marek Nowak',
+    invoiceNumber: 'FV/2026/0090',
+    issueDate: '2026-03-07',
+    saleDate: '2026-03-06',
+    sellerNip: '5240099887',
+    sellerName: 'P.H. Lakiernia "Efekt"',
+    buyerName: 'AutoService Marek Nowak',
+    buyerNip: '6340123456',
+    subject: 'Usługa lakierowania — 3 elementy karoserii',
+    netAmount: 1200.00,
+    vatAmount: 276.00,
+    grossAmount: 1476.00,
+    status: 'Do weryfikacji',
+    documentType: 'Faktura',
+    fileName: 'FV_035_lakiernia.pdf'
+  },
+  {
+    id: 'demo-6',
+    clientName: 'Agencja Reklamowa "Pixel Plus"',
+    invoiceNumber: 'INV-2026-03-1847',
+    issueDate: '2026-03-01',
+    saleDate: '2026-03-01',
+    sellerNip: 'IE6388047V',
+    sellerName: 'Adobe Systems Software Ireland Ltd',
+    buyerName: 'Agencja Reklamowa "Pixel Plus"',
+    buyerNip: '5262012345',
+    subject: 'Adobe Creative Cloud All Apps — 3 licencje, marzec 2026',
+    netAmount: 890.00,
+    vatAmount: 204.70,
+    grossAmount: 1094.70,
+    status: 'Oczekiwanie',
+    documentType: 'Faktura',
+    fileName: 'FV_Adobe_CC_032026.pdf'
   },
 ]);
 
@@ -364,29 +410,23 @@ const addActivity = (clientName: string, action: string, detail: string) => {
       if (record.id === 'demo-2') {
         return {
           ...record,
-          invoiceNumber: '---',
-          issueDate: '---',
-          sellerNip: '---',
-          netAmount: 0,
-          vatAmount: 0,
-          grossAmount: 0,
-          status: 'Odrzucone' as any,
-          documentType: 'Nieznany' as any,
+          invoiceNumber: '---', issueDate: '---', sellerNip: '---',
+          sellerName: undefined, buyerName: undefined, subject: 'Nieczytelny dokument — brak danych faktury',
+          netAmount: 0, vatAmount: 0, grossAmount: 0,
+          status: 'Odrzucone' as any, documentType: 'Nieznany' as any,
         };
       }
-      
+
       // A. OBSŁUGA DANYCH DEMO (demo-1)
       if (record.id === 'demo-1') {
-        return { 
-          ...record, 
-          invoiceNumber: 'FV/2026/102/AB', 
-          issueDate: '2026-03-15', 
-          sellerNip: 'PL5260001234', 
-          netAmount: 2500.0, 
-          vatAmount: 575.0, 
-          grossAmount: 3075.0, 
-          status: 'Do weryfikacji' as any, 
-          documentType: 'Faktura' as any 
+        return {
+          ...record,
+          invoiceNumber: 'FV/2026/102/AB', issueDate: '2026-03-15', saleDate: '2026-03-15',
+          sellerNip: '5260001234', sellerName: 'Microsoft Ireland Operations Ltd',
+          buyerName: 'Tech Solutions Sp. z o.o.', buyerNip: '5213456789',
+          subject: 'Microsoft 365 Business Premium — 5 licencji, marzec 2026',
+          netAmount: 2500.0, vatAmount: 575.0, grossAmount: 3075.0,
+          status: 'Do weryfikacji' as any, documentType: 'Faktura' as any
         };
       }
 
