@@ -16,6 +16,8 @@ const MOCK_CLIENTS: Client[] = [
   {
     id: '1',
     name: 'Tech Solutions Sp. z o.o.',
+    email: 'ksiegowosc@techsolutions.pl',
+    uploadToken: 'demo-portal-tech-001',
     month: 'Marzec 2026',
     tier: '2',
     documents: [
@@ -38,6 +40,8 @@ const MOCK_CLIENTS: Client[] = [
   {
     id: '2',
     name: 'Kawiarnia "Pod Chmurką"',
+    email: 'kontakt@podchmurka.pl',
+    uploadToken: 'demo-portal-kawiarnia-002',
     month: 'Marzec 2026',
     tier: '1',
     documents: [
@@ -54,6 +58,8 @@ const MOCK_CLIENTS: Client[] = [
   {
     id: '3',
     name: 'Jan Kowalski – Usługi IT',
+    email: 'jan@kowalski-it.pl',
+    uploadToken: 'demo-portal-jk-003',
     month: 'Marzec 2026',
     tier: '2',
     locked: true,
@@ -108,6 +114,8 @@ const MOCK_CLIENTS: Client[] = [
   {
     id: '6',
     name: 'MedCare Clinic Sp. z o.o.',
+    email: 'biuro@medcare.pl',
+    uploadToken: 'demo-portal-med-006',
     month: 'Marzec 2026',
     tier: '2',
     documents: [
@@ -154,6 +162,7 @@ const MOCK_CLIENTS: Client[] = [
   {
     id: '8',
     name: 'AutoService Marek Nowak',
+    email: 'marek@autoservice.pl',
     month: 'Marzec 2026',
     tier: '2',
     documents: [
@@ -177,6 +186,8 @@ const MOCK_CLIENTS: Client[] = [
   {
     id: '9',
     name: 'E-sklep "HomeGoods24" Sp. z o.o.',
+    email: 'admin@homegoods24.pl',
+    uploadToken: 'demo-portal-home-009',
     month: 'Marzec 2026',
     tier: '2',
     locked: true,

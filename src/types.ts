@@ -57,9 +57,11 @@ export interface Client {
   id: string;
   name: string;
   month: string;
-  tier: ClientTier; 
+  tier: ClientTier;
   documents: DocumentGroup[];
   locked?: boolean;
+  email?: string;
+  uploadToken?: string;
 }
 
 export const STATUS_COLORS: Record<string, string> = {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Client, STATUS_COLORS, DocumentStatus, OCRRecord } from '../types';
 // DODANE IKONY: FileText, Download, X (były już w Twoim kodzie, ale upewniam się, że są użyte)
-import { Bell, Copy, Check, ExternalLink, Search, Settings2, Plus, Trash2, X, Users, Clock, AlertTriangle, Folder, Lock, Unlock, History, ChevronDown, Download, Eye, FileText, Info, Zap, MessageSquare, Users2, Archive, BarChart3, ShieldCheck, ChevronRight, Sparkles, Paperclip } from 'lucide-react';
+import { Bell, Copy, Check, ExternalLink, Search, Settings2, Plus, Trash2, X, Users, Clock, AlertTriangle, Folder, Lock, Unlock, History, ChevronDown, Download, Eye, FileText, Info, Zap, MessageSquare, Users2, Archive, BarChart3, ShieldCheck, ChevronRight, Sparkles, Paperclip, CalendarDays, Link2, UserPlus, UserCheck } from 'lucide-react';
 import LeadModal from './LeadModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -130,6 +130,10 @@ export default function Dashboard({
   const [expandedOcrClients, setExpandedOcrClients] = useState<Set<string>>(() => new Set(ocrRecords.map(r => r.clientName)));
   const [nudgeRecord, setNudgeRecord] = useState<OCRRecord | null>(null);
   const [showAddClient, setShowAddClient] = useState(false);
+  const [copiedPortalId, setCopiedPortalId] = useState<string | null>(null);
+  const [invitingId, setInvitingId] = useState<string | null>(null);
+  const [deadlines, setDeadlines] = useState<Record<string, string>>({});
+  const [closingMonthClientId, setClosingMonthClientId] = useState<string | null>(null);
   const [newClientName, setNewClientName] = useState('');
   const [newClientEmail, setNewClientEmail] = useState('');
   const [newClientNip, setNewClientNip] = useState('');
@@ -709,8 +713,43 @@ export default function Dashboard({
                       <div className="flex items-center gap-0.5 sm:gap-1">
                         <Tooltip text={t('tooltips.lock')}><button onClick={() => handleToggleLock(client.id)} className={`p-2 rounded-xl transition-all ${client.locked ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:bg-blue-50'}`}>{client.locked ? <Lock className="w-4 h-4 lg:w-5 lg:h-5" /> : <Unlock className="w-4 h-4 lg:w-5 lg:h-5" />}</button></Tooltip>
                         <Tooltip text={t('tooltips.settings')}><button onClick={() => setEditingClientId(client.id)} className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl transition-all"><Settings2 className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
-                        <Tooltip text="Weryfikuj dokumenty klienta"><button onClick={() => setVerifyingClientId(client.id)} className="p-2 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-all"><Eye className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
+                        <Tooltip text="Zamknij miesiąc"><button onClick={() => setClosingMonthClientId(client.id)} className="p-2 text-slate-400 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all"><CalendarDays className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
+                        <Tooltip text="Weryfikuj dokumenty"><button onClick={() => setVerifyingClientId(client.id)} className="p-2 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-all"><Eye className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
                         <Tooltip text={t('tooltips.client_view')}><button onClick={() => navigate(`/client/${client.id}`)} className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"><ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
+                        {client.uploadToken && (
+                          <Tooltip text={copiedPortalId === client.id ? 'Skopiowano!' : 'Kopiuj link portalu klienta'}>
+                            <button onClick={() => {
+                              const url = `${window.location.origin}/portal/${client.uploadToken}`;
+                              navigator.clipboard?.writeText(url).catch(() => {});
+                              setCopiedPortalId(client.id);
+                              toast.success('Link portalu skopiowany!', { duration: 2000 });
+                              setTimeout(() => setCopiedPortalId(null), 2000);
+                            }} className={`p-2 rounded-xl transition-all ${copiedPortalId === client.id ? 'bg-green-50 text-green-600' : 'text-slate-400 hover:bg-purple-50 hover:text-purple-600'}`}>
+                              {copiedPortalId === client.id ? <Check className="w-4 h-4 lg:w-5 lg:h-5" /> : <Link2 className="w-4 h-4 lg:w-5 lg:h-5" />}
+                            </button>
+                          </Tooltip>
+                        )}
+                        {client.uploadToken ? (
+                          <Tooltip text="Klient ma aktywne konto w portalu">
+                            <span className="p-2 text-emerald-500 cursor-default"><UserCheck className="w-4 h-4 lg:w-5 lg:h-5" /></span>
+                          </Tooltip>
+                        ) : (
+                          <Tooltip text={client.email ? 'Wyślij zaproszenie do portalu' : 'Brak emaila klienta'}>
+                            <button disabled={!client.email || invitingId === client.id} onClick={() => {
+                              if (!client.email) return;
+                              setInvitingId(client.id);
+                              setTimeout(() => {
+                                setInvitingId(null);
+                                toast.success(`Zaproszenie wysłane do: ${client.email}`, { icon: '✉️', duration: 3000 });
+                                addActivity(client.name, 'Zaproszenie', client.email ?? '');
+                              }, 800);
+                            }} className="p-2 text-slate-400 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+                              {invitingId === client.id
+                                ? <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}><UserPlus className="w-4 h-4 lg:w-5 lg:h-5" /></motion.div>
+                                : <UserPlus className="w-4 h-4 lg:w-5 lg:h-5" />}
+                            </button>
+                          </Tooltip>
+                        )}
                       </div>
                       <Tooltip text={t('tooltips.nudge')}><button onClick={() => handleNudge(client)} className={`flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl text-xs lg:text-sm font-bold transition-all shrink-0 ${copiedId === client.id ? 'bg-green-500 text-white shadow-lg shadow-green-200' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}>{copiedId === client.id ? (<><Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" /> <span className="hidden xs:inline">{t('actions.sent')}</span></>) : (<><Bell className="w-3.5 h-3.5 lg:w-4 lg:h-4" />{t('actions.send')}</>)}</button></Tooltip>
                     </div>
@@ -732,18 +771,37 @@ export default function Dashboard({
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setEditingClientId(null)} className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" />
             <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden">
               <div className="p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold text-slate-900">{t('modal.edit_title')}</h3>
-                  <button onClick={() => setEditingClientId(null)} className="p-2 hover:bg-slate-100 rounded-full transition-colors"><X className="w-6 h-6 text-slate-400" /></button>
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-xl font-bold text-slate-900">{editingClient.name}</h3>
+                  <button onClick={() => setEditingClientId(null)} className="p-2 hover:bg-slate-100 rounded-full transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
                 </div>
-                <p className="text-slate-500 mb-6 font-medium">{editingClient.name}</p>
-                <div className="space-y-3 mb-8 max-h-[300px] overflow-y-auto pr-2">
-                  {editingClient.documents.map(doc => (
-                    <div key={doc.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100">
-                      <span className="font-semibold text-slate-700">{(() => { const labelMap: { [key: string]: string } = { 'Faktury Kosztowe': 'faktury_kosztowe', 'Faktury Przychodowe': 'faktury_przychodowe', 'Wyciągi': 'wyciagi', 'ZUS': 'zus', 'Kadry': 'kadry' }; const key = labelMap[doc.label] || doc.label.toLowerCase().replace(/ /g, '_'); return t(`labels.${key}`); })()}</span>
-                      <button onClick={() => removeDocument(editingClient.id, doc.id)} className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"><Trash2 className="w-4 h-4" /></button>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-5">Ustawienia klienta</p>
+
+                {/* Termin */}
+                <div className="mb-5 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Termin dostarczenia dokumentów</label>
+                  <div className="flex gap-2 items-center">
+                    <input type="date" value={deadlines[editingClient.id] ?? ''} onChange={e => setDeadlines(prev => ({ ...prev, [editingClient.id]: e.target.value }))}
+                      className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" />
+                    <button onClick={() => { toast.success(deadlines[editingClient.id] ? `Termin ustawiony: ${deadlines[editingClient.id]}` : 'Termin usunięty', { duration: 2000 }); }} className="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all">Zapisz</button>
+                    {deadlines[editingClient.id] && <button onClick={() => setDeadlines(prev => { const n = {...prev}; delete n[editingClient.id]; return n; })} className="p-2 text-slate-400 hover:text-red-500 rounded-xl transition-all"><X className="w-4 h-4" /></button>}
+                  </div>
+                </div>
+
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Lista wymaganych dokumentów</p>
+                <div className="space-y-2 mb-6 max-h-[240px] overflow-y-auto pr-2">
+                  {editingClient.documents.map(doc => {
+                    const statusColor = doc.status === 'OK' || doc.status === 'Zatwierdzone' ? 'text-emerald-600' : doc.status === 'W toku' ? 'text-blue-600' : doc.status === 'Spóźnione' ? 'text-red-600' : 'text-slate-400';
+                    return (
+                    <div key={doc.id} className="flex items-center justify-between gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                      <span className="font-semibold text-slate-800 text-sm truncate">{(() => { const labelMap: { [key: string]: string } = { 'Faktury Kosztowe': 'faktury_kosztowe', 'Faktury Przychodowe': 'faktury_przychodowe', 'Wyciągi': 'wyciagi', 'ZUS': 'zus', 'Kadry': 'kadry' }; const key = labelMap[doc.label] || doc.label.toLowerCase().replace(/ /g, '_'); return t(`labels.${key}`); })()}</span>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className={`text-[10px] font-black uppercase tracking-wider ${statusColor}`}>{doc.status}</span>
+                        <button onClick={() => removeDocument(editingClient.id, doc.id)} className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"><Trash2 className="w-4 h-4" /></button>
+                      </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
                 <div className="flex gap-2">
                   <input type="text" placeholder={t('actions.new_doc_placeholder')} className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium" value={newDocLabel} onChange={(e) => setNewDocLabel(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && newDocLabel.trim()) { addDocument(editingClient.id, newDocLabel.trim()); setNewDocLabel(''); } }} />
@@ -1231,6 +1289,42 @@ export default function Dashboard({
 
         <footer className="mt-12 text-center text-slate-400 text-sm">&copy; ArtWebCraft 2026 | {t('footer.system_name')} - {t('footer.system_description')}</footer>
       </div>
+
+      {/* DIALOG ZAMKNIĘCIA MIESIĄCA — per klient */}
+      <AnimatePresence>
+        {closingMonthClientId && (() => {
+          const cc = clients.find(c => c.id === closingMonthClientId);
+          if (!cc) return null;
+          return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setClosingMonthClientId(null)} className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" />
+              <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-sm bg-white rounded-[2.5rem] shadow-2xl overflow-hidden">
+                <div className="p-8">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-blue-50 text-blue-600 rounded-xl"><History className="w-5 h-5" /></div>
+                      <h3 className="text-xl font-bold text-slate-900">{t('month_close.title')}</h3>
+                    </div>
+                    <button onClick={() => setClosingMonthClientId(null)} className="p-2 hover:bg-slate-100 rounded-full transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
+                  </div>
+                  <p className="text-sm text-slate-600 font-semibold mb-1 mt-3">{cc.name}</p>
+                  <p className="text-sm text-slate-400 mb-5">{t('month_close.desc', { count: 1 })}</p>
+                  <div>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block">{t('month_close.new_month_label')}</label>
+                    <select value={selectedCloseMonth} onChange={e => setSelectedCloseMonth(e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                      {NEXT_MONTHS_ISO.map(iso => { const d = new Date(iso + '-01'); const label = d.toLocaleDateString(i18n.language === 'en' ? 'en-GB' : 'pl-PL', { month: 'long', year: 'numeric' }); return <option key={iso} value={iso}>{label}</option>; })}
+                    </select>
+                  </div>
+                  <div className="flex gap-3 mt-6">
+                    <button onClick={() => setClosingMonthClientId(null)} className="flex-1 px-4 py-3 border border-slate-200 text-slate-600 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all">{t('month_close.cancel')}</button>
+                    <button onClick={() => { const label = new Date(selectedCloseMonth + '-01').toLocaleDateString(i18n.language === 'en' ? 'en-GB' : 'pl-PL', { month: 'long', year: 'numeric' }); toast.success(`${cc.name} → ${label}`, { icon: '📅', duration: 3000 }); addActivity(cc.name, 'Zamknięto miesiąc', label); setClosingMonthClientId(null); }} className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">{t('month_close.btn')}</button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          );
+        })()}
+      </AnimatePresence>
 
       {/* MODAL DODAJ KLIENTA */}
       <AnimatePresence>
