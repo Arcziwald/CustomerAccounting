@@ -114,6 +114,14 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Demo banner */}
+      <div className="sticky top-0 z-50 bg-indigo-600 text-white px-4 py-2 flex items-center justify-between text-xs">
+        <div className="flex items-center gap-2">
+          <span className="bg-white/20 px-2 py-0.5 rounded font-black uppercase tracking-widest text-[9px]">DEMO</span>
+          <span className="text-indigo-200 hidden sm:block">To widzi Twój klient po zalogowaniu przez dedykowany link</span>
+        </div>
+        <Link to="/" className="text-white/70 hover:text-white font-bold transition-colors">← Dashboard</Link>
+      </div>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 md:py-12">
         <Link to="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors mb-8 group">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -275,7 +283,7 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                           <FileUp className="w-3 h-3 text-slate-400" />
                           <span className="truncate flex-1">{file.name}</span>
                           <span className="text-[10px] text-slate-300">
-                            {new Date(file.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            {file.timestamp.includes('T') ? new Date(file.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : file.timestamp}
                           </span>
                         </li>
                       ))}
