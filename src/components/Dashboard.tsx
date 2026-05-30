@@ -59,27 +59,6 @@ export default function Dashboard({
     setShowWelcome(false);
   };
 
-  const showUpsellToast = () => {
-    setTimeout(() => {
-      toast(
-        (tToast) => (
-          <div className="flex items-center gap-3">
-            <div>
-              <p className="text-xs font-bold text-slate-800">Podoba Ci się?</p>
-              <p className="text-xs text-slate-500">W pełnej wersji to działa dla Twojego biura.</p>
-            </div>
-            <button
-              onClick={() => { toast.dismiss(tToast.id); setShowLeadModal(true); }}
-              className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-[10px] font-black whitespace-nowrap hover:bg-blue-700 transition-all shrink-0"
-            >
-              Chcę takie →
-            </button>
-          </div>
-        ),
-        { duration: 7000, icon: '✨', style: { borderRadius: '12px', border: '1px solid #e2e8f0', maxWidth: '360px' } }
-      );
-    }, 1800);
-  };
 
   const handleNudge = async (client: any) => {
     const aiMessage = t('ai.nudge_msg', { name: client.name });
@@ -125,17 +104,14 @@ export default function Dashboard({
     }
 
     setTimeout(() => setCopiedId(null), 2000);
-    showUpsellToast();
   };
 
   const handleAnalyzeDocument = (recordId: string) => {
     analyzeDocument(recordId);
-    showUpsellToast();
   };
 
   const handleToggleLock = (clientId: string) => {
     toggleLockClient(clientId);
-    showUpsellToast();
   };
 
   const editingClient = clients.find(c => c.id === editingClientId);
@@ -550,7 +526,7 @@ export default function Dashboard({
                       <div className="flex items-center gap-0.5 sm:gap-1">
                         <Tooltip text={t('tooltips.lock')}><button onClick={() => handleToggleLock(client.id)} className={`p-2 rounded-xl transition-all ${client.locked ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:bg-blue-50'}`}>{client.locked ? <Lock className="w-4 h-4 lg:w-5 lg:h-5" /> : <Unlock className="w-4 h-4 lg:w-5 lg:h-5" />}</button></Tooltip>
                         <Tooltip text={t('tooltips.settings')}><button onClick={() => setEditingClientId(client.id)} className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"><Settings2 className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
-                        <Tooltip text={t('tooltips.client_view')}><button onClick={() => setShowLeadModal(true)} className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"><ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
+                        <Tooltip text={t('tooltips.client_view')}><button onClick={() => toast('Portal klienta — w pełnej wersji klient loguje się przez dedykowany link 🔗', { icon: '👤', duration: 3000 })} className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"><ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
                       </div>
                       <Tooltip text={t('tooltips.nudge')}><button onClick={() => handleNudge(client)} className={`flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl text-xs lg:text-sm font-bold transition-all shrink-0 ${copiedId === client.id ? 'bg-green-500 text-white shadow-lg shadow-green-200' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}>{copiedId === client.id ? (<><Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" /> <span className="hidden xs:inline">{t('actions.sent')}</span></>) : (<><Bell className="w-3.5 h-3.5 lg:w-4 lg:h-4" />{t('actions.send')}</>)}</button></Tooltip>
                     </div>
@@ -602,7 +578,7 @@ export default function Dashboard({
               <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl shrink-0"><FileText className="w-7 h-7" /></div>
               <div><h2 className="text-2xl font-bold text-slate-900">{t('dashboard.title')}</h2><p className="text-slate-500">{t('dashboard.subtitle')}</p></div>
             </div>
-            <Tooltip text={t('tooltips.export')}><button onClick={() => setShowLeadModal(true)} className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-100 transition-all shadow-sm w-full sm:w-auto"><Download className="w-5 h-5" />{t('common.export')}</button></Tooltip>
+            <Tooltip text={t('tooltips.export')}><button onClick={() => toast('Eksport Excel — w pełnej wersji generuje arkusz ze wszystkimi danymi OCR 📊', { icon: '📥', duration: 3000 })} className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-100 transition-all shadow-sm w-full sm:w-auto"><Download className="w-5 h-5" />{t('common.export')}</button></Tooltip>
           </div>
 
           <div className="w-full overflow-hidden">
