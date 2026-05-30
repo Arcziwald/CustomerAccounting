@@ -26,6 +26,7 @@ const NIP_DATA: Record<string, { type: 'bl' | 'vies'; aktywny?: boolean; valid?:
 function normNip(nip: string) { return nip.replace(/[\s-]/g, '').replace(/^[A-Za-z]{2}/, ''); }
 
 function NipBadge({ nip }: { nip: string }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const data = NIP_DATA[normNip(nip)];
 
@@ -46,7 +47,7 @@ function NipBadge({ nip }: { nip: string }) {
       {open && (
         <div className="absolute left-0 top-full mt-1 z-[60] w-64 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Weryfikacja NIP</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('nip.verification')}</span>
             <button onClick={() => setOpen(false)}><X className="w-3 h-3 text-slate-400" /></button>
           </div>
           <p className="text-[10px] font-mono text-slate-600 mb-3 bg-slate-50 px-2 py-1 rounded-lg">{nip}</p>
@@ -55,19 +56,19 @@ function NipBadge({ nip }: { nip: string }) {
             <span className="text-base mt-0.5">{ok ? '✓' : '✗'}</span>
             <div>
               <p className={`text-xs font-bold ${ok ? 'text-emerald-700' : 'text-rose-700'}`}>
-                {isVat ? `Biała Lista VAT MF — ${ok ? 'aktywny' : 'NIEAKTYWNY!'}` : `VIES EU — ${ok ? 'aktywny' : 'nieaktywny'}`}
+                {isVat ? ok ? t('nip.bl_active') : t('nip.bl_inactive') : ok ? t('nip.vies_active') : t('nip.vies_inactive')}
               </p>
-              {!ok && isVat && <p className="text-[10px] text-rose-600 font-semibold mt-0.5">⚠ Ryzyko podatkowe! Sprawdź przed płatnością.</p>}
-              {data.country && <p className="text-[10px] text-slate-500 mt-0.5">Kraj rejestracji: {data.country}</p>}
+              {!ok && isVat && <p className="text-[10px] text-rose-600 font-semibold mt-0.5">{t('nip.tax_risk')}</p>}
+              {data.country && <p className="text-[10px] text-slate-500 mt-0.5">{t('nip.country')} {data.country}</p>}
             </div>
           </div>
           {data.konto && (
             <div className="p-2.5 bg-slate-50 rounded-xl">
-              <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1">Nr konta (Biała Lista)</p>
+              <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1">{t('nip.account')}</p>
               <p className="text-[10px] font-mono text-slate-700 break-all">{data.konto}</p>
             </div>
           )}
-          <button onClick={() => setOpen(false)} className="mt-3 w-full py-1.5 text-[10px] font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all">Odśwież dane</button>
+          <button onClick={() => setOpen(false)} className="mt-3 w-full py-1.5 text-[10px] font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all">{t('nip.refresh')}</button>
         </div>
       )}
     </div>
@@ -106,11 +107,11 @@ export default function Dashboard({
 
   // Fake team data
   const TEAM = [
-    { initials: 'MW', name: 'Marta Wiśniewska', role: 'Pracownik', email: 'marta.w@biuro.pl', lastLogin: 'dzisiaj, 09:15', color: 'bg-violet-100 text-violet-700' },
-    { initials: 'PZ', name: 'Piotr Zając', role: 'Pracownik', email: 'piotr.z@biuro.pl', lastLogin: 'wczoraj, 16:42', color: 'bg-blue-100 text-blue-700' },
-    { initials: 'AK', name: 'Anna Kowalczyk', role: 'Pracownik', email: 'anna.k@biuro.pl', lastLogin: '28 maj, 11:30', color: 'bg-emerald-100 text-emerald-700' },
+    { initials: 'MW', name: 'Marta Wiśniewska', role: 'team.role', email: 'marta.w@biuro.pl', lastLogin: `${t('team.today')}, 09:15`, color: 'bg-violet-100 text-violet-700' },
+    { initials: 'PZ', name: 'Piotr Zając', role: 'team.role', email: 'piotr.z@biuro.pl', lastLogin: `${t('team.yesterday')}, 16:42`, color: 'bg-blue-100 text-blue-700' },
+    { initials: 'AK', name: 'Anna Kowalczyk', role: 'team.role', email: 'anna.k@biuro.pl', lastLogin: '28 maj, 11:30', color: 'bg-emerald-100 text-emerald-700' },
   ];
-  const NEXT_MONTHS = ['Kwiecień 2026','Maj 2026','Czerwiec 2026','Lipiec 2026','Sierpień 2026','Wrzesień 2026','Październik 2026','Listopad 2026','Grudzień 2026'];
+  const NEXT_MONTHS_ISO = ['2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'ready' | 'late' | 'missing' | 'correction' | 'locked'>('all');
@@ -131,7 +132,7 @@ export default function Dashboard({
   const [newClientEmail, setNewClientEmail] = useState('');
   const [newClientNip, setNewClientNip] = useState('');
   const [showCloseMonth, setShowCloseMonth] = useState(false);
-  const [selectedCloseMonth, setSelectedCloseMonth] = useState('Kwiecień 2026');
+  const [selectedCloseMonth, setSelectedCloseMonth] = useState('2026-04');
 
   useEffect(() => {
     const isDone = sessionStorage.getItem('brakomat_done');
@@ -313,15 +314,15 @@ export default function Dashboard({
     <div className="sticky top-0 z-[100] bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white px-4 py-2.5 flex items-center justify-between shadow-lg">
       <div className="flex items-center gap-2.5">
         <span className="bg-white/20 text-white text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-md shrink-0">DEMO</span>
-        <span className="text-xs font-medium text-blue-100 hidden sm:block">Wersja demonstracyjna — dane są fikcyjne. Odkryj pełne możliwości Brakomatu.</span>
-        <span className="text-xs font-medium text-blue-100 sm:hidden">Wersja demonstracyjna</span>
+        <span className="text-xs font-medium text-blue-100 hidden sm:block">{t('demo.banner_full')}</span>
+        <span className="text-xs font-medium text-blue-100 sm:hidden">{t('demo.banner_short')}</span>
       </div>
       <button
         onClick={() => setShowLeadModal(true)}
         className="flex items-center gap-1.5 px-4 py-1.5 bg-white text-blue-700 rounded-lg font-black text-[11px] uppercase tracking-wider hover:bg-blue-50 transition-all shadow-sm whitespace-nowrap shrink-0"
       >
         <Sparkles className="w-3 h-3" />
-        Chcę Brakomat →
+        {t('demo.want')}
       </button>
     </div>
 
@@ -347,7 +348,7 @@ export default function Dashboard({
             onClick={() => setShowAddClient(true)}
             className="flex items-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-wider hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 whitespace-nowrap shrink-0"
           >
-            <Plus className="w-4 h-4" /> Dodaj klienta
+            <Plus className="w-4 h-4" /> {t('common.add_client_btn')}
           </button>
         </div>
       </header>
@@ -506,7 +507,7 @@ export default function Dashboard({
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter text-center flex-1 mx-2 border-x border-slate-200">
             {t('dashboard.work_in_progress') || 'W trakcie'}
           </span>
-          <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">Finał</span>
+          <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">{t('common.finish')}</span>
         </div>
       </div>
 {/* KONTENER NAD TABELĄ */}
@@ -533,7 +534,7 @@ export default function Dashboard({
     ))}
     {statusFilter !== 'all' && (
       <button onClick={() => setStatusFilter('all')} className="text-[10px] font-black text-slate-400 hover:text-red-500 px-2 uppercase">
-        Wyczyść
+        {t('common.cancel')}
       </button>
     )}
   </div>
@@ -544,7 +545,7 @@ export default function Dashboard({
     onClick={() => setShowCloseMonth(true)}
     className="flex items-center gap-2 px-4 py-3 bg-white text-slate-700 rounded-2xl font-black text-[11px] uppercase tracking-wider border border-slate-200 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 transition-all shadow-sm"
   >
-    <History className="w-4 h-4" /> Zamknij miesiąc
+    <History className="w-4 h-4" /> {t('common.close_month_btn')}
   </button>
   <motion.button
   whileHover={{ scale: 1.05 }}
@@ -559,7 +560,7 @@ export default function Dashboard({
       clientsWithLateDocs.forEach(c => handleNudge(c));
       toast.success(`${t('ai.nudge_sent')}: ${clientsWithLateDocs.length}`);
     } else {
-      toast.error("Brak spóźnionych klientów");
+      toast.error(t('common.no_late_clients'));
     }
   }}
   className="flex items-center gap-3 px-6 py-3 bg-[#1e293b] text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.15em] shadow-xl hover:bg-slate-800 transition-all border border-slate-700"
@@ -652,8 +653,8 @@ export default function Dashboard({
 
                                 {allFiles.length === 0 ? (
                                   <div className="py-4 text-center">
-                                    <p className="text-[11px] text-slate-400 font-medium">Brak przesłanych plików</p>
-                                    <p className="text-[10px] text-slate-300 mt-0.5">Klient przesyła przez portal</p>
+                                    <p className="text-[11px] text-slate-400 font-medium">{t('files.no_files')}</p>
+                                    <p className="text-[10px] text-slate-300 mt-0.5">{t('files.portal_hint')}</p>
                                   </div>
                                 ) : (
                                   <div className="space-y-1.5 max-h-52 overflow-y-auto pr-1">
@@ -689,7 +690,7 @@ export default function Dashboard({
                                     onClick={() => handleAddScan(client.id, doc.id, doc.label)}
                                     className="flex items-center justify-center gap-1.5 w-full py-2 rounded-xl text-[11px] font-bold bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all"
                                   >
-                                    <Paperclip className="w-3 h-3" /> Dodaj skan
+                                    <Paperclip className="w-3 h-3" /> {t('files.add_scan')}
                                   </button>
                                 </div>
                               </motion.div>
@@ -768,7 +769,7 @@ export default function Dashboard({
                 <div className="p-6 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50/50">
                   <div>
                     <h3 className="text-xl font-bold text-slate-900">{vClient.name}</h3>
-                    <p className="text-sm text-slate-500 mt-0.5">Weryfikacja dokumentów • {vClient.month} • <span className="font-semibold text-blue-600">{totalApproved}/{totalFiles} zatwierdzonych</span></p>
+                    <p className="text-sm text-slate-500 mt-0.5">{t('verify.title')} • {vClient.month} • <span className="font-semibold text-blue-600">{totalApproved}/{totalFiles} {t('verify.approved_of')}</span></p>
                   </div>
                   <button onClick={() => setVerifyingClientId(null)} className="p-2 hover:bg-white rounded-xl transition-colors text-slate-400 hover:text-slate-600 shadow-sm"><X className="w-5 h-5" /></button>
                 </div>
@@ -791,7 +792,7 @@ export default function Dashboard({
                           )}
                         </div>
                         {allFiles.length === 0 ? (
-                          <p className="text-[11px] text-slate-300 italic pl-6 py-2">Brak przesłanych plików</p>
+                          <p className="text-[11px] text-slate-300 italic pl-6 py-2">{t('files.no_files')}</p>
                         ) : (
                           <div className="space-y-2 pl-6">
                             {allFiles.map((file, fIdx) => {
@@ -830,7 +831,7 @@ export default function Dashboard({
 
                 {/* Footer */}
                 <div className="p-5 border-t border-slate-100 bg-slate-50/50 shrink-0 flex items-center justify-between">
-                  <p className="text-[11px] text-slate-400">✓ Zatwierdź — ✕ Odrzuć i powiadom klienta</p>
+                  <p className="text-[11px] text-slate-400">{t('verify.footer_hint')}</p>
                   <button onClick={() => setVerifyingClientId(null)} className="px-6 py-2.5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 text-sm">
                     Zamknij
                   </button>
@@ -873,10 +874,10 @@ export default function Dashboard({
                 {expandedOcrClients.has(clientName) && (
                   <div className="divide-y divide-slate-50 bg-white">
                     <div className="hidden lg:grid grid-cols-[6rem,1fr,1fr,10rem] gap-4 px-5 py-2 bg-slate-50/80 border-b border-slate-100">
-                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Nr / Plik</span>
-                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Kontrahent</span>
-                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Opis AI / Status</span>
-                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">Kwoty</span>
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{t('ocr.col_file')}</span>
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{t('ocr.col_counterparty')}</span>
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{t('ocr.col_ai_status')}</span>
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">{t('ocr.col_amounts')}</span>
                     </div>
                     {records.map((record) => (
                       <motion.div
@@ -904,7 +905,7 @@ export default function Dashboard({
                           {record.status !== 'Oczekiwanie' ? (
                             <>
                               <div>
-                                <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">Sprzedawca</p>
+                                <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">{t('ocr.seller')}</p>
                                 {record.sellerName && <p className="text-sm font-bold text-slate-800 leading-tight">{record.sellerName}</p>}
                                 <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
                                   <p className="text-[10px] text-slate-500 font-mono">NIP: {record.sellerNip}</p>
@@ -913,14 +914,14 @@ export default function Dashboard({
                               </div>
                               {record.buyerName && (
                                 <div className="border-t border-slate-100 pt-1.5">
-                                  <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">Nabywca</p>
+                                  <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">{t('ocr.buyer')}</p>
                                   <p className="text-xs font-medium text-slate-600 leading-tight">{record.buyerName}</p>
                                   {record.buyerNip && <p className="text-[10px] text-slate-400 font-mono">NIP: {record.buyerNip}</p>}
                                 </div>
                               )}
                             </>
                           ) : (
-                            <span className="text-xs text-slate-300 italic">Oczekuje na analizę AI…</span>
+                            <span className="text-xs text-slate-300 italic">{t('ocr.waiting_ai')}</span>
                           )}
                         </div>
 
@@ -932,7 +933,7 @@ export default function Dashboard({
                           {record.status === 'Oczekiwanie' ? (
                             <Tooltip text={t('tooltips.ocr_analyze')}>
                               <button onClick={() => handleAnalyzeDocument(record.id)} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-black text-xs hover:bg-indigo-700 transition-all shadow-md uppercase tracking-wider w-fit">
-                                <Search className="w-3.5 h-3.5" /> Analizuj AI
+                                <Search className="w-3.5 h-3.5" /> {t('ocr.analyze_ai')}
                               </button>
                             </Tooltip>
                           ) : (
@@ -946,14 +947,14 @@ export default function Dashboard({
                               {record.status === 'Odrzucone' && (
                                 <Tooltip text={t('tooltips.ocr_smart_nudge')}>
                                   <button onClick={() => handleSmartNudge(record)} className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] text-blue-600 font-black bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors w-fit">
-                                    <Bell className="w-3 h-3" /> Smart Nudge AI
+                                    <Bell className="w-3 h-3" /> {t('ocr.smart_nudge_ai')}
                                   </button>
                                 </Tooltip>
                               )}
                               {record.wrongCategory && (
                                 <div className="mt-1 flex items-center gap-1.5 px-2.5 py-1.5 bg-orange-50 border border-orange-200 rounded-xl">
                                   <svg className="w-3 h-3 text-orange-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /></svg>
-                                  <span className="text-[10px] font-bold text-orange-700">Zła kategoria?</span>
+                                  <span className="text-[10px] font-bold text-orange-700">{t('ocr.wrong_category')}</span>
                                   {record.suggestedCategory && (
                                     <span className="text-[10px] text-orange-600">→ <span className="font-semibold">{record.suggestedCategory}</span></span>
                                   )}
@@ -967,12 +968,12 @@ export default function Dashboard({
                         <div className="flex flex-col items-end gap-1">
                           {record.status !== 'Oczekiwanie' ? (
                             <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 text-right w-full lg:w-auto">
-                              <p className="text-xs text-slate-500">Netto: <span className="font-bold text-slate-700">{record.netAmount.toLocaleString()} zł</span></p>
+                              <p className="text-xs text-slate-500">{t('ocr.net')}: <span className="font-bold text-slate-700">{record.netAmount.toLocaleString()} zł</span></p>
                               <p className="text-[10px] text-slate-400">VAT: {record.vatAmount.toLocaleString()} zł</p>
                               <p className="text-base font-black text-blue-600 mt-0.5">{record.grossAmount.toLocaleString()} zł</p>
                               <div className="mt-1.5 pt-1.5 border-t border-slate-100 space-y-0.5">
-                                {record.issueDate !== '---' && <p className="text-[9px] text-slate-400">Wystawienie: {record.issueDate}</p>}
-                                {record.saleDate && <p className="text-[9px] text-slate-400">Sprzedaż: {record.saleDate}</p>}
+                                {record.issueDate !== '---' && <p className="text-[9px] text-slate-400">{t('ocr.issue_date')}: {record.issueDate}</p>}
+                                {record.saleDate && <p className="text-[9px] text-slate-400">{t('ocr.sale_date_label')}: {record.saleDate}</p>}
                               </div>
                             </div>
                           ) : (
@@ -996,8 +997,8 @@ export default function Dashboard({
               ? `Nieprawidłowy dokument — ${nudgeRecord.clientName}`
               : `Weryfikacja dokumentu ${nudgeRecord.invoiceNumber}`;
             const emailBody = isUnknown
-              ? `Dzień dobry,\n\nSystem AI przeanalizował przesłany plik:\n"${nudgeRecord.fileName}"\n\nNiestety nie udało się rozpoznać go jako dokument księgowy. Proszę o ponowne przesłanie właściwej faktury lub wyciągu bankowego.\n\nTermin: ${deadline}\n\nZ poważaniem,\nBiuro Rachunkowe`
-              : `Dzień dobry,\n\nSystem AI zidentyfikował dokument do weryfikacji:\n\n• Dokument: ${nudgeRecord.subject || nudgeRecord.invoiceNumber}\n• Sprzedawca: ${nudgeRecord.sellerName || nudgeRecord.sellerNip}\n• Kwota brutto: ${nudgeRecord.grossAmount.toLocaleString()} zł\n• Data wystawienia: ${nudgeRecord.issueDate}\n\nProsimy o potwierdzenie, że powyższa faktura dotyczy działalności firmowej.\n\nTermin odpowiedzi: ${deadline}\n\nZ poważaniem,\nBiuro Rachunkowe`;
+              ? t('nudge_modal.body_unknown', { fileName: nudgeRecord.fileName, deadline })
+              : t('nudge_modal.body_verify', { subject: nudgeRecord.subject || nudgeRecord.invoiceNumber, seller: nudgeRecord.sellerName || nudgeRecord.sellerNip, amount: nudgeRecord.grossAmount.toLocaleString(), date: nudgeRecord.issueDate, deadline });
             return (
               <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setNudgeRecord(null)} className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" />
@@ -1006,29 +1007,29 @@ export default function Dashboard({
                     <div className="flex items-center gap-3">
                       <div className="p-2.5 bg-blue-600 text-white rounded-xl"><Bell className="w-5 h-5" /></div>
                       <div>
-                        <h3 className="font-black text-slate-900">Smart Nudge AI</h3>
-                        <p className="text-xs text-slate-500 mt-0.5">Wygenerowany szkic emaila do klienta</p>
+                        <h3 className="font-black text-slate-900">{t('nudge_modal.ai_label')}</h3>
+                        <p className="text-xs text-slate-500 mt-0.5">{t('nudge_modal.ai_subtitle')}</p>
                       </div>
                     </div>
                     <button onClick={() => setNudgeRecord(null)} className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-white rounded-xl transition-all"><X className="w-5 h-5" /></button>
                   </div>
                   <div className="p-6 space-y-4">
                     <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Odbiorca</p>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('nudge_modal.recipient')}</p>
                       <p className="text-sm font-bold text-slate-800">{nudgeRecord.clientName}</p>
                     </div>
                     <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Temat</p>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('nudge_modal.subject_label')}</p>
                       <p className="text-sm font-semibold text-slate-800">{emailSubject}</p>
                     </div>
                     <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Treść</p>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{t('nudge_modal.body_label')}</p>
                       <pre className="text-xs text-slate-700 whitespace-pre-wrap font-sans leading-relaxed">{emailBody}</pre>
                     </div>
                   </div>
                   <div className="p-5 border-t border-slate-100 flex gap-3 justify-end">
                     <button onClick={() => setNudgeRecord(null)} className="px-5 py-2.5 text-slate-500 border border-slate-200 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all">Anuluj</button>
-                    <button onClick={() => { setNudgeRecord(null); toast.success(`Email wysłany do: ${nudgeRecord.clientName}`, { icon: '✉️', duration: 3000 }); addActivity(nudgeRecord.clientName, 'Smart Nudge AI', emailSubject); }} className="px-6 py-2.5 bg-blue-600 text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+                    <button onClick={() => { setNudgeRecord(null); toast.success(t('nudge_modal.sent_toast', { name: nudgeRecord.clientName }), { icon: '✉️', duration: 3000 }); addActivity(nudgeRecord.clientName, 'Smart Nudge AI', emailSubject); }} className="px-6 py-2.5 bg-blue-600 text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
                       Wyślij email ✉️
                     </button>
                   </div>
@@ -1196,15 +1197,15 @@ export default function Dashboard({
             <div className="flex items-center gap-3">
               <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl"><Users className="w-5 h-5" /></div>
               <div>
-                <h2 className="text-lg font-black text-slate-900">Zespół biura</h2>
-                <p className="text-xs text-slate-400">3 aktywnych pracowników</p>
+                <h2 className="text-lg font-black text-slate-900">{t('team.title')}</h2>
+                <p className="text-xs text-slate-400">{t('team.active_count', { count: 3 })}</p>
               </div>
             </div>
             <button
-              onClick={() => toast('Zaproszenie pracownika — dostępne w pełnej wersji', { icon: '👥', duration: 2500 })}
+              onClick={() => toast(t('team.invite_toast'), { icon: '👥', duration: 2500 })}
               className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-indigo-700 transition-all shadow-md shadow-indigo-200"
             >
-              <Plus className="w-3.5 h-3.5" /> Zaproś pracownika
+              <Plus className="w-3.5 h-3.5" /> {t('team.invite')}
             </button>
           </div>
           <div className="space-y-3">
@@ -1218,7 +1219,7 @@ export default function Dashboard({
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="inline-block px-2.5 py-1 bg-white text-slate-500 border border-slate-200 rounded-lg text-[10px] font-semibold mb-1">{member.role}</span>
+                  <span className="inline-block px-2.5 py-1 bg-white text-slate-500 border border-slate-200 rounded-lg text-[10px] font-semibold mb-1">{t(member.role)}</span>
                   <p className="text-[10px] text-slate-400 flex items-center gap-1 justify-end"><Clock className="w-2.5 h-2.5" /> {member.lastLogin}</p>
                 </div>
               </div>
@@ -1239,18 +1240,18 @@ export default function Dashboard({
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-blue-50 text-blue-600 rounded-xl"><Plus className="w-5 h-5" /></div>
-                    <h3 className="text-xl font-bold text-slate-900">Dodaj klienta</h3>
+                    <h3 className="text-xl font-bold text-slate-900">{t('clients.add_title')}</h3>
                   </div>
                   <button onClick={() => setShowAddClient(false)} className="p-2 hover:bg-slate-100 rounded-full transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <label className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1.5 block">Nazwa firmy *</label>
-                    <input autoFocus type="text" placeholder="np. Firma Budowlana Nowak Sp. z o.o." className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm" value={newClientName} onChange={e => setNewClientName(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && newClientName.trim()) { addClient?.(newClientName, newClientEmail, newClientNip); toast.success(`Dodano: ${newClientName}`, { icon: '✓' }); setShowAddClient(false); setNewClientName(''); setNewClientEmail(''); setNewClientNip(''); }}} />
+                    <label className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1.5 block">{t('clients.name_label')}</label>
+                    <input autoFocus type="text" placeholder={t('clients.name_placeholder')} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm" value={newClientName} onChange={e => setNewClientName(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && newClientName.trim()) { addClient?.(newClientName, newClientEmail, newClientNip); toast.success(t('clients.added_toast', { name: newClientName }), { icon: '✓' }); setShowAddClient(false); setNewClientName(''); setNewClientEmail(''); setNewClientNip(''); }}} />
                   </div>
                   <div>
-                    <label className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1.5 block">Email (opcjonalnie)</label>
-                    <input type="email" placeholder="kontakt@firma.pl" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm" value={newClientEmail} onChange={e => setNewClientEmail(e.target.value)} />
+                    <label className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1.5 block">{t('clients.email_label')}</label>
+                    <input type="email" placeholder={t('clients.email_placeholder')} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm" value={newClientEmail} onChange={e => setNewClientEmail(e.target.value)} />
                   </div>
                   <div>
                     <label className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1.5 block">NIP (opcjonalnie)</label>
@@ -1261,7 +1262,7 @@ export default function Dashboard({
                   <button onClick={() => setShowAddClient(false)} className="flex-1 px-4 py-3 border border-slate-200 text-slate-600 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all">Anuluj</button>
                   <button
                     disabled={!newClientName.trim()}
-                    onClick={() => { addClient?.(newClientName, newClientEmail, newClientNip); toast.success(`Dodano: ${newClientName}`, { icon: '✓' }); setShowAddClient(false); setNewClientName(''); setNewClientEmail(''); setNewClientNip(''); }}
+                    onClick={() => { addClient?.(newClientName, newClientEmail, newClientNip); toast.success(t('clients.added_toast', { name: newClientName }), { icon: '✓' }); setShowAddClient(false); setNewClientName(''); setNewClientEmail(''); setNewClientNip(''); }}
                     className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Dodaj klienta
@@ -1283,25 +1284,25 @@ export default function Dashboard({
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-blue-50 text-blue-600 rounded-xl"><History className="w-5 h-5" /></div>
-                    <h3 className="text-xl font-bold text-slate-900">Zamknij miesiąc</h3>
+                    <h3 className="text-xl font-bold text-slate-900">{t('month_close.title')}</h3>
                   </div>
                   <button onClick={() => setShowCloseMonth(false)} className="p-2 hover:bg-slate-100 rounded-full transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
                 </div>
-                <p className="text-sm text-slate-500 mb-5">Aktualne dokumenty ({clients.length} klientów) zostaną zarchiwizowane. Nowy miesiąc otrzyma puste kategorie.</p>
+                <p className="text-sm text-slate-500 mb-5">{t('month_close.desc', { count: clients.length })}</p>
                 <div>
-                  <label className="text-xs font-black text-slate-500 uppercase tracking-wider mb-2 block">Nowy miesiąc rozliczeniowy</label>
+                  <label className="text-xs font-black text-slate-500 uppercase tracking-wider mb-2 block">{t('month_close.new_month_label')}</label>
                   <select
                     value={selectedCloseMonth}
                     onChange={e => setSelectedCloseMonth(e.target.value)}
                     className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-bold text-sm appearance-none"
                   >
-                    {NEXT_MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                    {NEXT_MONTHS_ISO.map(iso => { const d = new Date(iso + '-01'); const label = d.toLocaleDateString(i18n.language === 'en' ? 'en-GB' : 'pl-PL', { month: 'long', year: 'numeric' }); return <option key={iso} value={iso}>{label}</option>; })}
                   </select>
                 </div>
                 <div className="flex gap-3 mt-8">
                   <button onClick={() => setShowCloseMonth(false)} className="flex-1 px-4 py-3 border border-slate-200 text-slate-600 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all">Anuluj</button>
                   <button
-                    onClick={() => { toast.success(`Miesiąc zamknięty → ${selectedCloseMonth} (${clients.length} klientów)`, { icon: '📅', duration: 3500 }); addActivity('System', 'Zamknięto miesiąc', selectedCloseMonth); setShowCloseMonth(false); }}
+                    onClick={() => { toast.success(t('month_close.toast', { month: new Date(selectedCloseMonth + '-01').toLocaleDateString(i18n.language === 'en' ? 'en-GB' : 'pl-PL', { month: 'long', year: 'numeric' }), count: clients.length }), { icon: '📅', duration: 3500 }); addActivity('System', 'Zamknięto miesiąc', selectedCloseMonth); setShowCloseMonth(false); }}
                     className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
                   >
                     Zamknij miesiąc
@@ -1323,15 +1324,15 @@ export default function Dashboard({
             className="mb-4 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl shadow-2xl px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-700"
           >
             <div className="text-center sm:text-left">
-              <p className="font-black text-sm">Podoba Ci się Brakomat?</p>
-              <p className="text-slate-400 text-xs">Wdrożymy go dla Twojego biura rachunkowego — z Twoimi danymi i logo.</p>
+              <p className="font-black text-sm">{t('demo.bottom_title')}</p>
+              <p className="text-slate-400 text-xs">{t('demo.bottom_desc')}</p>
             </div>
             <button
               onClick={() => setShowLeadModal(true)}
               className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-blue-500 transition-all shadow-lg whitespace-nowrap shrink-0"
             >
               <Sparkles className="w-4 h-4" />
-              Chcę Brakomat dla swojego biura →
+              {t('demo.bottom_btn')}
             </button>
           </motion.div>
         </div>

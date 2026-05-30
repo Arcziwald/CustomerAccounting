@@ -12,7 +12,13 @@
     "uploading": "Wysyłanie...",
     "no_results": "Nie znaleziono klientów spełniających kryteria.",
     "search_placeholder": "Szukaj klienta...",
-    "just_now": "Właśnie teraz"
+    "just_now": "Właśnie teraz",
+    "cancel": "Anuluj",
+    "close": "Zamknij",
+    "no_late_clients": "Brak spóźnionych klientów",
+    "add_client_btn": "Dodaj klienta",
+    "close_month_btn": "Zamknij miesiąc",
+    "finish": "Finał"
   },
   "stats": {
     "all": "Wszyscy klienci",
@@ -62,6 +68,7 @@
     "odrzucone": "Odrzucone",
     "do_weryfikacji": "Do weryfikacji",
     "zweryfikowano": "Zweryfikowano",
+    "oczekiwanie": "Oczekiwanie",
     "late_notice": "Termin minął! Prosimy o pilne uzupełnienie."
   },
   "actions": {
@@ -113,9 +120,22 @@
     "doc_type": "Typ dokumentu",
     "waiting_msg": "Oczekiwanie na pierwsze dokumenty do analizy...",
     "analyze_btn": "Analizuj",
+    "analyze_ai": "Analizuj AI",
     "value": "Wartość",
     "vat": "VAT",
+    "net": "Netto",
+    "issue_date": "Wystawienie",
+    "sale_date_label": "Sprzedaż",
+    "seller": "Sprzedawca",
+    "buyer": "Nabywca",
+    "col_file": "Nr / Plik",
+    "col_counterparty": "Kontrahent",
+    "col_ai_status": "Opis AI / Status",
+    "col_amounts": "Kwoty",
+    "waiting_ai": "Oczekuje na analizę AI…",
+    "wrong_category": "Zła kategoria?",
     "smart_nudge": "SZYBKA DEPESZA",
+    "smart_nudge_ai": "Smart Nudge AI",
     "preview_title": "Podgląd dokumentu",
     "simulation_title": "Symulacja podglądu",
     "file": "Plik",
@@ -123,6 +143,79 @@
     "reject_btn": "Odrzuć (Powiadom klienta)",
     "approve_btn": "Zatwierdź dane",
     "toast_rejected_msg": "Dokument odrzucony. Klient otrzymał powiadomienie."
+  },
+  "files": {
+    "no_files": "Brak przesłanych plików",
+    "portal_hint": "Klient przesyła przez portal",
+    "add_scan": "Dodaj skan"
+  },
+  "verify": {
+    "title": "Weryfikacja dokumentów",
+    "approved_of": "zatwierdzonych",
+    "no_files": "Brak przesłanych plików",
+    "footer_hint": "✓ Zatwierdź  —  ✕ Odrzuć i powiadom klienta",
+    "close": "Zamknij"
+  },
+  "nip": {
+    "verification": "Weryfikacja NIP",
+    "bl_active": "Biała Lista VAT MF — aktywny",
+    "bl_inactive": "Biała Lista VAT MF — NIEAKTYWNY!",
+    "vies_active": "VIES EU — aktywny",
+    "vies_inactive": "VIES EU — nieaktywny",
+    "tax_risk": "⚠ Ryzyko podatkowe! Sprawdź przed płatnością.",
+    "account": "Nr konta (Biała Lista)",
+    "country": "Kraj rejestracji:",
+    "refresh": "Odśwież dane"
+  },
+  "nudge_modal": {
+    "recipient": "Odbiorca",
+    "subject_label": "Temat",
+    "body_label": "Treść",
+    "send_btn": "Wyślij email ✉️",
+    "cancel": "Anuluj",
+    "ai_label": "Smart Nudge AI",
+    "ai_subtitle": "Wygenerowany szkic emaila do klienta",
+    "sent_toast": "Email wysłany do: {{name}}",
+    "subject_unknown": "Nieprawidłowy dokument — {{name}}",
+    "subject_verify": "Weryfikacja dokumentu {{nr}}",
+    "body_unknown": "Dzień dobry,\n\nSystem AI przeanalizował przesłany plik:\n\"{{fileName}}\"\n\nNiestety nie udało się rozpoznać go jako dokument księgowy. Proszę o ponowne przesłanie właściwej faktury lub wyciągu bankowego.\n\nTermin: {{deadline}}\n\nZ poważaniem,\nBiuro Rachunkowe",
+    "body_verify": "Dzień dobry,\n\nSystem AI zidentyfikował dokument do weryfikacji:\n\n• Dokument: {{subject}}\n• Sprzedawca: {{seller}}\n• Kwota brutto: {{amount}} zł\n• Data wystawienia: {{date}}\n\nProsimy o potwierdzenie, że powyższa faktura dotyczy działalności firmowej.\n\nTermin odpowiedzi: {{deadline}}\n\nZ poważaniem,\nBiuro Rachunkowe"
+  },
+  "team": {
+    "title": "Zespół biura",
+    "active_count": "{{count}} aktywnych pracowników",
+    "invite": "Zaproś pracownika",
+    "role": "Pracownik",
+    "invite_toast": "Zaproszenie pracownika — dostępne w pełnej wersji",
+    "today": "dzisiaj",
+    "yesterday": "wczoraj"
+  },
+  "clients": {
+    "add_title": "Dodaj klienta",
+    "name_label": "Nazwa firmy *",
+    "name_placeholder": "np. Firma Budowlana Nowak Sp. z o.o.",
+    "email_label": "Email (opcjonalnie)",
+    "email_placeholder": "kontakt@firma.pl",
+    "nip_label": "NIP (opcjonalnie)",
+    "cancel": "Anuluj",
+    "add_btn": "Dodaj klienta",
+    "added_toast": "Dodano: {{name}}"
+  },
+  "month_close": {
+    "title": "Zamknij miesiąc",
+    "desc": "Aktualne dokumenty ({{count}} klientów) zostaną zarchiwizowane. Nowy miesiąc otrzyma puste kategorie.",
+    "new_month_label": "Nowy miesiąc rozliczeniowy",
+    "btn": "Zamknij miesiąc",
+    "cancel": "Anuluj",
+    "toast": "Miesiąc zamknięty → {{month}} ({{count}} klientów)"
+  },
+  "demo": {
+    "banner_full": "Wersja demonstracyjna — dane są fikcyjne. Odkryj pełne możliwości Brakomatu.",
+    "banner_short": "Wersja demonstracyjna",
+    "want": "Chcę Brakomat →",
+    "bottom_title": "Podoba Ci się Brakomat?",
+    "bottom_desc": "Wdrożymy go dla Twojego biura rachunkowego — z Twoimi danymi i logo.",
+    "bottom_btn": "Chcę Brakomat dla swojego biura →"
   },
   "client_view": {
     "back": "Powrót do panelu",

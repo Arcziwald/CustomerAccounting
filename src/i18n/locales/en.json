@@ -12,7 +12,13 @@
     "uploading": "Uploading...",
     "no_results": "No clients found matching the criteria.",
     "search_placeholder": "Search client...",
-    "just_now": "Just now"
+    "just_now": "Just now",
+    "cancel": "Cancel",
+    "close": "Close",
+    "no_late_clients": "No late clients",
+    "add_client_btn": "Add client",
+    "close_month_btn": "Close month",
+    "finish": "Done"
   },
   "stats": {
     "all": "All clients",
@@ -62,6 +68,7 @@
     "odrzucone": "Rejected",
     "do_weryfikacji": "To verify",
     "zweryfikowano": "Verified",
+    "oczekiwanie": "Pending",
     "late_notice": "Deadline passed! Please upload as soon as possible."
   },
   "actions": {
@@ -111,9 +118,22 @@
     "doc_type": "Document type",
     "waiting_msg": "Waiting for the first documents to analyze...",
     "analyze_btn": "Analyze",
+    "analyze_ai": "Analyze AI",
     "value": "Value",
     "vat": "VAT",
+    "net": "Net",
+    "issue_date": "Issued",
+    "sale_date_label": "Sale date",
+    "seller": "Seller",
+    "buyer": "Buyer",
+    "col_file": "No. / File",
+    "col_counterparty": "Counterparty",
+    "col_ai_status": "AI Description / Status",
+    "col_amounts": "Amounts",
+    "waiting_ai": "Awaiting AI analysis…",
+    "wrong_category": "Wrong category?",
     "smart_nudge": "SMART NUDGE",
+    "smart_nudge_ai": "Smart Nudge AI",
     "preview_title": "Document Preview",
     "simulation_title": "Preview Simulation",
     "file": "File",
@@ -121,6 +141,79 @@
     "reject_btn": "Reject (Notify client)",
     "approve_btn": "Approve data",
     "toast_rejected_msg": "Document rejected. Client has been notified."
+  },
+  "files": {
+    "no_files": "No files uploaded",
+    "portal_hint": "Client uploads via portal",
+    "add_scan": "Add scan"
+  },
+  "verify": {
+    "title": "Document verification",
+    "approved_of": "approved",
+    "no_files": "No files uploaded",
+    "footer_hint": "✓ Approve  —  ✕ Reject and notify client",
+    "close": "Close"
+  },
+  "nip": {
+    "verification": "VAT Verification",
+    "bl_active": "VAT Whitelist — active",
+    "bl_inactive": "VAT Whitelist — INACTIVE!",
+    "vies_active": "VIES EU — active",
+    "vies_inactive": "VIES EU — inactive",
+    "tax_risk": "⚠ Tax risk! Check before payment.",
+    "account": "Bank account (VAT Whitelist)",
+    "country": "Registration country:",
+    "refresh": "Refresh data"
+  },
+  "nudge_modal": {
+    "recipient": "Recipient",
+    "subject_label": "Subject",
+    "body_label": "Message",
+    "send_btn": "Send email ✉️",
+    "cancel": "Cancel",
+    "ai_label": "Smart Nudge AI",
+    "ai_subtitle": "AI-generated email draft to client",
+    "sent_toast": "Email sent to: {{name}}",
+    "subject_unknown": "Invalid document — {{name}}",
+    "subject_verify": "Document verification {{nr}}",
+    "body_unknown": "Hello,\n\nThe AI system analyzed the submitted file:\n\"{{fileName}}\"\n\nUnfortunately, it could not be recognized as an accounting document. Please re-submit the correct invoice or bank statement.\n\nDeadline: {{deadline}}\n\nBest regards,\nAccounting Office",
+    "body_verify": "Hello,\n\nThe AI system identified a document requiring verification:\n\n• Document: {{subject}}\n• Seller: {{seller}}\n• Gross amount: {{amount}}\n• Issue date: {{date}}\n\nPlease confirm that the above invoice relates to business activity.\n\nResponse deadline: {{deadline}}\n\nBest regards,\nAccounting Office"
+  },
+  "team": {
+    "title": "Office team",
+    "active_count": "{{count}} active employees",
+    "invite": "Invite employee",
+    "role": "Employee",
+    "invite_toast": "Employee invitation — available in full version",
+    "today": "today",
+    "yesterday": "yesterday"
+  },
+  "clients": {
+    "add_title": "Add client",
+    "name_label": "Company name *",
+    "name_placeholder": "e.g. Smith Construction Ltd",
+    "email_label": "Email (optional)",
+    "email_placeholder": "contact@company.com",
+    "nip_label": "VAT number (optional)",
+    "cancel": "Cancel",
+    "add_btn": "Add client",
+    "added_toast": "Added: {{name}}"
+  },
+  "month_close": {
+    "title": "Close month",
+    "desc": "Current documents ({{count}} clients) will be archived. The new month starts with empty categories.",
+    "new_month_label": "New billing month",
+    "btn": "Close month",
+    "cancel": "Cancel",
+    "toast": "Month closed → {{month}} ({{count}} clients)"
+  },
+  "demo": {
+    "banner_full": "Demo version — all data is fictional. Explore the full power of Brakomat.",
+    "banner_short": "Demo version",
+    "want": "I want Brakomat →",
+    "bottom_title": "Like what you see?",
+    "bottom_desc": "We'll set it up for your accounting office — with your data and branding.",
+    "bottom_btn": "I want Brakomat for my office →"
   },
   "client_view": {
     "back": "Back to panel",
