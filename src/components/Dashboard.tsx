@@ -794,7 +794,7 @@ export default function Dashboard({
                     const statusColor = doc.status === 'OK' || doc.status === 'Zatwierdzone' ? 'text-emerald-600' : doc.status === 'W toku' ? 'text-blue-600' : doc.status === 'Spóźnione' ? 'text-red-600' : 'text-slate-400';
                     return (
                     <div key={doc.id} className="flex items-center justify-between gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-100">
-                      <span className="font-semibold text-slate-800 text-sm truncate">{(() => { const labelMap: { [key: string]: string } = { 'Faktury Kosztowe': 'faktury_kosztowe', 'Faktury Przychodowe': 'faktury_przychodowe', 'Wyciągi': 'wyciagi', 'ZUS': 'zus', 'Kadry': 'kadry' }; const key = labelMap[doc.label] || doc.label.toLowerCase().replace(/ /g, '_'); return t(`labels.${key}`); })()}</span>
+                      <span className="font-semibold text-slate-800 text-sm truncate">{(() => { const labelMap: { [key: string]: string } = { 'Faktury Kosztowe': 'faktury_kosztowe', 'Faktury Przychodowe': 'faktury_przychodowe', 'Wyciągi': 'wyciagi', 'ZUS': 'zus', 'Kadry': 'kadry' }; const key = labelMap[doc.label] || doc.label.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/ /g,'_'); const tk = `labels.${key}`; const tr = t(tk); return tr === tk ? doc.label : tr; })()}</span>
                       <div className="flex items-center gap-2 shrink-0">
                         <span className={`text-[10px] font-black uppercase tracking-wider ${statusColor}`}>{doc.status}</span>
                         <button onClick={() => removeDocument(editingClient.id, doc.id)} className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"><Trash2 className="w-4 h-4" /></button>
