@@ -86,21 +86,31 @@ interface DashboardProps {
   updateOCRStatus: (recordId: string, newStatus: 'Oczekiwanie' | 'Do weryfikacji' | 'Zweryfikowano' | 'Odrzucone') => void;
   analyzeDocument: (recordId: string) => void;
   addActivity: (clientName: string, action: string, detail: string) => void;
+  addClient?: (name: string, email?: string, nip?: string) => void;
 }
 
-export default function Dashboard({ 
-  clients, 
+export default function Dashboard({
+  clients,
   subscriptionTier,
-  addDocument, 
-  removeDocument, 
-  activities, 
+  addDocument,
+  removeDocument,
+  activities,
   toggleLockClient,
   ocrRecords,
   updateOCRStatus,
   analyzeDocument,
-  addActivity
+  addActivity,
+  addClient,
 }: DashboardProps) {
   const { t, i18n } = useTranslation();
+
+  // Fake team data
+  const TEAM = [
+    { initials: 'MW', name: 'Marta Wiśniewska', role: 'Pracownik', email: 'marta.w@biuro.pl', lastLogin: 'dzisiaj, 09:15', color: 'bg-violet-100 text-violet-700' },
+    { initials: 'PZ', name: 'Piotr Zając', role: 'Pracownik', email: 'piotr.z@biuro.pl', lastLogin: 'wczoraj, 16:42', color: 'bg-blue-100 text-blue-700' },
+    { initials: 'AK', name: 'Anna Kowalczyk', role: 'Pracownik', email: 'anna.k@biuro.pl', lastLogin: '28 maj, 11:30', color: 'bg-emerald-100 text-emerald-700' },
+  ];
+  const NEXT_MONTHS = ['Kwiecień 2026','Maj 2026','Czerwiec 2026','Lipiec 2026','Sierpień 2026','Wrzesień 2026','Październik 2026','Listopad 2026','Grudzień 2026'];
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'ready' | 'late' | 'missing' | 'correction' | 'locked'>('all');
@@ -116,6 +126,12 @@ export default function Dashboard({
   const [verifyingClientId, setVerifyingClientId] = useState<string | null>(null);
   const [expandedOcrClients, setExpandedOcrClients] = useState<Set<string>>(() => new Set(ocrRecords.map(r => r.clientName)));
   const [nudgeRecord, setNudgeRecord] = useState<OCRRecord | null>(null);
+  const [showAddClient, setShowAddClient] = useState(false);
+  const [newClientName, setNewClientName] = useState('');
+  const [newClientEmail, setNewClientEmail] = useState('');
+  const [newClientNip, setNewClientNip] = useState('');
+  const [showCloseMonth, setShowCloseMonth] = useState(false);
+  const [selectedCloseMonth, setSelectedCloseMonth] = useState('Kwiecień 2026');
 
   useEffect(() => {
     const isDone = sessionStorage.getItem('brakomat_done');
@@ -322,9 +338,17 @@ export default function Dashboard({
           </div>
         </div>
 
-        <div className="relative w-full md:w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-          <input type="text" placeholder={t('common.search_placeholder', { defaultValue: 'Search client...' })} className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="relative w-full md:w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+            <input type="text" placeholder={t('common.search_placeholder', { defaultValue: 'Szukaj klienta...' })} className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+          </div>
+          <button
+            onClick={() => setShowAddClient(true)}
+            className="flex items-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-wider hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 whitespace-nowrap shrink-0"
+          >
+            <Plus className="w-4 h-4" /> Dodaj klienta
+          </button>
         </div>
       </header>
 
@@ -514,7 +538,14 @@ export default function Dashboard({
     )}
   </div>
 
-  {/* PRAWA: Czarny Przycisk Nudge All */}
+  {/* PRAWA: przyciski akcji */}
+  <div className="flex items-center gap-2">
+  <button
+    onClick={() => setShowCloseMonth(true)}
+    className="flex items-center gap-2 px-4 py-3 bg-white text-slate-700 rounded-2xl font-black text-[11px] uppercase tracking-wider border border-slate-200 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 transition-all shadow-sm"
+  >
+    <History className="w-4 h-4" /> Zamknij miesiąc
+  </button>
   <motion.button
   whileHover={{ scale: 1.05 }}
   whileTap={{ scale: 0.95 }}
@@ -538,6 +569,7 @@ export default function Dashboard({
     {t('ai.nudge_all')} ({stats.late})
   </span>
 </motion.button>
+</div>
 </div>
       <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto lg:overflow-visible">
@@ -1158,8 +1190,128 @@ export default function Dashboard({
           </div>
         </div>
 
+        {/* SEKCJA ZESPÓŁ */}
+        <div className="mt-12 mb-10 bg-white rounded-[2rem] p-6 lg:p-8 border border-slate-100 shadow-sm">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl"><Users className="w-5 h-5" /></div>
+              <div>
+                <h2 className="text-lg font-black text-slate-900">Zespół biura</h2>
+                <p className="text-xs text-slate-400">3 aktywnych pracowników</p>
+              </div>
+            </div>
+            <button
+              onClick={() => toast('Zaproszenie pracownika — dostępne w pełnej wersji', { icon: '👥', duration: 2500 })}
+              className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-indigo-700 transition-all shadow-md shadow-indigo-200"
+            >
+              <Plus className="w-3.5 h-3.5" /> Zaproś pracownika
+            </button>
+          </div>
+          <div className="space-y-3">
+            {TEAM.map((member) => (
+              <div key={member.email} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-blue-50/30 hover:border-blue-100 transition-all group">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${member.color}`}>{member.initials}</div>
+                  <div>
+                    <p className="font-bold text-slate-800 text-sm">{member.name}</p>
+                    <p className="text-[10px] text-slate-400">{member.email}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="inline-block px-2.5 py-1 bg-white text-slate-500 border border-slate-200 rounded-lg text-[10px] font-semibold mb-1">{member.role}</span>
+                  <p className="text-[10px] text-slate-400 flex items-center gap-1 justify-end"><Clock className="w-2.5 h-2.5" /> {member.lastLogin}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <footer className="mt-12 text-center text-slate-400 text-sm">&copy; ArtWebCraft 2026 | {t('footer.system_name')} - {t('footer.system_description')}</footer>
       </div>
+
+      {/* MODAL DODAJ KLIENTA */}
+      <AnimatePresence>
+        {showAddClient && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowAddClient(false)} className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" />
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden">
+              <div className="p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-50 text-blue-600 rounded-xl"><Plus className="w-5 h-5" /></div>
+                    <h3 className="text-xl font-bold text-slate-900">Dodaj klienta</h3>
+                  </div>
+                  <button onClick={() => setShowAddClient(false)} className="p-2 hover:bg-slate-100 rounded-full transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1.5 block">Nazwa firmy *</label>
+                    <input autoFocus type="text" placeholder="np. Firma Budowlana Nowak Sp. z o.o." className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm" value={newClientName} onChange={e => setNewClientName(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && newClientName.trim()) { addClient?.(newClientName, newClientEmail, newClientNip); toast.success(`Dodano: ${newClientName}`, { icon: '✓' }); setShowAddClient(false); setNewClientName(''); setNewClientEmail(''); setNewClientNip(''); }}} />
+                  </div>
+                  <div>
+                    <label className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1.5 block">Email (opcjonalnie)</label>
+                    <input type="email" placeholder="kontakt@firma.pl" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm" value={newClientEmail} onChange={e => setNewClientEmail(e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1.5 block">NIP (opcjonalnie)</label>
+                    <input type="text" placeholder="1234567890" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-sm font-mono" value={newClientNip} onChange={e => setNewClientNip(e.target.value)} />
+                  </div>
+                </div>
+                <div className="flex gap-3 mt-8">
+                  <button onClick={() => setShowAddClient(false)} className="flex-1 px-4 py-3 border border-slate-200 text-slate-600 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all">Anuluj</button>
+                  <button
+                    disabled={!newClientName.trim()}
+                    onClick={() => { addClient?.(newClientName, newClientEmail, newClientNip); toast.success(`Dodano: ${newClientName}`, { icon: '✓' }); setShowAddClient(false); setNewClientName(''); setNewClientEmail(''); setNewClientNip(''); }}
+                    className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    Dodaj klienta
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* DIALOG ZAMKNIĘCIA MIESIĄCA */}
+      <AnimatePresence>
+        {showCloseMonth && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowCloseMonth(false)} className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" />
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-sm bg-white rounded-[2.5rem] shadow-2xl overflow-hidden">
+              <div className="p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-50 text-blue-600 rounded-xl"><History className="w-5 h-5" /></div>
+                    <h3 className="text-xl font-bold text-slate-900">Zamknij miesiąc</h3>
+                  </div>
+                  <button onClick={() => setShowCloseMonth(false)} className="p-2 hover:bg-slate-100 rounded-full transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
+                </div>
+                <p className="text-sm text-slate-500 mb-5">Aktualne dokumenty ({clients.length} klientów) zostaną zarchiwizowane. Nowy miesiąc otrzyma puste kategorie.</p>
+                <div>
+                  <label className="text-xs font-black text-slate-500 uppercase tracking-wider mb-2 block">Nowy miesiąc rozliczeniowy</label>
+                  <select
+                    value={selectedCloseMonth}
+                    onChange={e => setSelectedCloseMonth(e.target.value)}
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-bold text-sm appearance-none"
+                  >
+                    {NEXT_MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                  </select>
+                </div>
+                <div className="flex gap-3 mt-8">
+                  <button onClick={() => setShowCloseMonth(false)} className="flex-1 px-4 py-3 border border-slate-200 text-slate-600 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all">Anuluj</button>
+                  <button
+                    onClick={() => { toast.success(`Miesiąc zamknięty → ${selectedCloseMonth} (${clients.length} klientów)`, { icon: '📅', duration: 3500 }); addActivity('System', 'Zamknięto miesiąc', selectedCloseMonth); setShowCloseMonth(false); }}
+                    className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
+                  >
+                    Zamknij miesiąc
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* STICKY BOTTOM CTA */}
       <div className="sticky bottom-0 z-[90] w-full">

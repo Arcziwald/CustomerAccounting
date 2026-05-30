@@ -594,6 +594,24 @@ addActivity(
         : client
     ));
   };
+  const addClient = (name: string, email?: string, nip?: string) => {
+    const newC: Client = {
+      id: `c-${Date.now()}`,
+      name: name.trim(),
+      month: 'Marzec 2026',
+      tier: '1',
+      documents: [
+        { id: 'd1', label: 'Faktury Kosztowe', status: 'Brak' as DocumentStatus, files: [] },
+        { id: 'd2', label: 'Faktury Przychodowe', status: 'Brak' as DocumentStatus, files: [] },
+        { id: 'd3', label: 'Wyciągi', status: 'Brak' as DocumentStatus, files: [] },
+        { id: 'd4', label: 'ZUS', status: 'Brak' as DocumentStatus, files: [] },
+        { id: 'd5', label: 'Kadry', status: 'Brak' as DocumentStatus, files: [] },
+      ],
+    };
+    setClients(prev => [newC, ...prev]);
+    addActivity(name, 'Dodano klienta', email ?? 'brak emaila');
+  };
+
   const addDocument = (clientId: string, label: string) => {
     setClients(prev => prev.map(client => 
       client.id === clientId 
@@ -622,17 +640,18 @@ addActivity(
       <div className="min-h-screen bg-slate-50">
         <Routes>
           <Route path="/" element={
-            <Dashboard 
+            <Dashboard
               clients={clients}
               subscriptionTier={OFFICE_SUBSCRIPTION}
-              addDocument={addDocument} 
-              removeDocument={removeDocument} 
+              addDocument={addDocument}
+              removeDocument={removeDocument}
               activities={activities}
               toggleLockClient={toggleLockClient}
               ocrRecords={ocrRecords}
               updateOCRStatus={updateOCRStatus}
               analyzeDocument={analyzeDocument}
               addActivity={addActivity}
+              addClient={addClient}
             />
           } />
           <Route path="/client/:id" element={
