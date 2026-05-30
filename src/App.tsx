@@ -17,7 +17,7 @@ const MOCK_CLIENTS: Client[] = [
     id: '1',
     name: 'Tech Solutions Sp. z o.o.',
     month: 'Marzec 2026',
-    tier: '2', // Pakiet Kontrola (z OCR)
+    tier: '2',
     documents: [
       { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [] },
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Brak', files: [] },
@@ -31,11 +31,11 @@ const MOCK_CLIENTS: Client[] = [
     id: '2',
     name: 'Kawiarnia "Pod Chmurką"',
     month: 'Marzec 2026',
-    tier: '1', // Pakiet Porządek (bez OCR)
+    tier: '1',
     documents: [
-      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Brak', files: [] },
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Spóźnione', files: [] },
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Brak', files: [] },
-      { id: 'wyciagi', label: 'Wyciągi', status: 'Brak', files: [] },
+      { id: 'wyciagi', label: 'Wyciągi', status: 'Spóźnione', files: [] },
       { id: 'zus', label: 'ZUS', status: 'Spóźnione', files: [] },
       { id: 'kadry', label: 'Kadry', status: 'OK', files: [] },
       { id: 'inne', label: 'Inne', status: 'Brak', files: [] }
@@ -43,32 +43,111 @@ const MOCK_CLIENTS: Client[] = [
   },
   {
     id: '3',
-    name: 'Jan Kowalski - Usługi IT',
+    name: 'Jan Kowalski – Usługi IT',
     month: 'Marzec 2026',
-    tier: '2', // Pakiet Kontrola (z OCR)
+    tier: '2',
+    locked: true,
     documents: [
-      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [] },
-      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'OK', files: [] },
-      { id: 'wyciagi', label: 'Wyciągi', status: 'OK', files: [] },
-      { id: 'zus', label: 'ZUS', status: 'OK', files: [] },
-      { id: 'kadry', label: 'Kadry', status: 'OK', files: [] },
-      { id: 'inne', label: 'Inne', status: 'OK', files: [] }
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Zatwierdzone', files: [] },
+      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Zatwierdzone', files: [] },
+      { id: 'wyciagi', label: 'Wyciągi', status: 'Zatwierdzone', files: [] },
+      { id: 'zus', label: 'ZUS', status: 'Zatwierdzone', files: [] },
+      { id: 'kadry', label: 'Kadry', status: 'Zatwierdzone', files: [] },
     ]
   },
   {
     id: '4',
     name: 'Eko-Budownictwo S.A.',
     month: 'Marzec 2026',
-    tier: '2', // Pakiet Kontrola (z OCR)
+    tier: '2',
     documents: [
       { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Spóźnione', files: [] },
       { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Spóźnione', files: [] },
-      { id: 'wyciagi', label: 'Wyciągi', status: 'OK', files: [] },
+      { id: 'wyciagi', label: 'Wyciągi', status: 'Brak', files: [] },
       { id: 'zus', label: 'ZUS', status: 'Brak', files: [] },
       { id: 'kadry', label: 'Kadry', status: 'Brak', files: [] },
-      { id: 'inne', label: 'Inne', status: 'Brak', files: [] }
     ]
-  }
+  },
+  {
+    id: '5',
+    name: 'Restauracja "Złota Rybka" s.j.',
+    month: 'Marzec 2026',
+    tier: '1',
+    documents: [
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Brak', files: [] },
+      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Brak', files: [] },
+      { id: 'wyciagi', label: 'Wyciągi', status: 'Brak', files: [] },
+      { id: 'zus', label: 'ZUS', status: 'Brak', files: [] },
+      { id: 'kadry', label: 'Kadry', status: 'Brak', files: [] },
+    ]
+  },
+  {
+    id: '6',
+    name: 'MedCare Clinic Sp. z o.o.',
+    month: 'Marzec 2026',
+    tier: '2',
+    documents: [
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'W toku', files: [] },
+      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'OK', files: [] },
+      { id: 'wyciagi', label: 'Wyciągi', status: 'W toku', files: [] },
+      { id: 'zus', label: 'ZUS', status: 'OK', files: [] },
+      { id: 'kadry', label: 'Kadry', status: 'OK', files: [] },
+    ]
+  },
+  {
+    id: '7',
+    name: 'Agencja Reklamowa "Pixel Plus"',
+    month: 'Marzec 2026',
+    tier: '1',
+    documents: [
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [] },
+      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Spóźnione', files: [] },
+      { id: 'wyciagi', label: 'Wyciągi', status: 'Brak', files: [] },
+      { id: 'zus', label: 'ZUS', status: 'OK', files: [] },
+      { id: 'kadry', label: 'Kadry', status: 'Brak', files: [] },
+    ]
+  },
+  {
+    id: '8',
+    name: 'AutoService Marek Nowak',
+    month: 'Marzec 2026',
+    tier: '2',
+    documents: [
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [] },
+      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'OK', files: [] },
+      { id: 'wyciagi', label: 'Wyciągi', status: 'W toku', files: [] },
+      { id: 'zus', label: 'ZUS', status: 'Brak', files: [] },
+      { id: 'kadry', label: 'Kadry', status: 'Brak', files: [] },
+      { id: 'paliwo', label: 'Paliwo', status: 'Brak', files: [] },
+    ]
+  },
+  {
+    id: '9',
+    name: 'E-sklep "HomeGoods24" Sp. z o.o.',
+    month: 'Marzec 2026',
+    tier: '2',
+    locked: true,
+    documents: [
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Zatwierdzone', files: [] },
+      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Zatwierdzone', files: [] },
+      { id: 'wyciagi', label: 'Wyciągi', status: 'Zatwierdzone', files: [] },
+      { id: 'zus', label: 'ZUS', status: 'Zatwierdzone', files: [] },
+      { id: 'kadry', label: 'Kadry', status: 'Zatwierdzone', files: [] },
+    ]
+  },
+  {
+    id: '10',
+    name: 'Firma Transportowa Kowalczyk',
+    month: 'Marzec 2026',
+    tier: '1',
+    documents: [
+      { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'Spóźnione', files: [] },
+      { id: 'f-przych', label: 'Faktury Przychodowe', status: 'Brak', files: [] },
+      { id: 'wyciagi', label: 'Wyciągi', status: 'Brak', files: [] },
+      { id: 'zus', label: 'ZUS', status: 'Spóźnione', files: [] },
+      { id: 'kadry', label: 'Kadry', status: 'Brak', files: [] },
+    ]
+  },
 ];
 
 const OFFICE_SUBSCRIPTION: ClientTier = 'demo'; // Tu zmieniasz pakiet dla całego biura (np. na '1' dla demo)
@@ -92,11 +171,39 @@ export default function App() {
   },
   {
     id: 'init-3',
-    clientName: 'Eko-Budownictwo S.A.',
-    action: 'Kadry',
-    detail: 'Umowa_zlecenie_Nowak.pdf',
-    timestamp: '08:45'
-  }
+    clientName: 'MedCare Clinic Sp. z o.o.',
+    action: 'Faktury Kosztowe',
+    detail: 'faktury_koszt_02_2026.pdf',
+    timestamp: '09:12'
+  },
+  {
+    id: 'init-4',
+    clientName: 'Agent AI',
+    action: 'KSeF',
+    detail: 'Pobrano 12 faktur z KSeF (AutoService)',
+    timestamp: '08:55'
+  },
+  {
+    id: 'init-5',
+    clientName: 'Jan Kowalski – Usługi IT',
+    action: 'System',
+    detail: 'activities.finished',
+    timestamp: '08:40'
+  },
+  {
+    id: 'init-6',
+    clientName: 'Agent AI',
+    action: 'Systemowe Przypomnienie',
+    detail: 'activities.nudge_sent_to|Kawiarnia "Pod Chmurką"',
+    timestamp: '08:05'
+  },
+  {
+    id: 'init-7',
+    clientName: 'E-sklep "HomeGoods24" Sp. z o.o.',
+    action: 'System',
+    detail: 'activities.finished',
+    timestamp: '07:50'
+  },
 ]);
   const [ocrRecords, setOcrRecords] = useState<OCRRecord[]>([
   {
@@ -124,7 +231,33 @@ export default function App() {
     status: 'Oczekiwanie',
     documentType: 'Nieznany',
     fileName: 'zdjecie_z_wakacji.jpg'
-  }
+  },
+  {
+    id: 'demo-3',
+    clientName: 'MedCare Clinic Sp. z o.o.',
+    invoiceNumber: 'FV/2026/0312',
+    issueDate: '2026-03-08',
+    sellerNip: 'PL7272800001',
+    netAmount: 4200.00,
+    vatAmount: 966.00,
+    grossAmount: 5166.00,
+    status: 'Do weryfikacji',
+    documentType: 'Faktura',
+    fileName: 'faktura_sprzet_medyczny.pdf'
+  },
+  {
+    id: 'demo-4',
+    clientName: 'AutoService Marek Nowak',
+    invoiceNumber: 'FV/2026/0089',
+    issueDate: '2026-03-05',
+    sellerNip: 'PL6760000012',
+    netAmount: 3850.00,
+    vatAmount: 885.50,
+    grossAmount: 4735.50,
+    status: 'Zweryfikowano',
+    documentType: 'Faktura',
+    fileName: 'faktura_czesc_silnik.pdf'
+  },
 ]);
 
 const addActivity = (clientName: string, action: string, detail: string) => {

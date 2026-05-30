@@ -164,12 +164,16 @@
     "export": "Generate a summary spreadsheet (.xlsx) with all client statistics, document statuses, and OCR analysis data for reporting purposes."
   },
   "welcome": {
-  "title": "Welcome to",
-  "highlight": "Bridge to Accounting",
-  "intro": "You have just launched the Brakomat demo version.",
-  "security_note": "In the full version of the system, there is a secure login panel with access verification for you and a separate one for your clients.",
-  "description": "We have prepared a simulation of real processes: automated nudges, AI OCR analysis, intelligent period locking, and many other extremely useful features.",
-  "button": "START DEMO ENGINE"
+  "title": "Stop chasing clients",
+  "highlight": "for documents",
+  "intro": "Brakomat is a document management system for accounting offices — it automates everything that costs you time and stress.",
+  "security_note": "In the full version, there is a secure login panel with separate access for you and your clients.",
+  "stat1_label": "hours/month lost on collecting documents",
+  "stat2_label": "clients regularly late with documents",
+  "stat3_label": "of these problems with Brakomat",
+  "description": "Demo version — all data is fictional. Click below to explore.",
+  "button": "Show me the demo →",
+  "cta_button": "I want this for my office"
   },
   "activity": {
   "title": "RECENT ACTIVITY",

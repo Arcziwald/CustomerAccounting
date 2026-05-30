@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Client, STATUS_COLORS, DocumentStatus, OCRRecord } from '../types';
 // DODANE IKONY: FileText, Download, X (były już w Twoim kodzie, ale upewniam się, że są użyte)
-import { Bell, Copy, Check, ExternalLink, Search, Settings2, Plus, Trash2, X, Users, Clock, AlertTriangle, Folder, Lock, Unlock, History, ChevronDown, Download, Eye, FileText, Info } from 'lucide-react';
+import { Bell, Copy, Check, ExternalLink, Search, Settings2, Plus, Trash2, X, Users, Clock, AlertTriangle, Folder, Lock, Unlock, History, ChevronDown, Download, Eye, FileText, Info, Zap, MessageSquare, Users2, Archive, BarChart3, ShieldCheck, ChevronRight, Sparkles } from 'lucide-react';
+import LeadModal from './LeadModal';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+
 import { ActivityEntry } from '../types';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
@@ -44,6 +45,7 @@ export default function Dashboard({
   const [viewingFilesDocId, setViewingFilesDocId] = useState<string | null>(null);
   const [previewDoc, setPreviewDoc] = useState<OCRRecord | null>(null);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [showLeadModal, setShowLeadModal] = useState(false);
 
   useEffect(() => {
     const isDone = sessionStorage.getItem('brakomat_done');
@@ -55,6 +57,28 @@ export default function Dashboard({
   const handleFinalClose = () => {
     sessionStorage.setItem('brakomat_done', 'true');
     setShowWelcome(false);
+  };
+
+  const showUpsellToast = () => {
+    setTimeout(() => {
+      toast(
+        (tToast) => (
+          <div className="flex items-center gap-3">
+            <div>
+              <p className="text-xs font-bold text-slate-800">Podoba Ci się?</p>
+              <p className="text-xs text-slate-500">W pełnej wersji to działa dla Twojego biura.</p>
+            </div>
+            <button
+              onClick={() => { toast.dismiss(tToast.id); setShowLeadModal(true); }}
+              className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-[10px] font-black whitespace-nowrap hover:bg-blue-700 transition-all shrink-0"
+            >
+              Chcę takie →
+            </button>
+          </div>
+        ),
+        { duration: 7000, icon: '✨', style: { borderRadius: '12px', border: '1px solid #e2e8f0', maxWidth: '360px' } }
+      );
+    }, 1800);
   };
 
   const handleNudge = async (client: any) => {
@@ -101,6 +125,17 @@ export default function Dashboard({
     }
 
     setTimeout(() => setCopiedId(null), 2000);
+    showUpsellToast();
+  };
+
+  const handleAnalyzeDocument = (recordId: string) => {
+    analyzeDocument(recordId);
+    showUpsellToast();
+  };
+
+  const handleToggleLock = (clientId: string) => {
+    toggleLockClient(clientId);
+    showUpsellToast();
   };
 
   const editingClient = clients.find(c => c.id === editingClientId);
@@ -168,6 +203,23 @@ export default function Dashboard({
   });
 
    return (
+    <>
+    {/* DEMO BANNER — sticky, full-width */}
+    <div className="sticky top-0 z-[100] bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white px-4 py-2.5 flex items-center justify-between shadow-lg">
+      <div className="flex items-center gap-2.5">
+        <span className="bg-white/20 text-white text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-md shrink-0">DEMO</span>
+        <span className="text-xs font-medium text-blue-100 hidden sm:block">Wersja demonstracyjna — dane są fikcyjne. Odkryj pełne możliwości Brakomatu.</span>
+        <span className="text-xs font-medium text-blue-100 sm:hidden">Wersja demonstracyjna</span>
+      </div>
+      <button
+        onClick={() => setShowLeadModal(true)}
+        className="flex items-center gap-1.5 px-4 py-1.5 bg-white text-blue-700 rounded-lg font-black text-[11px] uppercase tracking-wider hover:bg-blue-50 transition-all shadow-sm whitespace-nowrap shrink-0"
+      >
+        <Sparkles className="w-3 h-3" />
+        Chcę Brakomat →
+      </button>
+    </div>
+
     <div className="min-h-screen bg-[#F8FAFC] max-w-7xl mx-auto px-4 py-8">
       <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
 
@@ -496,9 +548,9 @@ export default function Dashboard({
                   <td className="px-4 py-2 lg:px-8 lg:py-6 block lg:table-cell">
                     <div className="flex items-center justify-between lg:justify-end gap-1 sm:gap-2">
                       <div className="flex items-center gap-0.5 sm:gap-1">
-                        <Tooltip text={t('tooltips.lock')}><button onClick={() => toggleLockClient(client.id)} className={`p-2 rounded-xl transition-all ${client.locked ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:bg-blue-50'}`}>{client.locked ? <Lock className="w-4 h-4 lg:w-5 lg:h-5" /> : <Unlock className="w-4 h-4 lg:w-5 lg:h-5" />}</button></Tooltip>
+                        <Tooltip text={t('tooltips.lock')}><button onClick={() => handleToggleLock(client.id)} className={`p-2 rounded-xl transition-all ${client.locked ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:bg-blue-50'}`}>{client.locked ? <Lock className="w-4 h-4 lg:w-5 lg:h-5" /> : <Unlock className="w-4 h-4 lg:w-5 lg:h-5" />}</button></Tooltip>
                         <Tooltip text={t('tooltips.settings')}><button onClick={() => setEditingClientId(client.id)} className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"><Settings2 className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
-                        <Tooltip text={t('tooltips.client_view')}><Link to={`/client/${client.id}`} className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"><ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" /></Link></Tooltip>
+                        <Tooltip text={t('tooltips.client_view')}><button onClick={() => setShowLeadModal(true)} className="p-2 text-slate-400 hover:bg-blue-50 rounded-xl transition-all"><ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" /></button></Tooltip>
                       </div>
                       <Tooltip text={t('tooltips.nudge')}><button onClick={() => handleNudge(client)} className={`flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl text-xs lg:text-sm font-bold transition-all shrink-0 ${copiedId === client.id ? 'bg-green-500 text-white shadow-lg shadow-green-200' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}>{copiedId === client.id ? (<><Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" /> <span className="hidden xs:inline">{t('actions.sent')}</span></>) : (<><Bell className="w-3.5 h-3.5 lg:w-4 lg:h-4" />{t('actions.send')}</>)}</button></Tooltip>
                     </div>
@@ -550,7 +602,7 @@ export default function Dashboard({
               <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl shrink-0"><FileText className="w-7 h-7" /></div>
               <div><h2 className="text-2xl font-bold text-slate-900">{t('dashboard.title')}</h2><p className="text-slate-500">{t('dashboard.subtitle')}</p></div>
             </div>
-            <Tooltip text={t('tooltips.export')}><button onClick={() => alert('Symulacja eksportu do Excel (.xlsx)...')} className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-100 transition-all shadow-sm w-full sm:w-auto"><Download className="w-5 h-5" />{t('common.export')}</button></Tooltip>
+            <Tooltip text={t('tooltips.export')}><button onClick={() => setShowLeadModal(true)} className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-100 transition-all shadow-sm w-full sm:w-auto"><Download className="w-5 h-5" />{t('common.export')}</button></Tooltip>
           </div>
 
           <div className="w-full overflow-hidden">
@@ -562,7 +614,7 @@ export default function Dashboard({
                     <motion.tr key={record.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full flex flex-col lg:table-row bg-white hover:bg-slate-50/50 transition-colors p-5 lg:p-0 mb-6 lg:mb-0 border lg:border-none rounded-[2rem] lg:rounded-none shadow-sm lg:shadow-none min-w-full">
                       <td className="w-full py-2 lg:py-6 lg:px-6 block lg:table-cell"><div className="w-full flex justify-between items-start lg:block"><div className="w-full"><div className="font-black text-slate-900 text-lg lg:text-base leading-tight break-words">{record.clientName}</div>{record.status !== 'Oczekiwanie' && (<button onClick={() => setPreviewDoc(record)} className="text-blue-600 text-sm font-bold hover:underline flex items-center gap-1 mt-2 lg:mt-0.5">{record.invoiceNumber} <Eye className="w-4 h-4" /></button>)}</div></div></td>
                       <td className="w-full py-4 lg:py-6 lg:px-6 block lg:table-cell border-t lg:border-none mt-2 lg:mt-0">{record.status !== 'Oczekiwanie' && (<div className="w-full grid grid-cols-1 gap-4"><div className="w-full"><div className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">{t('ocr.doc_type')}:</div><div className="text-sm text-slate-700 font-bold">{t(`labels.${record.documentType.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g, '_')}`)}</div></div><div className="w-full"><div className="flex flex-wrap items-center gap-x-4 gap-y-2"><div className="text-sm text-slate-600 font-medium">{record.issueDate}</div><div className="text-xs text-slate-500 font-mono font-bold bg-slate-50 px-2 py-0.5 rounded border border-slate-100">{record.sellerNip}</div></div></div></div>)}</td>
-                      <td className="w-full py-4 lg:py-6 lg:px-8 block lg:table-cell"><div className="w-full flex flex-col lg:items-end gap-4">{record.status !== 'Oczekiwanie' && (<div className="w-full lg:w-48 bg-slate-50 p-4 rounded-2xl flex justify-between items-center lg:block lg:text-right border border-slate-100"><div className="lg:hidden text-[10px] text-slate-400 font-black uppercase">{t('ocr.value')}:</div><div className="text-right"><div className="text-sm font-bold text-slate-900">{record.netAmount.toLocaleString()} {i18n.language === 'en' ? '€' : 'zł'}</div><div className="text-[10px] text-slate-400 font-bold">{t('ocr.vat')}: {record.vatAmount.toLocaleString()} {i18n.language === 'en' ? '€' : 'zł'}</div><div className="text-base font-black text-blue-600 mt-1">{record.grossAmount.toLocaleString()} {i18n.language === 'en' ? '€' : 'zł'}</div></div></div>)}<div className="w-full lg:w-auto">{record.status === 'Oczekiwanie' ? (<Tooltip text={t('tooltips.ocr_analyze')}><button onClick={() => analyzeDocument(record.id)} className="w-full px-8 py-4 lg:py-2.5 bg-indigo-600 text-white rounded-2xl lg:rounded-xl font-black text-sm lg:text-xs hover:bg-indigo-700 transition-all shadow-lg uppercase tracking-wider"><Search className="w-5 h-5 lg:w-4 lg:h-4 mr-2 inline" /> {t('ocr.analyze_btn')}</button></Tooltip>) : (<div className="flex flex-col gap-2 w-full lg:w-auto"><button onClick={() => record.status !== 'Zweryfikowano' && updateOCRStatus(record.id, record.status === 'Odrzucone' ? 'Do weryfikacji' : 'Zweryfikowano')} className={`w-full px-6 py-3 lg:py-1.5 rounded-xl text-xs font-black transition-all border-2 ${record.status === 'Zweryfikowano' ? 'bg-green-50 text-green-700 border-green-100' : record.status === 'Odrzucone' ? 'bg-red-50 text-red-700 border-red-100' : 'bg-yellow-50 text-yellow-700 border-yellow-100'}`}>{t(`status.${record.status.toLowerCase().replace(/ /g, '_')}`).toUpperCase()}</button>{record.status === 'Odrzucone' && (<Tooltip text={t('tooltips.ocr_smart_nudge')}><button onClick={() => handleSmartNudge(record)} className="py-2 px-4 text-[10px] text-blue-600 font-black bg-blue-50/50 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-100 transition-colors w-full lg:w-auto"><Bell className="w-3.5 h-3.5" /> {t('ocr.smart_nudge')}</button></Tooltip>)}</div>)}</div></div></td>
+                      <td className="w-full py-4 lg:py-6 lg:px-8 block lg:table-cell"><div className="w-full flex flex-col lg:items-end gap-4">{record.status !== 'Oczekiwanie' && (<div className="w-full lg:w-48 bg-slate-50 p-4 rounded-2xl flex justify-between items-center lg:block lg:text-right border border-slate-100"><div className="lg:hidden text-[10px] text-slate-400 font-black uppercase">{t('ocr.value')}:</div><div className="text-right"><div className="text-sm font-bold text-slate-900">{record.netAmount.toLocaleString()} {i18n.language === 'en' ? '€' : 'zł'}</div><div className="text-[10px] text-slate-400 font-bold">{t('ocr.vat')}: {record.vatAmount.toLocaleString()} {i18n.language === 'en' ? '€' : 'zł'}</div><div className="text-base font-black text-blue-600 mt-1">{record.grossAmount.toLocaleString()} {i18n.language === 'en' ? '€' : 'zł'}</div></div></div>)}<div className="w-full lg:w-auto">{record.status === 'Oczekiwanie' ? (<Tooltip text={t('tooltips.ocr_analyze')}><button onClick={() => handleAnalyzeDocument(record.id)} className="w-full px-8 py-4 lg:py-2.5 bg-indigo-600 text-white rounded-2xl lg:rounded-xl font-black text-sm lg:text-xs hover:bg-indigo-700 transition-all shadow-lg uppercase tracking-wider"><Search className="w-5 h-5 lg:w-4 lg:h-4 mr-2 inline" /> {t('ocr.analyze_btn')}</button></Tooltip>) : (<div className="flex flex-col gap-2 w-full lg:w-auto"><button onClick={() => record.status !== 'Zweryfikowano' && updateOCRStatus(record.id, record.status === 'Odrzucone' ? 'Do weryfikacji' : 'Zweryfikowano')} className={`w-full px-6 py-3 lg:py-1.5 rounded-xl text-xs font-black transition-all border-2 ${record.status === 'Zweryfikowano' ? 'bg-green-50 text-green-700 border-green-100' : record.status === 'Odrzucone' ? 'bg-red-50 text-red-700 border-red-100' : 'bg-yellow-50 text-yellow-700 border-yellow-100'}`}>{t(`status.${record.status.toLowerCase().replace(/ /g, '_')}`).toUpperCase()}</button>{record.status === 'Odrzucone' && (<Tooltip text={t('tooltips.ocr_smart_nudge')}><button onClick={() => handleSmartNudge(record)} className="py-2 px-4 text-[10px] text-blue-600 font-black bg-blue-50/50 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-100 transition-colors w-full lg:w-auto"><Bell className="w-3.5 h-3.5" /> {t('ocr.smart_nudge')}</button></Tooltip>)}</div>)}</div></div></td>
                     </motion.tr>
                   ))
                 )}
@@ -640,7 +692,113 @@ export default function Dashboard({
           </div>
         )}
         </AnimatePresence>
+        {/* SEKCJA PREMIUM FEATURES */}
+        <div className="mt-16 mb-10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 px-2">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Lock className="w-5 h-5 text-amber-500" />
+                <h2 className="text-xl font-black text-slate-900">Pełna wersja Brakomatu</h2>
+              </div>
+              <p className="text-sm text-slate-500">Funkcje dostępne po wdrożeniu dla Twojego biura rachunkowego</p>
+            </div>
+            <button
+              onClick={() => setShowLeadModal(true)}
+              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-wider hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 whitespace-nowrap"
+            >
+              <Sparkles className="w-4 h-4" />
+              Uzyskaj dostęp →
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              {
+                icon: Zap,
+                color: 'text-amber-600', bg: 'bg-amber-50',
+                title: 'Integracja KSeF',
+                desc: 'Faktury elektroniczne pobierane automatycznie z Krajowego Systemu e-Faktur co dobę. Zero ręcznej pracy.',
+              },
+              {
+                icon: ShieldCheck,
+                color: 'text-emerald-600', bg: 'bg-emerald-50',
+                title: 'VIES & Biała lista VAT',
+                desc: 'Każdy kontrahent weryfikowany automatycznie w VIES i Białej liście MF — z podglądem rachunku bankowego.',
+              },
+              {
+                icon: Users2,
+                color: 'text-blue-600', bg: 'bg-blue-50',
+                title: 'Portal klienta',
+                desc: 'Twoi klienci logują się na własną podstronę i sami wgrywają dokumenty. Ty tylko zatwierdzasz.',
+              },
+              {
+                icon: MessageSquare,
+                color: 'text-violet-600', bg: 'bg-violet-50',
+                title: 'Auto-przypomnienia (cron)',
+                desc: 'System sam wysyła przypomnienia email/SMS/WhatsApp według Twoich reguł — bez klikania.',
+              },
+              {
+                icon: Archive,
+                color: 'text-rose-600', bg: 'bg-rose-50',
+                title: 'Archiwum miesięcy',
+                desc: 'Pełna historia dokumentów z każdego zamkniętego miesiąca. Szybkie przeszukiwanie i pobieranie.',
+              },
+              {
+                icon: BarChart3,
+                color: 'text-indigo-600', bg: 'bg-indigo-50',
+                title: 'Zarządzanie zespołem',
+                desc: 'Dodaj pracowników biura, przydzielaj im klientów i śledź postęp pracy całego zespołu.',
+              },
+            ].map((feature) => (
+              <motion.div
+                key={feature.title}
+                whileHover={{ y: -3 }}
+                onClick={() => setShowLeadModal(true)}
+                className="relative cursor-pointer bg-white rounded-[1.75rem] border border-slate-100 shadow-sm p-6 hover:shadow-md hover:border-blue-200 transition-all group overflow-hidden"
+              >
+                <div className="absolute top-4 right-4">
+                  <span className="flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-600 border border-amber-100 rounded-full text-[9px] font-black uppercase tracking-wider">
+                    <Lock className="w-2.5 h-2.5" /> Pełna wersja
+                  </span>
+                </div>
+                <div className={`p-3 rounded-2xl w-fit ${feature.bg} ${feature.color} mb-4`}>
+                  <feature.icon className="w-6 h-6" />
+                </div>
+                <h3 className="font-black text-slate-900 mb-2 pr-8">{feature.title}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed">{feature.desc}</p>
+                <div className="mt-4 flex items-center gap-1 text-blue-600 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                  Dowiedz się więcej <ChevronRight className="w-3.5 h-3.5" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
         <footer className="mt-12 text-center text-slate-400 text-sm">&copy; ArtWebCraft 2026 | {t('footer.system_name')} - {t('footer.system_description')}</footer>
+      </div>
+
+      {/* STICKY BOTTOM CTA */}
+      <div className="sticky bottom-0 z-[90] w-full">
+        <div className="max-w-7xl mx-auto px-4">
+          <motion.div
+            initial={{ y: 80 }}
+            animate={{ y: 0 }}
+            transition={{ delay: 3, duration: 0.5, ease: 'easeOut' }}
+            className="mb-4 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl shadow-2xl px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-700"
+          >
+            <div className="text-center sm:text-left">
+              <p className="font-black text-sm">Podoba Ci się Brakomat?</p>
+              <p className="text-slate-400 text-xs">Wdrożymy go dla Twojego biura rachunkowego — z Twoimi danymi i logo.</p>
+            </div>
+            <button
+              onClick={() => setShowLeadModal(true)}
+              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-blue-500 transition-all shadow-lg whitespace-nowrap shrink-0"
+            >
+              <Sparkles className="w-4 h-4" />
+              Chcę Brakomat dla swojego biura →
+            </button>
+          </motion.div>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -680,36 +838,52 @@ export default function Dashboard({
             ))}
           </div>
 
-          {/* TYTUŁ - dynamiczna wielkość tekstu (text-2xl na mobile) */}
-          <h2 className="text-2xl md:text-5xl font-black text-white mb-4 md:mb-6 tracking-tight leading-tight px-2">
+          {/* TYTUŁ */}
+          <h2 className="text-2xl md:text-4xl font-black text-white mb-3 md:mb-4 tracking-tight leading-tight px-2">
             {t('welcome.title')} <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
               {t('welcome.highlight')}
             </span>
           </h2>
-          
-          {/* TREŚĆ - mniejszy font na mobile (text-sm) */}
-          <div className="space-y-4 text-blue-100/80 text-sm md:text-lg leading-relaxed mb-6 md:mb-10 px-1 md:px-4">
-            <p>{t('welcome.intro')}</p>
-            <div className="bg-white/5 rounded-2xl p-4 md:p-6 border border-white/10 text-xs md:text-sm text-left italic">
-              <span className="text-blue-400 font-bold italic block mb-1">Note:</span> {t('welcome.security_note')}
-            </div>
-            <p className="text-xs md:text-base opacity-70">{t('welcome.description')}</p>
+          <p className="text-blue-100/70 text-sm md:text-base mb-6 md:mb-8 px-1">{t('welcome.intro')}</p>
+
+          {/* PAIN STATS */}
+          <div className="grid grid-cols-3 gap-3 mb-6 md:mb-8 px-1">
+            {[
+              { value: '8h', label: t('welcome.stat1_label') },
+              { value: '1/4', label: t('welcome.stat2_label') },
+              { value: '0', label: t('welcome.stat3_label') },
+            ].map((stat) => (
+              <div key={stat.label} className="bg-white/5 border border-white/10 rounded-2xl p-3 md:p-4 text-center">
+                <div className="text-2xl md:text-3xl font-black text-white">{stat.value}</div>
+                <div className="text-[9px] md:text-[10px] text-blue-300/80 uppercase tracking-wider mt-1 leading-tight">{stat.label}</div>
+              </div>
+            ))}
           </div>
+
+          <p className="text-xs text-white/40 px-1 mb-2">{t('welcome.description')}</p>
         </div>
 
-        {/* PRZYCISK - zawsze widoczny na dole, mniejszy padding na mobile */}
-        <div className="mt-4 pt-2">
-          <motion.button 
+        {/* PRZYCISK */}
+        <div className="mt-4 pt-2 space-y-3">
+          <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleFinalClose}
-            className="w-full md:w-auto px-8 py-3.5 md:px-12 md:py-5 bg-blue-600 text-white rounded-full font-black text-base md:text-xl shadow-xl hover:bg-blue-700 transition-all uppercase tracking-widest"
+            className="w-full px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-base shadow-xl hover:bg-blue-700 transition-all uppercase tracking-widest"
           >
             {t('welcome.button')}
           </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            onClick={() => { handleFinalClose(); setTimeout(() => setShowLeadModal(true), 300); }}
+            className="w-full px-8 py-3 bg-white/10 text-white rounded-2xl font-bold text-sm border border-white/20 hover:bg-white/15 transition-all"
+          >
+            {t('welcome.cta_button')}
+          </motion.button>
 
-          <p className="mt-6 text-[8px] md:text-[9px] text-white/20 uppercase tracking-[0.3em]">
+          <p className="text-[8px] md:text-[9px] text-white/20 uppercase tracking-[0.3em] text-center pt-2">
             ArtWebCraft Digital Experience 2026
           </p>
         </div>
@@ -718,5 +892,8 @@ export default function Dashboard({
   )}
 </AnimatePresence>
     </div>
+
+    <LeadModal isOpen={showLeadModal} onClose={() => setShowLeadModal(false)} />
+    </>
   );
 }
