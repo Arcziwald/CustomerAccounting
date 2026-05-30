@@ -117,7 +117,7 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
   return (
     <div className="min-h-screen bg-white">
       {/* Demo banner */}
-      <div className="sticky top-0 z-50 bg-indigo-600 text-white px-4 py-2 flex items-center justify-between text-xs">
+      <div className="sticky top-0 z-50 bg-slate-700 text-white px-4 py-2 flex items-center justify-between text-xs">
         <div className="flex items-center gap-2">
           <span className="bg-white/20 px-2 py-0.5 rounded font-black uppercase tracking-widest text-[9px]">DEMO</span>
           <span className="text-indigo-200 hidden sm:block">To widzi Twój klient po zalogowaniu przez dedykowany link</span>
@@ -172,9 +172,9 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
                   <div className="flex items-center gap-4">
   {/* IKONA I KOLOR TŁA - Zsynchronizowane z Dashboardem */}
   <div className={`p-3 rounded-2xl ${
-    doc.status === 'OK' || doc.status === 'Zatwierdzone' ? 'bg-emerald-50 text-emerald-600' : 
-    doc.status === 'Spóźnione' ? 'bg-red-50 text-red-600 animate-pulse' : 
-    'bg-orange-50 text-orange-600'
+    doc.status === 'OK' || doc.status === 'Zatwierdzone' ? 'bg-teal-50 text-teal-600' : 
+    doc.status === 'Spóźnione' ? 'bg-rose-50 text-rose-400 animate-pulse' : 
+    'bg-amber-50 text-amber-500'
   }`}>
     {doc.status === 'OK' || doc.status === 'Zatwierdzone' ? <CheckCircle className="w-6 h-6" /> : 
      doc.status === 'Spóźnione' ? <AlertCircle className="w-6 h-6" /> : 
@@ -202,8 +202,8 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
 </h3>
     <div className="flex flex-col">
       <span className={`text-sm font-black uppercase tracking-wider ${
-        doc.status === 'OK' || doc.status === 'Zatwierdzone' ? 'text-emerald-600' :
-        doc.status === 'Spóźnione' ? 'text-red-600 font-black' : 'text-orange-500'
+        doc.status === 'OK' || doc.status === 'Zatwierdzone' ? 'text-teal-600' :
+        doc.status === 'Spóźnione' ? 'text-rose-400 font-black' : 'text-orange-500'
       }`}>
         {(() => {
           const statusMap: { [key: string]: string } = {
@@ -353,7 +353,7 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
           </div>
         </div>
 
-        <div className="mt-8 md:mt-12 p-6 md:p-10 bg-blue-600 rounded-[2rem] md:rounded-[3rem] text-white text-center shadow-2xl shadow-blue-200">
+        <div className="mt-8 md:mt-12 p-6 md:p-10 bg-slate-700 rounded-[2rem] md:rounded-[3rem] text-white text-center shadow-2xl shadow-blue-200">
   <h3 className="text-2xl md:text-3xl font-bold mb-3">{t('client_view.ready_title')}</h3>
   <p className="text-blue-100 mb-6 md:mb-8 text-base md:text-lg max-w-md mx-auto">{t('client_view.ready_desc')}</p>
           <button 

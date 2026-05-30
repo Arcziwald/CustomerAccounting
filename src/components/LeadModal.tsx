@@ -57,7 +57,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
           >
             {!success ? (
               <>
-                <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-8 text-white relative overflow-hidden">
+                <div className="bg-gradient-to-br from-blue-500 to-indigo-500 p-8 text-white relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-10 -mt-10" />
                   <button
                     onClick={handleClose}

@@ -66,20 +66,20 @@ export interface Client {
 
 export const STATUS_COLORS: Record<string, string> = {
   // Stan: Brak / Do przesłania (Subtelny pomarańcz zamiast żółtego)
-  'Brak': 'bg-orange-50 text-orange-600 border-orange-100',
+  'Brak': 'bg-amber-50 text-amber-500 border-amber-100',
   
   // Stan: W toku / Do weryfikacji
-  'W toku': 'bg-blue-50 text-blue-600 border-blue-100',
-  'Do weryfikacji': 'bg-indigo-50 text-indigo-600 border-indigo-100',
+  'W toku': 'bg-sky-50 text-sky-500 border-sky-100',
+  'Do weryfikacji': 'bg-violet-50 text-violet-500 border-violet-100',
   
   // Stan: Spóźnione (Delikatny róż/czerwień)
-  'Spóźnione': 'bg-red-50 text-red-600 border-red-100',
-  'Odrzucone': 'bg-rose-50 text-rose-600 border-rose-100',
+  'Spóźnione': 'bg-rose-50 text-rose-400 border-rose-100',
+  'Odrzucone': 'bg-pink-50 text-pink-400 border-pink-100',
   
   // Stan: OK (Pastelowa zieleń)
-  'OK': 'bg-emerald-50 text-emerald-600 border-emerald-100',
+  'OK': 'bg-teal-50 text-teal-600 border-teal-100',
   
   // STANY FINALNE - Tutaj zostawiamy mocniejszy akcent
-  'Zatwierdzone': 'bg-emerald-500 text-white border-emerald-600 shadow-sm',
-  'Zweryfikowano': 'bg-blue-500 text-white border-blue-600 shadow-sm'
+  'Zatwierdzone': 'bg-teal-100 text-teal-700 border-teal-200',
+  'Zweryfikowano': 'bg-sky-100 text-sky-700 border-sky-200'
 };

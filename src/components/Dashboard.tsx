@@ -38,8 +38,8 @@ function NipBadge({ nip }: { nip: string }) {
   const isVat = data.type === 'bl';
   const ok = isVat ? data.aktywny : data.valid;
   const badge = ok
-    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-    : 'bg-rose-50 text-rose-700 border border-rose-200';
+    ? 'bg-teal-50 text-teal-600 border border-teal-200'
+    : 'bg-pink-50 text-pink-500 border border-pink-200';
   const label = ok ? (isVat ? '✓ VAT' : '✓ VIES') : (isVat ? '✗ VAT' : '✗ VIES');
 
   return (
@@ -317,7 +317,7 @@ export default function Dashboard({
    return (
     <>
     {/* DEMO BANNER — sticky, full-width */}
-    <div className="sticky top-0 z-[100] bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white px-4 py-2.5 flex items-center justify-between shadow-lg">
+    <div className="sticky top-0 z-[100] bg-gradient-to-r from-slate-600 via-slate-700 to-slate-600 text-white px-4 py-2.5 flex items-center justify-between shadow-lg">
       <div className="flex items-center gap-2.5">
         <span className="bg-white/20 text-white text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-md shrink-0">DEMO</span>
         <span className="text-xs font-medium text-blue-100 hidden sm:block">{t('demo.banner_full')}</span>
@@ -396,10 +396,10 @@ export default function Dashboard({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 w-full">
             {[
   { id: 'all', label: t('stats.all'), value: stats.total, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', tip: t('tooltips_stats.all') },
-  { id: 'ready', label: t('stats.complete'), value: stats.complete, icon: Check, color: 'text-emerald-600', bg: 'bg-emerald-50', tip: t('tooltips_stats.ready') },
-  { id: 'missing', label: t('stats.missing'), value: stats.missing, icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50', tip: t('tooltips_stats.missing') },
-  { id: 'late', label: t('stats.late'), value: stats.late, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50', tip: t('tooltips_stats.late') },
-  { id: 'correction', label: t('stats.to_correct'), value: stats.toCorrect, icon: Info, color: 'text-rose-600', bg: 'bg-rose-50', tip: t('tooltips_stats.correction') }
+  { id: 'ready', label: t('stats.complete'), value: stats.complete, icon: Check, color: 'text-teal-500', bg: 'bg-teal-50', tip: t('tooltips_stats.ready') },
+  { id: 'missing', label: t('stats.missing'), value: stats.missing, icon: Clock, color: 'text-amber-500', bg: 'bg-amber-50', tip: t('tooltips_stats.missing') },
+  { id: 'late', label: t('stats.late'), value: stats.late, icon: AlertTriangle, color: 'text-rose-400', bg: 'bg-rose-50', tip: t('tooltips_stats.late') },
+  { id: 'correction', label: t('stats.to_correct'), value: stats.toCorrect, icon: Info, color: 'text-pink-400', bg: 'bg-pink-50', tip: t('tooltips_stats.correction') }
 ].map((item) => (
   <Tooltip key={item.id} text={item.tip}>
     <motion.div
@@ -491,7 +491,7 @@ export default function Dashboard({
             </p>
           </div>
           <div className="text-right">
-            <span className="text-4xl font-black text-blue-600 italic">
+            <span className="text-4xl font-black text-slate-600 italic">
               {progressPercent}%
             </span>
           </div>
@@ -503,7 +503,7 @@ export default function Dashboard({
             initial={{ width: 0 }}
             animate={{ width: `${progressPercent}%` }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+            className="h-full bg-gradient-to-r from-sky-400 via-violet-300 to-teal-400 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"
           />
         </div>
 
@@ -569,9 +569,9 @@ export default function Dashboard({
       toast.error(t('common.no_late_clients'));
     }
   }}
-  className="flex items-center gap-3 px-6 py-3 bg-[#1e293b] text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.15em] shadow-xl hover:bg-slate-800 transition-all border border-slate-700"
+  className="flex items-center gap-3 px-6 py-3 bg-slate-600 text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.15em] shadow-md hover:bg-slate-500 transition-all border border-slate-700"
 >
-  <Bell className="w-4 h-4 text-yellow-400 animate-pulse" />
+  <Bell className="w-4 h-4 text-amber-300 animate-pulse" />
   <span>
     {t('ai.nudge_all')} ({stats.late})
   </span>
@@ -602,8 +602,8 @@ export default function Dashboard({
                               <Bell className="w-3 h-3 fill-white" /> {t('status.client_finished', { defaultValue: 'KLIENT SKOŃCZYŁ' })}
                             </motion.div>
                           )}
-                          {client.locked && (<div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500 text-white rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm"><Check className="w-3 h-3 stroke-[3px]" /> {t('status.ready', { defaultValue: 'GOTOWE' })}</div>)}
-                          {client.locked && <Lock className="w-4 h-4 text-emerald-600 shrink-0" />}
+                          {client.locked && (<div className="flex items-center gap-1.5 px-2.5 py-1 bg-teal-100 text-teal-700 rounded-lg text-[10px] font-black uppercase tracking-widest"><Check className="w-3 h-3 stroke-[3px]" /> {t('status.ready', { defaultValue: 'GOTOWE' })}</div>)}
+                          {client.locked && <Lock className="w-4 h-4 text-teal-500 shrink-0" />}
                         </div>
                         <div className="text-xs lg:text-sm text-slate-400 font-medium flex items-center gap-2">
                           {t(`months.${client.month.toLowerCase().replace(/ /g, '_')}`)}
@@ -791,7 +791,7 @@ export default function Dashboard({
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Lista wymaganych dokumentów</p>
                 <div className="space-y-2 mb-6 max-h-[240px] overflow-y-auto pr-2">
                   {editingClient.documents.map(doc => {
-                    const statusColor = doc.status === 'OK' || doc.status === 'Zatwierdzone' ? 'text-emerald-600' : doc.status === 'W toku' ? 'text-blue-600' : doc.status === 'Spóźnione' ? 'text-red-600' : 'text-slate-400';
+                    const statusColor = doc.status === 'OK' || doc.status === 'Zatwierdzone' ? 'text-teal-600' : doc.status === 'W toku' ? 'text-sky-500' : doc.status === 'Spóźnione' ? 'text-rose-400' : 'text-slate-400';
                     return (
                     <div key={doc.id} className="flex items-center justify-between gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-100">
                       <span className="font-semibold text-slate-800 text-sm truncate">{(() => { const labelMap: { [key: string]: string } = { 'Faktury Kosztowe': 'faktury_kosztowe', 'Faktury Przychodowe': 'faktury_przychodowe', 'Wyciągi': 'wyciagi', 'ZUS': 'zus', 'Kadry': 'kadry' }; const key = labelMap[doc.label] || doc.label.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/ /g,'_'); const tk = `labels.${key}`; const tr = t(tk); return tr === tk ? doc.label : tr; })()}</span>
@@ -924,7 +924,7 @@ export default function Dashboard({
                 {/* Nagłówek klienta — accordion */}
                 <button
                   onClick={() => toggleOcrClient(clientName)}
-                  className="w-full flex items-center gap-3 px-5 py-3 bg-slate-800 hover:bg-slate-700 text-white transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-5 py-3 bg-slate-600 hover:bg-slate-500 text-white transition-colors text-left"
                 >
                   <span className="font-black text-sm uppercase tracking-wide flex-1">{clientName}</span>
                   <span className="text-[10px] font-bold bg-white/20 px-2 py-0.5 rounded-lg">{records.length}</span>
@@ -1000,7 +1000,7 @@ export default function Dashboard({
                             <div className="flex flex-col gap-1.5">
                               <button
                                 onClick={() => record.status !== 'Zweryfikowano' && updateOCRStatus(record.id, record.status === 'Odrzucone' ? 'Do weryfikacji' : 'Zweryfikowano')}
-                                className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all border-2 w-fit ${record.status === 'Zweryfikowano' ? 'bg-green-50 text-green-700 border-green-100' : record.status === 'Odrzucone' ? 'bg-red-50 text-red-700 border-red-100' : 'bg-yellow-50 text-yellow-700 border-yellow-100'}`}
+                                className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all border-2 w-fit ${record.status === 'Zweryfikowano' ? 'bg-teal-50 text-teal-700 border-teal-100' : record.status === 'Odrzucone' ? 'bg-rose-50 text-rose-400 border-rose-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}
                               >
                                 {record.status.toUpperCase()}
                               </button>
