@@ -127,7 +127,7 @@ export default function Dashboard({
   const [rejectedFiles, setRejectedFiles] = useState<Set<string>>(new Set());
   const [addedScans, setAddedScans] = useState<Record<string, string[]>>({});
   const [verifyingClientId, setVerifyingClientId] = useState<string | null>(null);
-  const [expandedOcrClients, setExpandedOcrClients] = useState<Set<string>>(() => new Set(ocrRecords.map(r => r.clientName)));
+  const [expandedOcrClients, setExpandedOcrClients] = useState<Set<string>>(new Set());
   const [nudgeRecord, setNudgeRecord] = useState<OCRRecord | null>(null);
   const [showAddClient, setShowAddClient] = useState(false);
   const [copiedPortalId, setCopiedPortalId] = useState<string | null>(null);
@@ -1230,8 +1230,7 @@ export default function Dashboard({
               <motion.div
                 key={feature.title}
                 whileHover={{ y: -3 }}
-                onClick={() => setShowLeadModal(true)}
-                className="relative cursor-pointer bg-white rounded-[1.75rem] border border-slate-100 shadow-sm p-6 hover:shadow-md hover:border-blue-200 transition-all group overflow-hidden"
+                className="relative bg-white rounded-[1.75rem] border border-slate-100 shadow-sm p-6 hover:shadow-md transition-all group overflow-hidden"
               >
                 <div className="absolute top-4 right-4">
                   <span className="flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-600 border border-amber-100 rounded-full text-[9px] font-black uppercase tracking-wider">
@@ -1243,13 +1242,53 @@ export default function Dashboard({
                 </div>
                 <h3 className="font-black text-slate-900 mb-2 pr-8">{feature.title}</h3>
                 <p className="text-sm text-slate-500 leading-relaxed">{feature.desc}</p>
-                <div className="mt-4 flex items-center gap-1 text-blue-600 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                  {t('premium.learn_more')} <ChevronRight className="w-3.5 h-3.5" />
-                </div>
               </motion.div>
             ))}
           </div>
         </div>
+
+        {/* SEKCJA KOSZ */}
+        {(() => {
+          const trashedFiles = clients.flatMap(c =>
+            c.documents.flatMap(d =>
+              getDocFiles(c.id, d.id, d.files)
+                .map((f, i) => ({ ...f, key: `${c.id}-${d.id}-${i}`, clientName: c.name, docLabel: d.label }))
+                .filter((_, i) => isFileRejected(c.id, d.id, i))
+            )
+          );
+          return (
+            <div className="mt-12 mb-6 bg-white rounded-[2rem] p-6 lg:p-8 border border-slate-100 shadow-sm">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2.5 bg-rose-50 text-rose-500 rounded-xl"><Trash2 className="w-5 h-5" /></div>
+                <div>
+                  <h2 className="text-lg font-black text-slate-900">Kosz</h2>
+                  <p className="text-xs text-slate-400">Odrzucone pliki — możesz je przywrócić</p>
+                </div>
+              </div>
+              {trashedFiles.length === 0 ? (
+                <p className="text-sm text-slate-300 italic text-center py-6">Kosz jest pusty</p>
+              ) : (
+                <div className="space-y-2">
+                  {trashedFiles.map(f => (
+                    <div key={f.key} className="flex items-center justify-between p-3 bg-red-50 border border-red-100 rounded-2xl">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <FileText className="w-4 h-4 text-red-400 shrink-0" />
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-slate-700 truncate">{f.name}</p>
+                          <p className="text-[10px] text-slate-400">{f.clientName} · {f.docLabel}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2 shrink-0 ml-3">
+                        <button onClick={() => { toggleApproveFile(f.key); toast.success(`Przywrócono: ${f.name}`, { icon: '↩️' }); }} className="px-3 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all">Przywróć</button>
+                        <button onClick={() => toast(`Plik trwale usunięty: ${f.name}`, { icon: '🗑️', duration: 2000 })} className="px-3 py-1.5 text-xs font-bold text-red-500 bg-white border border-red-100 hover:bg-red-50 rounded-xl transition-all">Usuń</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* SEKCJA ZESPÓŁ */}
         <div className="mt-12 mb-10 bg-white rounded-[2rem] p-6 lg:p-8 border border-slate-100 shadow-sm">
