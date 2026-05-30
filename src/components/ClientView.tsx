@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Client, STATUS_COLORS, DocumentStatus, UploadedFile } from '../types';
-import { ArrowLeft, Upload, CheckCircle, FileText, Clock, AlertCircle, Hash, Search, FileUp, Send, Plus, Lock } from 'lucide-react';
+import { ArrowLeft, Upload, CheckCircle, FileText, Clock, AlertCircle, Hash, Search, FileUp, Send, Plus, Lock, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
@@ -19,6 +19,8 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
   const { t } = useTranslation(); // Poprawione umiejscowienie hooka
   const [client, setClient] = useState<Client | null>(null);
   const [uploading, setUploading] = useState<string | null>(null);
+  const [pendingFiles, setPendingFiles] = useState<Record<string, File>>({});
+  const [notes, setNotes] = useState<Record<string, string>>({});
   const [invoiceInput, setInvoiceInput] = useState('');
   const [missingInvoices, setMissingInvoices] = useState<number[]>([]);
   const [showChecker, setShowChecker] = useState(false);
@@ -241,32 +243,86 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
     </button>
   )}
   
-  <input 
-    type="file" 
+  <input
+    type="file"
     id={`file-upload-${doc.id}`}
-    className="hidden" 
-    accept=".pdf, .jpg, .jpeg, .png"
+    className="hidden"
+    accept=".pdf,.jpg,.jpeg,.png"
     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
-      if (file) handleUpload(doc.id, doc.label, file);
+      if (file) { setPendingFiles(prev => ({ ...prev, [doc.id]: file })); e.target.value = ''; }
     }}
   />
-  
-  {/* Przycisk Dodaj dokument - przywrócony rozmiar text-sm i czytelna ikona */}
-  <button 
-    onClick={() => document.getElementById(`file-upload-${doc.id}`)?.click()}
-    disabled={uploading === doc.id || client.locked}
-    className="w-48 py-3 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-100 disabled:opacity-50 disabled:bg-slate-200 flex items-center justify-center gap-2"
-  >
-    {uploading === doc.id ? (
-      <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
-        <Upload className="w-4 h-4" />
-      </motion.div>
-    ) : (
-      <><Plus className="w-4 h-4 stroke-[3px]" />{t('client_view.add_doc')}</>
-    )}
-  </button>
+
+  {!pendingFiles[doc.id] && (
+    <button
+      onClick={() => document.getElementById(`file-upload-${doc.id}`)?.click()}
+      disabled={uploading === doc.id || client.locked}
+      className="w-48 py-3 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-100 disabled:opacity-50 disabled:bg-slate-200 flex items-center justify-center gap-2"
+    >
+      {uploading === doc.id ? (
+        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>
+          <Upload className="w-4 h-4" />
+        </motion.div>
+      ) : (
+        <><Plus className="w-4 h-4 stroke-[3px]" />{t('client_view.add_doc')}</>
+      )}
+    </button>
+  )}
 </div>
+
+{/* Staging area z notatką */}
+{pendingFiles[doc.id] && !client.locked && (
+  <div className="mt-3 w-full p-4 bg-blue-50 border border-blue-100 rounded-2xl space-y-3">
+    <div className="flex items-center gap-2">
+      <FileText className="w-4 h-4 text-blue-500 shrink-0" />
+      <span className="text-sm font-semibold text-slate-800 truncate flex-1">{pendingFiles[doc.id].name}</span>
+      <button
+        onClick={() => setPendingFiles(prev => { const n = { ...prev }; delete n[doc.id]; return n; })}
+        className="text-slate-400 hover:text-red-500 transition-colors shrink-0"
+      >
+        <X className="w-4 h-4" />
+      </button>
+    </div>
+    <div>
+      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-1.5">
+        {t('client_view.note_label')}
+      </label>
+      <textarea
+        value={notes[doc.id] ?? ''}
+        onChange={e => setNotes(prev => ({ ...prev, [doc.id]: e.target.value }))}
+        placeholder={t('client_view.note_placeholder')}
+        rows={2}
+        autoFocus
+        className="w-full px-3 py-2 rounded-xl border border-blue-200 bg-white text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 resize-none"
+      />
+    </div>
+    <div className="flex gap-2">
+      <button
+        onClick={() => { setPendingFiles(prev => { const n = { ...prev }; delete n[doc.id]; return n; }); setNotes(prev => { const n = { ...prev }; delete n[doc.id]; return n; }); }}
+        className="flex-1 py-2 rounded-xl text-sm font-semibold text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 transition-all"
+      >
+        {t('client_view.cancel')}
+      </button>
+      <button
+        disabled={uploading === doc.id}
+        onClick={async () => {
+          const file = pendingFiles[doc.id];
+          if (!file) return;
+          setPendingFiles(prev => { const n = { ...prev }; delete n[doc.id]; return n; });
+          setNotes(prev => { const n = { ...prev }; delete n[doc.id]; return n; });
+          await handleUpload(doc.id, doc.label, file);
+        }}
+        className="flex-1 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-60"
+      >
+        {uploading === doc.id
+          ? <><motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}><Upload className="w-4 h-4" /></motion.div> {t('client_view.sending')}</>
+          : <><Send className="w-4 h-4" /> {t('client_view.send_doc')}</>
+        }
+      </button>
+    </div>
+  </div>
+)}
                 </div>
 
                 <div className="pt-4 border-t border-slate-200/50">

@@ -281,7 +281,12 @@
     "ready_title": "Ready for this month?",
     "ready_desc": "Click below to inform the office that you have finished uploading.",
     "finish_btn": "Finish uploading",
-    "finish_success_msg": "Sent! The office has been notified of your document readiness."
+    "finish_success_msg": "Sent! The office has been notified of your document readiness.",
+    "note_label": "Describe what this document is about",
+    "note_placeholder": "e.g. \"Office renovation deposit\" or \"Laptop invoice for remote work\"",
+    "send_doc": "Send document",
+    "cancel": "Cancel",
+    "sending": "Sending..."
   },
   "months": {
     "marzec_2026": "March 2026"

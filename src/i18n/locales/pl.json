@@ -284,7 +284,12 @@
     "Podgląd strefy klienta": "Zobacz interfejs strefy klienta, sprawdź postęp przesyłania plików i status powiadomień.",
     "ready_desc": "Kliknij poniżej, aby poinformować biuro o zakończeniu przesyłania.",
     "finish_btn": "Zakończ przesyłanie",
-    "finish_success_msg": "Wysłano! Biuro zostało powiadomione o gotowości dokumentów."
+    "finish_success_msg": "Wysłano! Biuro zostało powiadomione o gotowości dokumentów.",
+    "note_label": "Opisz czego dotyczy dokument",
+    "note_placeholder": "np. \"Zaliczka za remont biura\" lub \"Faktura za laptop do pracy zdalnej\"",
+    "send_doc": "Wyślij dokument",
+    "cancel": "Anuluj",
+    "sending": "Wysyłam..."
   },
   "months": {
     "marzec_2026": "Marzec 2026"
