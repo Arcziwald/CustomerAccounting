@@ -564,7 +564,7 @@ export default function Dashboard({
     
     if (clientsWithLateDocs.length > 0) {
       clientsWithLateDocs.forEach(c => handleNudge(c));
-      toast.success(`${t('ai.nudge_sent')}: ${clientsWithLateDocs.length}`);
+      toast.success(\`\${t('ai.nudge_sent')} (\${clientsWithLateDocs.length})\`, { icon: '📨' });
     } else {
       toast.error(t('common.no_late_clients'));
     }

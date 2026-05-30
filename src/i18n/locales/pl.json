@@ -53,7 +53,8 @@
     "toast_header": "Agent AI wysłał wiadomość",
     "nudge_type_system": "Systemowe Przypomnienie",
     "nudge_all": "POGOŃ SPÓŹNIALSKICH",
-    "nudge_sent_count": "Wysłano monity do"
+    "nudge_sent_count": "Wysłano monity do",
+    "nudge_sent": "Wysłano monity do spóźnionych klientów"
   },
   "header": {
     "app_name": "BRAKOMAT",
