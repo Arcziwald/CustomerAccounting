@@ -40,7 +40,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ from: 'Brakomat Demo <noreply@mailing.artwebcraft.com>', to: ['hello@artwebcraft.com'], reply_to: $json.leadEmail ? [$json.leadEmail] : undefined, subject: $json.subject, html: $json.html }) }}",
+        "jsonBody": "={{ JSON.stringify({ from: 'Brakomat Demo <noreply@mailing.artwebcraft.com>', to: ['accounting@artwebcraft.com'], reply_to: $json.leadEmail ? [$json.leadEmail] : undefined, subject: $json.subject, html: $json.html }) }}",
         "options": {}
       },
       "id": "http-resend-email",
