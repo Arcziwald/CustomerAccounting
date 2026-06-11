@@ -1,0 +1,67 @@
+{
+  "name": "Brakomat - Lead z demo",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "brakomat-lead",
+        "responseMode": "onReceived",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "webhook-brakomat-lead",
+      "name": "Webhook - Lead z demo",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "brakomat-lead"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Payload z LeadModal demo: { name, email, phone, clients, employees, offices, source, timestamp }\nconst d = $input.first().json.body ?? $input.first().json;\n\nconst esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n\nconst name = esc(d.name) || '(brak)';\nconst email = esc(d.email) || '(brak)';\nconst phone = esc(d.phone) || '(nie podano)';\nconst clients = esc(d.clients) || '(nie podano)';\nconst employees = esc(d.employees) || '(nie podano)';\nconst offices = esc(d.offices) || '(nie podano)';\nconst when = d.timestamp ? new Date(d.timestamp).toLocaleString('pl-PL', { timeZone: 'Europe/Warsaw' }) : new Date().toLocaleString('pl-PL', { timeZone: 'Europe/Warsaw' });\n\nconst html = `\n<h2>\\uD83E\\uDD81 Nowy lead z demo Brakomatu</h2>\n<table cellpadding=\"6\" style=\"border-collapse:collapse;font-family:sans-serif\">\n  <tr><td><b>Imi\\u0119 i nazwisko</b></td><td>${name}</td></tr>\n  <tr><td><b>Email</b></td><td><a href=\"mailto:${email}\">${email}</a></td></tr>\n  <tr><td><b>Telefon</b></td><td>${phone}</td></tr>\n  <tr><td><b>Liczba klient\\u00f3w</b></td><td>${clients}</td></tr>\n  <tr><td><b>Pracownicy</b></td><td>${employees}</td></tr>\n  <tr><td><b>Oddzia\\u0142y</b></td><td>${offices}</td></tr>\n  <tr><td><b>\\u0179r\\u00f3d\\u0142o</b></td><td>${esc(d.source) || 'brakomat-demo'}</td></tr>\n  <tr><td><b>Data</b></td><td>${when}</td></tr>\n</table>\n<p>Sugerowany pakiet: <b>${d.clients === '100+' ? 'Pakiet 3' : d.clients === '50-100' ? 'Pakiet 2/3' : d.clients === '20-50' ? 'Pakiet 2' : 'Pakiet 1'}</b></p>`;\n\nreturn [{ json: {\n  subject: `\\uD83E\\uDD81 Lead z demo Brakomat: ${name}${d.phone ? ' \\u2618 tel: ' + phone : ''}`,\n  html,\n  leadEmail: d.email ?? null,\n} }];"
+      },
+      "id": "code-format-lead",
+      "name": "Sformatuj leada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer TUTAJ_WKLEJ_RESEND_API_KEY" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ from: 'Brakomat Demo <noreply@mailing.artwebcraft.com>', to: ['hello@artwebcraft.com'], reply_to: $json.leadEmail ? [$json.leadEmail] : undefined, subject: $json.subject, html: $json.html }) }}",
+        "options": {}
+      },
+      "id": "http-resend-email",
+      "name": "Resend - Email do Artura",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Lead z demo": {
+      "main": [[{ "node": "Sformatuj leada", "type": "main", "index": 0 }]]
+    },
+    "Sformatuj leada": {
+      "main": [[{ "node": "Resend - Email do Artura", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-06-11T00:00:00.000Z",
+  "versionId": "1"
+}
