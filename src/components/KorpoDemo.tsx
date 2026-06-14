@@ -7,8 +7,8 @@
 import React, { useMemo, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import {
-  ArrowLeft, Building2, Check, ChevronRight, HardHat, Mail, MailQuestion,
-  RotateCcw, Route, Sparkles, X,
+  ArrowLeft, Briefcase, Building2, Check, ChevronRight, HardHat, Mail, MailQuestion,
+  RotateCcw, Route, Sparkles, Truck, X,
 } from 'lucide-react';
 import LeadModal from './LeadModal';
 
@@ -21,24 +21,32 @@ interface Faktura {
 }
 interface Regula { nip: string; sprzedawca: string; dzial: string; zrodlo: 'reczna' | 'wyuczona'; trafienia: number }
 
+type ScenKey = 'budowa' | 'transport' | 'nieruchomosci' | 'korpo';
+
 interface Scenariusz {
   nazwa: string;
   firma: string;
+  icon: React.ComponentType<{ className?: string }>;
   dzialy: Dzial[];
   faktury: Faktura[];
   reguly: Regula[];
-  // Słownik odmian jednostki rozliczenia — podmieniany w treści per scenariusz
+  // Słownik nazewnictwa jednostki rozliczenia — podmieniany w treści per branża
   vocab: {
-    celMn: string;       // biernik l.mn.: „Zapytaj budowy" / „Zapytaj działy"
-    innaFraza: string;   // „to sprawa innej budowy" / „…innego działu"
-    tenSamFraza: string; // „na tę samą budowę" / „do tego samego działu"
+    celMn: string;       // biernik l.mn., cel zapytania: „Zapytaj budowy" / „…kierowców"
+    innaFraza: string;   // „to sprawa innej budowy" / „…innego pojazdu"
+    tenSamFraza: string; // „na tę samą budowę" / „do tego samego pojazdu"
+    perCo: string;       // biernik lp: „koszty per budowę / pojazd / obiekt / dział"
+    jednostka: string;   // mianownik lp: „dostawca → budowa / pojazd / obiekt / dział"
+    jednostkaMn: string; // mianownik lmn: „na które budowy / pojazdy / obiekty / działy idzie koszt"
+    placeholder: string; // podpowiedź w polu „czego dotyczy zakup"
   };
 }
 
-const SCENARIUSZE: Record<'budowa' | 'korpo', Scenariusz> = {
+const SCENARIUSZE: Record<ScenKey, Scenariusz> = {
   budowa: {
     nazwa: 'Budownictwo',
     firma: 'GRUPA BUDOMAX S.A.',
+    icon: HardHat,
     dzialy: [
       { id: 's7', nazwa: 'Budowa S7 Płońsk', kierownik: 'kier. Tomasz Wrona' },
       { id: 'zacisze', nazwa: 'Budowa Osiedle Zacisze', kierownik: 'kier. Anna Lis' },
@@ -61,11 +69,71 @@ const SCENARIUSZE: Record<'budowa' | 'korpo', Scenariusz> = {
       { nip: '5252243951', sprzedawca: 'Ramirent Polska', dzial: 'sprzet', zrodlo: 'reczna', trafienia: 7 },
       { nip: '5260250995', sprzedawca: 'Orange Polska', dzial: 'centrala', zrodlo: 'wyuczona', trafienia: 12 },
     ],
-    vocab: { celMn: 'budowy', innaFraza: 'innej budowy', tenSamFraza: 'na tę samą budowę' },
+    vocab: { celMn: 'budowy', innaFraza: 'innej budowy', tenSamFraza: 'na tę samą budowę',
+             perCo: 'budowę', jednostka: 'budowa', jednostkaMn: 'budowy', placeholder: 'np. beton na strop poziomu 2, zamówienie awaryjne' },
+  },
+  transport: {
+    nazwa: 'Transport',
+    firma: 'TRANSGÓRA Logistyka Sp. z o.o.',
+    icon: Truck,
+    dzialy: [
+      { id: 'wgm4521', nazwa: 'Zestaw WGM 4521 (Kowalczyk)', kierownik: 'kier. Daniel Kowalczyk' },
+      { id: 'wgm7788', nazwa: 'Zestaw WGM 7788 (Nowak)', kierownik: 'kier. Sławomir Nowak' },
+      { id: 'busy', nazwa: 'Flota dostawcza (busy)', kierownik: 'dysp. Renata Pawlak' },
+      { id: 'warsztat', nazwa: 'Warsztat i serwis', kierownik: 'Marek Stocki' },
+      { id: 'centrala', nazwa: 'Centrala / dyspozytornia', kierownik: 'Biuro zarządu' },
+    ],
+    faktury: [
+      { id: 't1', sprzedawca: 'Inter Cars S.A. (części)', nip: '5252097454', kwota: 8740.00, data: '2026-06-02', wlasciciel: 'warsztat', zrodlo: 'regula', sugestia: null },
+      { id: 't2', sprzedawca: 'Inter Cars S.A. (części)', nip: '5252097454', kwota: 3120.00, data: '2026-06-08', wlasciciel: 'warsztat', zrodlo: 'regula', sugestia: null },
+      { id: 't3', sprzedawca: 'Orange Polska S.A.', nip: '5260250995', kwota: 1290.00, data: '2026-06-05', wlasciciel: 'centrala', zrodlo: 'wyuczona', sugestia: null },
+      { id: 't4', sprzedawca: 'PKN Orlen (karta paliwowa)', nip: '7740001454', kwota: 9850.00, data: '2026-06-09', wlasciciel: null, zrodlo: null, sugestia: 'wgm4521' },
+      { id: 't5', sprzedawca: 'BP Europa (karta paliwowa)', nip: '5272308545', kwota: 7430.00, data: '2026-06-10', wlasciciel: null, zrodlo: null, sugestia: 'wgm7788' },
+      { id: 't6', sprzedawca: 'PKN Orlen (karta paliwowa)', nip: '7740001454', kwota: 4120.00, data: '2026-06-10', wlasciciel: null, zrodlo: null, sugestia: null },
+      { id: 't7', sprzedawca: 'GITD e-TOLL (opłaty drogowe)', nip: '5262311348', kwota: 5680.00, data: '2026-06-10', wlasciciel: null, zrodlo: null, sugestia: null },
+      { id: 't8', sprzedawca: 'Continental Opony (ogumienie)', nip: '8990107208', kwota: 12300.00, data: '2026-06-11', wlasciciel: null, zrodlo: null, sugestia: null },
+      { id: 't9', sprzedawca: 'Myjnia TIR Stryków', nip: '7282765352', kwota: 980.00, data: '2026-06-11', wlasciciel: null, zrodlo: null, sugestia: null },
+    ],
+    reguly: [
+      { nip: '5252097454', sprzedawca: 'Inter Cars', dzial: 'warsztat', zrodlo: 'reczna', trafienia: 8 },
+      { nip: '5260250995', sprzedawca: 'Orange Polska', dzial: 'centrala', zrodlo: 'wyuczona', trafienia: 11 },
+    ],
+    vocab: { celMn: 'kierowców', innaFraza: 'innego pojazdu', tenSamFraza: 'do tego samego pojazdu',
+             perCo: 'pojazd', jednostka: 'pojazd', jednostkaMn: 'pojazdy', placeholder: 'np. tankowanie w trasie Gdańsk–Wrocław, naczepa-chłodnia' },
+  },
+  nieruchomosci: {
+    nazwa: 'Nieruchomości',
+    firma: 'DOMENA Zarządzanie Nieruchomościami Sp. z o.o.',
+    icon: Building2,
+    dzialy: [
+      { id: 'galeria', nazwa: 'Galeria Saska (C.H.)', kierownik: 'zarządca Ewa Tomczyk' },
+      { id: 'atrium', nazwa: 'Biurowiec Atrium Plaza', kierownik: 'zarządca Robert Kania' },
+      { id: 'osiedle', nazwa: 'Osiedle Słoneczne (wspólnota)', kierownik: 'adm. Joanna Bąk' },
+      { id: 'magazyn', nazwa: 'Park magazynowy A2', kierownik: 'zarządca Piotr Lis' },
+      { id: 'centrala', nazwa: 'Centrala / zarząd', kierownik: 'Biuro zarządu' },
+    ],
+    faktury: [
+      { id: 'n1', sprzedawca: 'Impel Facility (sprzątanie)', nip: '8990010807', kwota: 11200.00, data: '2026-06-02', wlasciciel: 'galeria', zrodlo: 'regula', sugestia: null },
+      { id: 'n2', sprzedawca: 'Impel Facility (sprzątanie)', nip: '8990010807', kwota: 6800.00, data: '2026-06-08', wlasciciel: 'galeria', zrodlo: 'regula', sugestia: null },
+      { id: 'n3', sprzedawca: 'Orange Polska S.A.', nip: '5260250995', kwota: 1740.00, data: '2026-06-05', wlasciciel: 'centrala', zrodlo: 'wyuczona', sugestia: null },
+      { id: 'n4', sprzedawca: 'Veolia (ciepło systemowe)', nip: '5272681045', kwota: 18900.00, data: '2026-06-09', wlasciciel: null, zrodlo: null, sugestia: 'atrium' },
+      { id: 'n5', sprzedawca: 'PGE Obrót (energia el.)', nip: '8133173052', kwota: 24600.00, data: '2026-06-09', wlasciciel: null, zrodlo: null, sugestia: 'galeria' },
+      { id: 'n6', sprzedawca: 'KONE (serwis dźwigów)', nip: '5220010334', kwota: 7350.00, data: '2026-06-10', wlasciciel: null, zrodlo: null, sugestia: null },
+      { id: 'n7', sprzedawca: 'Veolia (ciepło systemowe)', nip: '5272681045', kwota: 9420.00, data: '2026-06-10', wlasciciel: null, zrodlo: null, sugestia: null },
+      { id: 'n8', sprzedawca: 'Saur Neptun (woda i ścieki)', nip: '5832025396', kwota: 5180.00, data: '2026-06-11', wlasciciel: null, zrodlo: null, sugestia: null },
+      { id: 'n9', sprzedawca: 'ZIELNIK (pielęgnacja zieleni)', nip: '7393557632', kwota: 2640.00, data: '2026-06-11', wlasciciel: null, zrodlo: null, sugestia: null },
+    ],
+    reguly: [
+      { nip: '8990010807', sprzedawca: 'Impel Facility', dzial: 'galeria', zrodlo: 'reczna', trafienia: 6 },
+      { nip: '5260250995', sprzedawca: 'Orange Polska', dzial: 'centrala', zrodlo: 'wyuczona', trafienia: 9 },
+    ],
+    vocab: { celMn: 'zarządców', innaFraza: 'innego obiektu', tenSamFraza: 'do tego samego obiektu',
+             perCo: 'obiekt', jednostka: 'obiekt', jednostkaMn: 'obiekty', placeholder: 'np. wymiana opraw LED w garażu -1, Galeria Saska' },
   },
   korpo: {
-    nazwa: 'Korporacja',
+    nazwa: 'Usługi / biuro',
     firma: 'NORDPOL GROUP Sp. z o.o.',
+    icon: Briefcase,
     dzialy: [
       { id: 'it', nazwa: 'Dział IT', kierownik: 'kier. Karol Mazur' },
       { id: 'marketing', nazwa: 'Marketing', kierownik: 'kier. Ewa Kruk' },
@@ -88,7 +156,8 @@ const SCENARIUSZE: Record<'budowa' | 'korpo', Scenariusz> = {
       { nip: '5263326050', sprzedawca: 'Microsoft Ireland', dzial: 'it', zrodlo: 'reczna', trafienia: 9 },
       { nip: '5261039762', sprzedawca: 'Securitas Polska', dzial: 'admin', zrodlo: 'wyuczona', trafienia: 5 },
     ],
-    vocab: { celMn: 'działy', innaFraza: 'innego działu', tenSamFraza: 'do tego samego działu' },
+    vocab: { celMn: 'działy', innaFraza: 'innego działu', tenSamFraza: 'do tego samego działu',
+             perCo: 'dział', jednostka: 'dział', jednostkaMn: 'działy', placeholder: 'np. spotkanie z klientem strategicznym, 8 osób' },
   },
 };
 
@@ -111,7 +180,7 @@ interface Dochodzenie {
 }
 
 export default function KorpoDemo() {
-  const [scenKey, setScenKey] = useState<'budowa' | 'korpo'>('budowa');
+  const [scenKey, setScenKey] = useState<ScenKey>('budowa');
   const scen = SCENARIUSZE[scenKey];
 
   const [faktury, setFaktury] = useState<Faktura[]>(scen.faktury);
@@ -127,7 +196,7 @@ export default function KorpoDemo() {
   const [alertBiuro, setAlertBiuro] = useState<string | null>(null); // fakturaId po komplecie zaprzeczeń
   const [showLead, setShowLead] = useState(false);
 
-  const resetuj = (key: 'budowa' | 'korpo') => {
+  const resetuj = (key: ScenKey) => {
     const s = SCENARIUSZE[key];
     setScenKey(key);
     setFaktury(s.faktury.map(f => ({ ...f })));
@@ -310,7 +379,7 @@ export default function KorpoDemo() {
               <label className="block text-sm font-semibold text-slate-700">
                 Czego dotyczy ten zakup? <span className="font-normal text-slate-400">(wymagane — księgowość musi wiedzieć)</span>
                 <textarea value={opis} onChange={e => setOpis(e.target.value)} rows={2}
-                  placeholder={scenKey === 'budowa' ? 'np. beton na strop poziomu 2, zamówienie awaryjne' : 'np. spotkanie z klientem strategicznym, 8 osób'}
+                  placeholder={scen.vocab.placeholder}
                   className="mt-1 w-full border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
               </label>
               <button onClick={() => odpowiedz('moje')} disabled={!opis.trim()}
@@ -357,15 +426,18 @@ export default function KorpoDemo() {
             <span className="font-bold">Brakomat Korpo</span>
             <span className="text-xs bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-full">demo interaktywne</span>
           </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => resetuj('budowa')}
-              className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${scenKey === 'budowa' ? 'bg-sky-500 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}>
-              <HardHat className="w-3.5 h-3.5" /> Budownictwo
-            </button>
-            <button onClick={() => resetuj('korpo')}
-              className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${scenKey === 'korpo' ? 'bg-sky-500 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}>
-              <Building2 className="w-3.5 h-3.5" /> Korporacja
-            </button>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[11px] text-slate-400 mr-0.5 hidden sm:inline">branża:</span>
+            {(Object.keys(SCENARIUSZE) as ScenKey[]).map(key => {
+              const s = SCENARIUSZE[key];
+              const Ikona = s.icon;
+              return (
+                <button key={key} onClick={() => resetuj(key)}
+                  className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${scenKey === key ? 'bg-sky-500 text-white' : 'bg-white/10 text-slate-300 hover:bg-white/20'}`}>
+                  <Ikona className="w-3.5 h-3.5" /> {s.nazwa}
+                </button>
+              );
+            })}
             <button onClick={() => resetuj(scenKey)} className="text-xs px-3 py-1.5 rounded-lg bg-white/10 text-slate-300 hover:bg-white/20 flex items-center gap-1.5">
               <RotateCcw className="w-3.5 h-3.5" /> Od nowa
             </button>
@@ -413,7 +485,7 @@ export default function KorpoDemo() {
           <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 mb-5 text-sm text-rose-800 flex items-start gap-2">
             <Mail className="w-4 h-4 mt-0.5 shrink-0" />
             <span><b>Alert do księgowości:</b> wszyscy zapytani zaprzeczyli przy fakturze {f.sprzedawca} ({zl(f.kwota)}).
-            W realnym systemie ten mail właśnie wylądował w skrzynce biura — możesz zapytać kolejne {scen.vocab.celMn} albo przypisać ręcznie poniżej.</span>
+            W realnym systemie ten mail właśnie wylądował w skrzynce biura — możesz dopytać pozostałych albo przypisać ręcznie poniżej.</span>
           </div>
         ) : null; })()}
 
@@ -495,7 +567,7 @@ export default function KorpoDemo() {
         {niczyje.length === 0 && sugestie.length === 0 && (
           <div className="bg-emerald-50 border border-emerald-200 rounded-3xl p-6 mb-5 text-center">
             <p className="text-lg font-extrabold text-emerald-800">100% faktur ma właściciela kosztu 🎉</p>
-            <p className="text-sm text-emerald-700 mt-1">Dokładnie o to chodzi: księgowość nie goni nikogo telefonami, a kontroling widzi koszty per {scenKey === 'budowa' ? 'budowę' : 'dział'} od ręki.</p>
+            <p className="text-sm text-emerald-700 mt-1">Dokładnie o to chodzi: księgowość nie goni nikogo telefonami, a kontroling widzi koszty per {scen.vocab.perCo} od ręki.</p>
             <button onClick={() => setShowLead(true)} className="mt-4 px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700">
               Chcę tak u siebie — umów rozmowę
             </button>
@@ -527,7 +599,7 @@ export default function KorpoDemo() {
 
         {/* Reguły */}
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5">
-          <h3 className="text-sm font-bold text-slate-600 mb-2">Reguły przypisania: dostawca → {scenKey === 'budowa' ? 'budowa' : 'dział'} ({reguly.length})</h3>
+          <h3 className="text-sm font-bold text-slate-600 mb-2">Reguły przypisania: dostawca → {scen.vocab.jednostka} ({reguly.length})</h3>
           <div className="bg-slate-50 rounded-2xl px-4 py-1">
             {reguly.map(r => (
               <div key={r.nip} className="flex flex-wrap items-center gap-2 py-2.5 border-b border-slate-200 last:border-0">
@@ -549,7 +621,7 @@ export default function KorpoDemo() {
           <h3 className="text-xl font-extrabold text-white">Mniej faktur „niczyich" = mniej godzin księgowości na detektywistykę</h3>
           <p className="text-sm text-slate-300 mt-2 max-w-2xl mx-auto">
             Brakomat nie zastępuje Waszego obiegu dokumentów — <b>karmi go danymi, których KSeF nie dostarcza</b>:
-            kto zamówił, czego dotyczy zakup, na które {scenKey === 'budowa' ? 'budowy' : 'centra kosztów'} idzie koszt.
+            kto zamówił, czego dotyczy zakup, na które {scen.vocab.jednostkaMn} idzie koszt.
           </p>
           <button onClick={() => setShowLead(true)}
             className="mt-5 px-6 py-3 rounded-xl bg-sky-500 text-white font-bold hover:bg-sky-400 transition">
