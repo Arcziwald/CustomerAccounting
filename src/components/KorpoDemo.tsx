@@ -27,6 +27,12 @@ interface Scenariusz {
   dzialy: Dzial[];
   faktury: Faktura[];
   reguly: Regula[];
+  // Słownik odmian jednostki rozliczenia — podmieniany w treści per scenariusz
+  vocab: {
+    celMn: string;       // biernik l.mn.: „Zapytaj budowy" / „Zapytaj działy"
+    innaFraza: string;   // „to sprawa innej budowy" / „…innego działu"
+    tenSamFraza: string; // „na tę samą budowę" / „do tego samego działu"
+  };
 }
 
 const SCENARIUSZE: Record<'budowa' | 'korpo', Scenariusz> = {
@@ -55,6 +61,7 @@ const SCENARIUSZE: Record<'budowa' | 'korpo', Scenariusz> = {
       { nip: '5252243951', sprzedawca: 'Ramirent Polska', dzial: 'sprzet', zrodlo: 'reczna', trafienia: 7 },
       { nip: '5260250995', sprzedawca: 'Orange Polska', dzial: 'centrala', zrodlo: 'wyuczona', trafienia: 12 },
     ],
+    vocab: { celMn: 'budowy', innaFraza: 'innej budowy', tenSamFraza: 'na tę samą budowę' },
   },
   korpo: {
     nazwa: 'Korporacja',
@@ -81,6 +88,7 @@ const SCENARIUSZE: Record<'budowa' | 'korpo', Scenariusz> = {
       { nip: '5263326050', sprzedawca: 'Microsoft Ireland', dzial: 'it', zrodlo: 'reczna', trafienia: 9 },
       { nip: '5261039762', sprzedawca: 'Securitas Polska', dzial: 'admin', zrodlo: 'wyuczona', trafienia: 5 },
     ],
+    vocab: { celMn: 'działy', innaFraza: 'innego działu', tenSamFraza: 'do tego samego działu' },
   },
 };
 
@@ -249,7 +257,7 @@ export default function KorpoDemo() {
                 className="bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition">
                 Odpowiedz (zajmie 30 sekund)
               </button>
-              <p className="text-xs text-slate-400 mt-4">Trzy możliwe odpowiedzi: „to nasz zakup", „to nie nasze", „to sprawa innego działu".
+              <p className="text-xs text-slate-400 mt-4">Trzy możliwe odpowiedzi: „to nasz zakup", „to nie nasze", „to sprawa {scen.vocab.innaFraza}".
               Bez logowania. Brak odpowiedzi w ciągu 2 dni trafi do księgowości jako sprawa otwarta.</p>
             </div>
           </div>
@@ -292,7 +300,7 @@ export default function KorpoDemo() {
               </button>
               <button onClick={() => setTrybOdp('przekaz')}
                 className="w-full py-3 rounded-2xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200 flex items-center justify-center gap-2">
-                <ChevronRight className="w-4 h-4" /> To sprawa innego działu
+                <ChevronRight className="w-4 h-4" /> To sprawa {scen.vocab.innaFraza}
               </button>
             </div>
           )}
@@ -371,12 +379,12 @@ export default function KorpoDemo() {
           <h1 className="text-xl font-extrabold text-slate-900">Faktury z KSeF spływają do centrali. Ale kto je zamówił?</h1>
           <p className="text-sm text-slate-600 mt-2">
             To panel księgowości firmy <b>{scen.firma}</b>. KSeF dostarcza faktury bez wskazania zamawiającego — „pula niczyja" rośnie.
-            Brakomat przypisuje właścicieli kosztów automatycznie, a gdy nie wie — <b>pyta działy mailem zamiast księgowej</b>. Wypróbuj:
+            Brakomat przypisuje właścicieli kosztów automatycznie, a gdy nie wie — <b>pyta {scen.vocab.celMn} mailem zamiast księgowej</b>. Wypróbuj:
           </p>
           <ol className="text-sm text-slate-600 mt-3 space-y-1 list-decimal list-inside">
             <li><b>Potwierdź sugestię</b> jednym kliknięciem — Brakomat podpowiada na podstawie wcześniejszych przypisań.</li>
-            <li>Przy niczyjej fakturze kliknij <b>„Zapytaj działy"</b> — zobaczysz mail i odpowiedź oczami kierownika, bez logowania.</li>
-            <li>Przypisz <b>dwie faktury tego samego dostawcy</b> do tego samego działu — Brakomat od tej pory przypisze je automatycznie.</li>
+            <li>Przy niczyjej fakturze kliknij <b>„Zapytaj {scen.vocab.celMn}"</b> — zobaczysz mail i odpowiedź oczami kierownika, bez logowania.</li>
+            <li>Przypisz <b>dwie faktury tego samego dostawcy</b> {scen.vocab.tenSamFraza} — Brakomat od tej pory przypisze je automatycznie.</li>
           </ol>
         </div>
 
@@ -405,7 +413,7 @@ export default function KorpoDemo() {
           <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 mb-5 text-sm text-rose-800 flex items-start gap-2">
             <Mail className="w-4 h-4 mt-0.5 shrink-0" />
             <span><b>Alert do księgowości:</b> wszyscy zapytani zaprzeczyli przy fakturze {f.sprzedawca} ({zl(f.kwota)}).
-            W realnym systemie ten mail właśnie wylądował w skrzynce biura — możesz zapytać kolejne działy albo przypisać ręcznie poniżej.</span>
+            W realnym systemie ten mail właśnie wylądował w skrzynce biura — możesz zapytać kolejne {scen.vocab.celMn} albo przypisać ręcznie poniżej.</span>
           </div>
         ) : null; })()}
 
@@ -450,7 +458,7 @@ export default function KorpoDemo() {
                     <div className="flex items-center gap-2">
                       <button onClick={() => { setDochodzenieOpen(dochodzenieOpen === f.id ? null : f.id); setKandydaci(new Set()); }}
                         className="text-xs px-2.5 py-1.5 rounded-lg bg-sky-100 text-sky-700 hover:bg-sky-200 flex items-center gap-1">
-                        <MailQuestion className="w-3.5 h-3.5" /> Zapytaj działy
+                        <MailQuestion className="w-3.5 h-3.5" /> Zapytaj {scen.vocab.celMn}
                       </button>
                       <select value={wybor[f.id] ?? ''}
                         onChange={e => { setWybor(p => ({ ...p, [f.id]: e.target.value })); if (e.target.value) przypisz(f.id, e.target.value, 'reczne'); }}
