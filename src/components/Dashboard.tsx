@@ -249,19 +249,11 @@ export default function Dashboard({
     setApprovedFiles(prev => { const n = new Set(prev); n.has(key) ? n.delete(key) : n.add(key); return n; });
     setRejectedFiles(prev => { const n = new Set(prev); n.delete(key); return n; });
   };
-  // Klucz pliku to `${clientId}-${docId}-${idx}` — clientId może zawierać myślniki, więc parsujemy od końca.
-  const parseFileKey = (key: string) => {
-    const parts = key.split('-');
-    parts.pop(); // idx (nieużywany przy powodzie — powód jest na poziomie dokumentu)
-    const docId = parts.pop() ?? '';
-    const clientId = parts.join('-');
-    return { clientId, docId };
-  };
-
   // Odrzucenie z powodem (Fala 2, pkt 9): jeśli plik już odrzucony → cofnij i wyczyść powód;
   // w przeciwnym razie otwórz modal z powodem (powód trafia do modelu → widać go w portalu klienta).
-  const requestReject = (key: string, fileName: string) => {
-    const { clientId, docId } = parseFileKey(key);
+  // clientId/docId przekazujemy jawnie — id dokumentów zawierają myślniki (np. „f-koszt"), więc nie parsujemy klucza.
+  const requestReject = (clientId: string, docId: string, idx: number, fileName: string) => {
+    const key = `${clientId}-${docId}-${idx}`;
     if (rejectedFiles.has(key)) {
       setRejectedFiles(prev => { const n = new Set(prev); n.delete(key); return n; });
       setDocRejection?.(clientId, docId, null);
@@ -780,7 +772,7 @@ export default function Dashboard({
                                             <button onClick={() => toggleApproveFile(key)} title="Zatwierdź" className={`p-1.5 rounded-lg transition-all ${approved ? 'bg-emerald-100 text-emerald-600' : 'text-slate-300 hover:text-emerald-500 hover:bg-emerald-50'}`}>
                                               <Check className="w-3 h-3" />
                                             </button>
-                                            <button onClick={() => requestReject(key, file.name)} title="Odrzuć" className={`p-1.5 rounded-lg transition-all ${rejected ? 'bg-red-100 text-red-500' : 'text-slate-300 hover:text-red-400 hover:bg-red-50'}`}>
+                                            <button onClick={() => requestReject(client.id, doc.id, fIdx, file.name)} title="Odrzuć" className={`p-1.5 rounded-lg transition-all ${rejected ? 'bg-red-100 text-red-500' : 'text-slate-300 hover:text-red-400 hover:bg-red-50'}`}>
                                               <X className="w-3 h-3" />
                                             </button>
                                           </div>
@@ -979,7 +971,7 @@ export default function Dashboard({
                                     <button onClick={() => toggleApproveFile(key)} title="Zatwierdź" className={`p-1.5 rounded-lg transition-all ${approved ? 'bg-emerald-100 text-emerald-600' : 'text-slate-300 hover:text-emerald-500 hover:bg-emerald-50'}`}>
                                       <Check className="w-3.5 h-3.5" />
                                     </button>
-                                    <button onClick={() => requestReject(key, file.name)} title="Odrzuć" className={`p-1.5 rounded-lg transition-all ${rejected ? 'bg-red-100 text-red-500' : 'text-slate-300 hover:text-red-400 hover:bg-red-50'}`}>
+                                    <button onClick={() => requestReject(vClient.id, doc.id, fIdx, file.name)} title="Odrzuć" className={`p-1.5 rounded-lg transition-all ${rejected ? 'bg-red-100 text-red-500' : 'text-slate-300 hover:text-red-400 hover:bg-red-50'}`}>
                                       <X className="w-3.5 h-3.5" />
                                     </button>
                                   </div>
