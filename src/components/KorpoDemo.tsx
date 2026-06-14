@@ -86,7 +86,7 @@ const SCENARIUSZE: Record<'budowa' | 'korpo', Scenariusz> = {
 
 const ZRODLO_BADGE: Record<Zrodlo, { cls: string; label: string }> = {
   regula:   { cls: 'bg-blue-50 text-blue-700 border-blue-200',          label: 'reguła' },
-  wyuczona: { cls: 'bg-violet-50 text-violet-700 border-violet-200',    label: 'wyuczona' },
+  wyuczona: { cls: 'bg-violet-50 text-violet-700 border-violet-200',    label: 'automatyczna' },
   sugestia: { cls: 'bg-emerald-50 text-emerald-700 border-emerald-200', label: 'sugestia' },
   reczne:   { cls: 'bg-slate-100 text-slate-600 border-slate-200',      label: 'ręczne' },
 };
@@ -155,14 +155,14 @@ export default function KorpoDemo() {
         return f;
       }));
       toast.success(
-        <div className="text-sm"><b>Silnik nauczył się reguły!</b><br />
+        <div className="text-sm"><b>Reguła gotowa!</b><br />
         {`${sprzedawca.replace(/\s*\(.*\)/, '')} → ${dzialName(dzialId)}. `}
         Pozostałe faktury tego dostawcy przypisane automatycznie — kolejne będą przypisywać się same.</div>,
-        { duration: 7000, icon: '🧠', style: { borderRadius: '14px', maxWidth: '420px' } }
+        { duration: 7000, icon: '✅', style: { borderRadius: '14px', maxWidth: '420px' } }
       );
       return;
     }
-    toast.success('Przypisane. Silnik zapamiętał — drugie zgodne przypisanie utworzy regułę.', { style: { borderRadius: '14px' } });
+    toast.success('Przypisane. Powtórz ten sam wybór dla tego dostawcy, a Brakomat zacznie przypisywać go automatycznie.', { style: { borderRadius: '14px' } });
   };
 
   const przypisz = (fakturaId: string, dzialId: string, zrodlo: Zrodlo, opisZakupu?: string) => {
@@ -374,9 +374,9 @@ export default function KorpoDemo() {
             Brakomat przypisuje właścicieli kosztów automatycznie, a gdy nie wie — <b>pyta działy mailem zamiast księgowej</b>. Wypróbuj:
           </p>
           <ol className="text-sm text-slate-600 mt-3 space-y-1 list-decimal list-inside">
-            <li><b>Potwierdź sugestię</b> jednym kliknięciem — silnik podpowiada na podstawie historii.</li>
+            <li><b>Potwierdź sugestię</b> jednym kliknięciem — Brakomat podpowiada na podstawie wcześniejszych przypisań.</li>
             <li>Przy niczyjej fakturze kliknij <b>„Zapytaj działy"</b> — zobaczysz mail i odpowiedź oczami kierownika, bez logowania.</li>
-            <li>Przypisz <b>dwie faktury tego samego dostawcy</b> do tego samego działu — silnik nauczy się reguły i resztę zrobi sam.</li>
+            <li>Przypisz <b>dwie faktury tego samego dostawcy</b> do tego samego działu — Brakomat od tej pory przypisze je automatycznie.</li>
           </ol>
         </div>
 
@@ -396,7 +396,7 @@ export default function KorpoDemo() {
           </div>
           <div className="bg-white border border-slate-100 rounded-2xl p-4">
             <p className="text-2xl font-bold text-slate-700">{reguly.length}</p>
-            <p className="text-xs text-slate-500 mt-1">reguł routingu (ręczne + wyuczone)</p>
+            <p className="text-xs text-slate-500 mt-1">reguł automatycznego przypisania</p>
           </div>
         </div>
 
@@ -413,7 +413,7 @@ export default function KorpoDemo() {
         {sugestie.length > 0 && (
           <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5">
             <h3 className="text-sm font-bold text-emerald-700 flex items-center gap-1.5 mb-2">
-              <Sparkles className="w-4 h-4" /> Sugestie silnika — potwierdź jednym kliknięciem ({sugestie.length})
+              <Sparkles className="w-4 h-4" /> Sugestie Brakomatu — potwierdź jednym kliknięciem ({sugestie.length})
             </h3>
             <div className="bg-emerald-50/50 rounded-2xl px-4 py-1">
               {sugestie.map(f => (
@@ -519,7 +519,7 @@ export default function KorpoDemo() {
 
         {/* Reguły */}
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5">
-          <h3 className="text-sm font-bold text-slate-600 mb-2">Reguły routingu NIP → {scenKey === 'budowa' ? 'budowa' : 'dział'} ({reguly.length})</h3>
+          <h3 className="text-sm font-bold text-slate-600 mb-2">Reguły przypisania: dostawca → {scenKey === 'budowa' ? 'budowa' : 'dział'} ({reguly.length})</h3>
           <div className="bg-slate-50 rounded-2xl px-4 py-1">
             {reguly.map(r => (
               <div key={r.nip} className="flex flex-wrap items-center gap-2 py-2.5 border-b border-slate-200 last:border-0">
@@ -528,7 +528,7 @@ export default function KorpoDemo() {
                 <span className="text-xs font-semibold text-slate-700">{dzialName(r.dzial)}</span>
                 <span className="text-xs text-slate-500">({r.sprzedawca})</span>
                 <span className={`text-[11px] px-2 py-0.5 rounded-full border ${r.zrodlo === 'wyuczona' ? ZRODLO_BADGE.wyuczona.cls : ZRODLO_BADGE.regula.cls}`}>
-                  {r.zrodlo === 'wyuczona' ? 'wyuczona przez silnik' : 'ręczna'}
+                  {r.zrodlo === 'wyuczona' ? 'automatyczna' : 'ręczna'}
                 </span>
                 <span className="text-[11px] text-slate-400">{r.trafienia} {r.trafienia === 1 ? 'trafienie' : 'trafienia'}</span>
               </div>
