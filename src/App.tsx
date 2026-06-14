@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import ClientView from './components/ClientView';
+import KorpoDemo from './components/KorpoDemo';
 import { Client, DocumentStatus, UploadedFile, ActivityEntry, ClientTier, OCRRecord } from './types';
 import { Toaster } from 'react-hot-toast';
 import { toast } from 'react-hot-toast'; // Dodaj to
@@ -665,6 +666,7 @@ addActivity(
               addClient={addClient}
             />
           } />
+          <Route path="/korpo" element={<KorpoDemo />} />
           <Route path="/client/:id" element={
             <ClientView 
               clients={clients} 
