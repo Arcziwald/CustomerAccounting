@@ -363,6 +363,19 @@
   },
   "list": {
     "filter_by_problem": "Filtruj wg problemu",
-    "completeness": "Kompletność"
+    "completeness": "Kompletność",
+    "days_late": "{{count}} dni po terminie"
+  },
+  "reject": {
+    "title": "Powód odrzucenia",
+    "subtitle": "Klient zobaczy ten powód w swoim portalu i będzie wiedział, co poprawić.",
+    "placeholder": "Opisz, co jest nie tak z dokumentem…",
+    "confirm": "Odrzuć i powiadom klienta",
+    "cancel": "Anuluj",
+    "badge": "Do poprawy",
+    "r1": "Brak wszystkich stron",
+    "r2": "Nieczytelny skan",
+    "r3": "Zła kategoria dokumentu",
+    "r4": "Niewłaściwy okres rozliczeniowy"
   }
 }

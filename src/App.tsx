@@ -511,6 +511,16 @@ const addActivity = (clientName: string, action: string, detail: string) => {
     ));
   };
 
+  // Powód odrzucenia dokumentu — zapisany w modelu, więc płynie do panelu i do portalu klienta (Fala 2, pkt 9)
+  const setDocRejection = (clientId: string, docId: string, reason: string | null) => {
+    setClients(prev => prev.map(client =>
+      client.id === clientId
+        ? { ...client, documents: client.documents.map(doc =>
+            doc.id === docId ? { ...doc, rejectionReason: reason ?? undefined } : doc) }
+        : client
+    ));
+  };
+
   const addFileToDocument = async (clientId: string, docId: string, file: UploadedFile) => {
   const client = clients.find(c => c.id === clientId);
   const doc = client?.documents.find(d => d.id === docId);
@@ -664,6 +674,7 @@ addActivity(
               analyzeDocument={analyzeDocument}
               addActivity={addActivity}
               addClient={addClient}
+              setDocRejection={setDocRejection}
             />
           } />
           <Route path="/korpo" element={<KorpoDemo />} />

@@ -223,6 +223,12 @@ export default function ClientView({ clients, updateClientStatus, addFileToDocum
           {t('status.late_notice', { defaultValue: 'Termin minął! Prosimy o pilne uzupełnienie.' })}
         </span>
       )}
+      {/* Powód odrzucenia od księgowego (Fala 2 — pkt 9) */}
+      {doc.rejectionReason && (
+        <span className="mt-1.5 inline-block px-2.5 py-1.5 bg-pink-50 border border-pink-200 rounded-lg text-[11px] text-pink-700 font-medium leading-snug">
+          <b className="uppercase tracking-wide">{t('reject.badge')}:</b> {doc.rejectionReason}
+        </span>
+      )}
     </div>
   </div>
   </div>

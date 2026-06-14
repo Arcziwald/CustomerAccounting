@@ -51,6 +51,7 @@ export interface DocumentGroup {
   label: string;
   status: DocumentStatus;
   files: UploadedFile[];
+  rejectionReason?: string; // powód odrzucenia widoczny dla klienta w portalu (Fala 2, pkt 9)
 }
 
 export interface Client {

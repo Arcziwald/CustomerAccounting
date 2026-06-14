@@ -361,6 +361,19 @@
   },
   "list": {
     "filter_by_problem": "Filter by problem",
-    "completeness": "Completeness"
+    "completeness": "Completeness",
+    "days_late": "{{count}} days overdue"
+  },
+  "reject": {
+    "title": "Rejection reason",
+    "subtitle": "The client will see this reason in their portal and know what to fix.",
+    "placeholder": "Describe what is wrong with the document…",
+    "confirm": "Reject and notify client",
+    "cancel": "Cancel",
+    "badge": "Needs fixing",
+    "r1": "Missing some pages",
+    "r2": "Unreadable scan",
+    "r3": "Wrong document category",
+    "r4": "Wrong accounting period"
   }
 }
