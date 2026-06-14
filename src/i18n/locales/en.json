@@ -343,5 +343,24 @@
   "missing": "Companies with missing documents, but the deadline has not yet passed.",
   "late": "ALARM: Clients past your deadline (e.g., after the 5th). The system has automatically prepared AI nudges for them.",
   "correction": "OCR Errors: Blurry or cropped invoices end up here. The client will see error details and the option to re-upload."
-}
+},
+  "doc_status": {
+    "ok": "ok",
+    "approved": "approved",
+    "in_progress": "in progress",
+    "missing": "missing",
+    "overdue": "overdue"
+  },
+  "legend": {
+    "title": "What the colors mean",
+    "complete": "Complete",
+    "in_progress": "In progress",
+    "missing": "Missing",
+    "overdue": "Overdue",
+    "correction": "Needs fixing"
+  },
+  "list": {
+    "filter_by_problem": "Filter by problem",
+    "completeness": "Completeness"
+  }
 }

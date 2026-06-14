@@ -11,6 +11,19 @@ import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import Tooltip from './Tooltip';
 
+// Mapowanie statusu dokumentu → klucz i18n (doc_status.*) — status słowny na pigułce (Fala 1, pkt 1)
+const DOC_STATUS_KEY: Record<string, string> = {
+  'OK': 'ok', 'Zatwierdzone': 'approved', 'W toku': 'in_progress', 'Brak': 'missing', 'Spóźnione': 'overdue',
+};
+// Legenda kolorów statusów (kropka + etykieta i18n legend.*) — Fala 1, pkt 2
+const LEGEND_ITEMS = [
+  { key: 'complete', dot: 'bg-teal-400' },
+  { key: 'in_progress', dot: 'bg-sky-400' },
+  { key: 'missing', dot: 'bg-amber-400' },
+  { key: 'overdue', dot: 'bg-rose-400' },
+  { key: 'correction', dot: 'bg-pink-400' },
+];
+
 
 // ─── Fake NIP verification data ───────────────────────────────────────────
 const NIP_DATA: Record<string, { type: 'bl' | 'vies'; aktywny?: boolean; valid?: boolean; name?: string; konto?: string; country?: string }> = {
@@ -520,7 +533,8 @@ export default function Dashboard({
 <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 px-4">
   
   {/* LEWA: Przyciski Filtrów */}
-  <div className="flex flex-wrap gap-2">
+  <div className="flex flex-wrap gap-2 items-center">
+    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-1">{t('list.filter_by_problem')}:</span>
     {filters.map((f) => (
       <button
         key={f.id}
@@ -578,6 +592,16 @@ export default function Dashboard({
 </motion.button>
 </div>
 </div>
+      {/* LEGENDA KOLORÓW STATUSÓW (Fala 1 — pkt 2 feedbacku Agnieszki) */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4 px-5 py-3 bg-white/60 rounded-2xl border border-slate-100">
+        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('legend.title')}:</span>
+        {LEGEND_ITEMS.map(item => (
+          <span key={item.key} className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500">
+            <span className={`w-2.5 h-2.5 rounded-full ${item.dot}`} />
+            {t(`legend.${item.key}`)}
+          </span>
+        ))}
+      </div>
       <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto lg:overflow-visible">
           <table className="w-full text-left border-collapse">
@@ -610,6 +634,20 @@ export default function Dashboard({
                           <span className="w-1 h-1 bg-slate-300 rounded-full" />
                           <Tooltip text={t('tooltips.drive')}><a href={`https://drive.google.com/drive/search?q=${encodeURIComponent(client.name)}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-blue-500 hover:text-blue-700 transition-colors"><Folder className="w-3 h-3" />{t('common.drive')}</a></Tooltip>
                         </div>
+                        {/* KOMPLETNOŚĆ DOKUMENTÓW (Fala 1 — pkt 4 feedbacku) */}
+                        {(() => {
+                          const total = client.documents.length;
+                          const done = client.documents.filter(d => d.status === 'OK' || d.status === 'Zatwierdzone').length;
+                          const pct = total ? Math.round((done / total) * 100) : 0;
+                          return (
+                            <div className="mt-1.5 flex items-center gap-2 max-w-[210px]">
+                              <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                <div className={`h-full rounded-full transition-all ${pct === 100 ? 'bg-teal-400' : pct >= 50 ? 'bg-sky-400' : 'bg-amber-400'}`} style={{ width: `${pct}%` }} />
+                              </div>
+                              <span className="text-[10px] font-bold text-slate-400 whitespace-nowrap">{t('list.completeness')} {done}/{total}</span>
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
                   </td>
@@ -639,7 +677,8 @@ export default function Dashboard({
     return translated === translationKey ? doc.label : translated;
   })()}
   
-  {doc.files.length > 0 && <span className="bg-white/30 px-1 rounded-sm text-[9px]">{doc.files.length}</span>}
+  <span className="normal-case font-semibold opacity-70">· {t(`doc_status.${DOC_STATUS_KEY[doc.status] || 'missing'}`)}</span>
+  {doc.files.length > 0 && <span className="inline-flex items-center gap-0.5 bg-white/40 px-1 rounded-sm text-[9px]"><Paperclip className="w-2.5 h-2.5" />{doc.files.length}</span>}
 </button>
                           </Tooltip>
 

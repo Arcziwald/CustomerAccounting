@@ -345,5 +345,24 @@
   "missing": "Firmy, którym brakuje dokumentów, ale termin jeszcze nie minął.",
   "late": "ALARM: Klienci po Twoim terminie (np. po 5-tym). System automatycznie przygotował dla nich monity do wysłania przez Agenta AI.",
   "correction": "Błędy OCR: Tu trafią faktury niewyraźne lub ucięte. W panelu Klient zobaczy informacje o błędach i możliwości ich poprawy."
-}
+},
+  "doc_status": {
+    "ok": "ok",
+    "approved": "zatwierdzone",
+    "in_progress": "w toku",
+    "missing": "brak",
+    "overdue": "po terminie"
+  },
+  "legend": {
+    "title": "Co oznaczają kolory",
+    "complete": "Kompletne",
+    "in_progress": "W toku",
+    "missing": "Brak",
+    "overdue": "Spóźnione",
+    "correction": "Do poprawy"
+  },
+  "list": {
+    "filter_by_problem": "Filtruj wg problemu",
+    "completeness": "Kompletność"
+  }
 }
