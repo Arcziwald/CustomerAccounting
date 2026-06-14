@@ -63,6 +63,7 @@ export interface Client {
   locked?: boolean;
   email?: string;
   uploadToken?: string;
+  isFinished?: boolean; // klient kliknął „Zakończ przesyłanie" w portalu → badge „KLIENT SKOŃCZYŁ" w panelu
 }
 
 export const STATUS_COLORS: Record<string, string> = {

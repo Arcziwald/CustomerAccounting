@@ -146,6 +146,7 @@ const MOCK_CLIENTS: Client[] = [
     name: 'Agencja Reklamowa "Pixel Plus"',
     month: 'Marzec 2026',
     tier: '1',
+    isFinished: true, // wariant: klient kliknął „Zakończ przesyłanie" → niebieski badge „KLIENT SKOŃCZYŁ"
     documents: [
       { id: 'f-koszt', label: 'Faktury Kosztowe', status: 'OK', files: [
         { name: 'FV_Adobe_CC_032026.pdf', timestamp: '10:05', isApproved: true },
