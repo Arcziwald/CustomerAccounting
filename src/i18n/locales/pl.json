@@ -364,7 +364,8 @@
   "list": {
     "filter_by_problem": "Filtruj wg problemu",
     "completeness": "Kompletność",
-    "days_late": "{{count}} dni po terminie"
+    "days_late": "{{count}} dni po terminie",
+    "month_history": "Historia miesięcy"
   },
   "reject": {
     "title": "Powód odrzucenia",

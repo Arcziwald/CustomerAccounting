@@ -362,7 +362,8 @@
   "list": {
     "filter_by_problem": "Filter by problem",
     "completeness": "Completeness",
-    "days_late": "{{count}} days overdue"
+    "days_late": "{{count}} days overdue",
+    "month_history": "Month history"
   },
   "reject": {
     "title": "Rejection reason",

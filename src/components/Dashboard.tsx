@@ -671,7 +671,6 @@ export default function Dashboard({
             <thead className="hidden lg:table-header-group bg-slate-50/50 border-b border-slate-100">
               <tr>
                 <th className="px-8 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('table.client')}</th>
-                <th className="px-6 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('table.doc_statuses')}</th>
                 <th className="px-8 py-5 text-sm font-semibold text-slate-500 uppercase tracking-wider text-right">{t('table.actions')}</th>
               </tr>
             </thead>
@@ -718,11 +717,9 @@ export default function Dashboard({
                         })()}
                       </div>
                     </div>
-                  </td>
-                  
-                  {/* --- POPRAWIONA KOLUMNA STATUSÓW Z PODGLĄDEM PLIKÓW --- */}
-                  <td className="px-4 py-3 lg:px-6 lg:py-6 block lg:table-cell">
-                    <div className="flex flex-wrap gap-1.5 lg:gap-2">
+
+                      {/* Kafelki statusu dokumentów — poziomy rząd pod danymi klienta (układ jak w produkcji) */}
+                      <div className="flex flex-wrap gap-1.5 lg:gap-2 mt-3 lg:ml-[52px]">
                       {client.documents.map((doc) => (
                         <div key={doc.id} className="relative">
                           <Tooltip text={`${t('tooltips.status_info')}: ${doc.files.length > 0 ? t('tooltips.files_uploaded') : t('tooltips.no_files')}`}>
@@ -817,7 +814,11 @@ export default function Dashboard({
                           </AnimatePresence>
                         </div>
                       ))}
-                    </div>
+                      </div>
+                      {/* Historia miesięcy — tylko napis (bez backendu, zgodnie z ustaleniem) */}
+                      <div className="mt-2 lg:ml-[52px]">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400">📁 {t('list.month_history')}</span>
+                      </div>
                   </td>
 
                   <td className="px-4 py-2 lg:px-8 lg:py-6 block lg:table-cell">
