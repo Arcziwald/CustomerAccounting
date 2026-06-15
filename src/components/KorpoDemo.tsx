@@ -8,9 +8,10 @@ import React, { useMemo, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import {
   ArrowLeft, Briefcase, Building2, Check, ChevronRight, HardHat, Mail, MailQuestion,
-  RotateCcw, Route, Sparkles, Truck, X,
+  RotateCcw, Route, Truck, X,
 } from 'lucide-react';
 import LeadModal from './LeadModal';
+import { podzielFakturyDemo, type ZakladkaKey } from '../lib/korpo-skrzynka';
 
 type Zrodlo = 'regula' | 'wyuczona' | 'sugestia' | 'reczne';
 
@@ -195,6 +196,7 @@ export default function KorpoDemo() {
   const [trybOdp, setTrybOdp] = useState<'wybor' | 'moje' | 'przekaz'>('wybor');
   const [alertBiuro, setAlertBiuro] = useState<string | null>(null); // fakturaId po komplecie zaprzeczeń
   const [showLead, setShowLead] = useState(false);
+  const [zakladka, setZakladka] = useState<ZakladkaKey>('sugestie');
 
   const resetuj = (key: ScenKey) => {
     const s = SCENARIUSZE[key];
@@ -203,14 +205,21 @@ export default function KorpoDemo() {
     setReguly(s.reguly.map(r => ({ ...r })));
     setReczne({}); setWybor({}); setDochodzenieOpen(null); setKandydaci(new Set());
     setDoch(null); setOpis(''); setPrzekazDo(''); setTrybOdp('wybor'); setAlertBiuro(null);
+    setZakladka('sugestie');
   };
 
   const dzial = (id: string | null) => scen.dzialy.find(d => d.id === id);
   const dzialName = (id: string | null) => dzial(id)?.nazwa ?? '—';
 
-  const sugestie = faktury.filter(f => !f.wlasciciel && f.sugestia);
-  const niczyje = faktury.filter(f => !f.wlasciciel && !f.sugestia);
-  const przypisane = faktury.filter(f => f.wlasciciel);
+  // Podział na zakładki. W demie „w dochodzeniu" = faktura po komplecie zaprzeczeń
+  // (alertBiuro), wciąż nieprzypisana — aktywne dochodzenie przejmuje cały ekran,
+  // więc nie ma innej trwałej listy „w toku".
+  const wDochodzeniuIds = new Set<string>(alertBiuro ? [alertBiuro] : []);
+  const { sugestie, niczyje, wDochodzeniu, przypisane } = podzielFakturyDemo(faktury, wDochodzeniuIds);
+  const liczby: Record<ZakladkaKey, number> = {
+    sugestie: sugestie.length, niczyje: niczyje.length, wDochodzeniu: wDochodzeniu.length, przypisane: przypisane.length,
+  };
+  const widoczne = { sugestie, niczyje, wDochodzeniu, przypisane }[zakladka];
   const stats = useMemo(() => {
     const total = faktury.length;
     const przyp = faktury.filter(f => f.wlasciciel).length;
@@ -470,9 +479,9 @@ export default function KorpoDemo() {
             <p className="text-2xl font-bold text-blue-700">{stats.auto}</p>
             <p className="text-xs text-slate-500 mt-1">przypisane automatycznie</p>
           </div>
-          <div className="bg-white border border-slate-100 rounded-2xl p-4">
-            <p className="text-2xl font-bold text-amber-600">{niczyje.length + sugestie.length}</p>
-            <p className="text-xs text-slate-500 mt-1">do wyjaśnienia („pula niczyja")</p>
+          <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4">
+            <p className="text-2xl font-bold text-amber-600">{niczyje.length + wDochodzeniu.length}</p>
+            <p className="text-xs text-amber-700 mt-1">pula niczyja: {niczyje.length + wDochodzeniu.length} z {stats.total}</p>
           </div>
           <div className="bg-white border border-slate-100 rounded-2xl p-4">
             <p className="text-2xl font-bold text-slate-700">{reguly.length}</p>
@@ -489,82 +498,104 @@ export default function KorpoDemo() {
           </div>
         ) : null; })()}
 
-        {/* Sugestie */}
-        {sugestie.length > 0 && (
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5">
-            <h3 className="text-sm font-bold text-emerald-700 flex items-center gap-1.5 mb-2">
-              <Sparkles className="w-4 h-4" /> Sugestie Brakomatu — potwierdź jednym kliknięciem ({sugestie.length})
-            </h3>
-            <div className="bg-emerald-50/50 rounded-2xl px-4 py-1">
-              {sugestie.map(f => (
-                <div key={f.id} className="flex flex-wrap items-center justify-between gap-3 py-2.5 border-b border-emerald-100 last:border-0">
+        {/* Skrzynka triażu — zakładki po statusie */}
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5">
+          <div className="flex gap-1 overflow-x-auto border-b border-slate-200 mb-4">
+            {([
+              ['sugestie', 'Sugerowane'], ['niczyje', 'Niczyje'],
+              ['wDochodzeniu', 'W dochodzeniu'], ['przypisane', 'Przypisane'],
+            ] as [ZakladkaKey, string][]).map(([key, label]) => (
+              <button key={key} onClick={() => setZakladka(key)}
+                className={`whitespace-nowrap px-4 py-2 text-sm font-semibold border-b-2 -mb-px ${
+                  zakladka === key ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-700'
+                }`}>
+                {label} <span className="text-xs opacity-70">{liczby[key]}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="space-y-0 max-h-[460px] overflow-y-auto">
+            {widoczne.length === 0 && (
+              <p className="text-center text-slate-400 italic py-6 text-sm">Brak faktur w tej zakładce</p>
+            )}
+            {widoczne.map(f => (
+              <div key={f.id} className="py-2.5 border-b border-slate-100 last:border-0">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-slate-700">{f.sprzedawca}</p>
-                    <p className="text-xs text-slate-500">{new Date(f.data).toLocaleDateString('pl-PL')} · NIP {f.nip} · {zl(f.kwota)}</p>
+                    <p className="text-xs text-slate-500">{new Date(f.data).toLocaleDateString('pl-PL')} · NIP {f.nip} · {zl(f.kwota)}{f.opis ? <> · <i>„{f.opis}"</i></> : null}</p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-600">sugestia: <b>{dzialName(f.sugestia)}</b></span>
-                    <button onClick={() => przypisz(f.id, f.sugestia!, 'sugestia')}
-                      className="text-xs px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-1">
-                      <Check className="w-3 h-3" /> Potwierdź
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {zakladka === 'sugestie' && (
+                      <>
+                        <span className="text-xs text-slate-600">sugestia: <b>{dzialName(f.sugestia)}</b></span>
+                        <button onClick={() => przypisz(f.id, f.sugestia!, 'sugestia')}
+                          className="text-xs px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-1">
+                          <Check className="w-3 h-3" /> Potwierdź
+                        </button>
+                      </>
+                    )}
+                    {zakladka === 'niczyje' && (
+                      <>
+                        <button onClick={() => { setDochodzenieOpen(dochodzenieOpen === f.id ? null : f.id); setKandydaci(new Set()); }}
+                          className="text-xs px-2.5 py-1.5 rounded-lg bg-sky-100 text-sky-700 hover:bg-sky-200 flex items-center gap-1">
+                          <MailQuestion className="w-3.5 h-3.5" /> Zapytaj {scen.vocab.celMn}
+                        </button>
+                        <select value={wybor[f.id] ?? ''}
+                          onChange={e => { setWybor(p => ({ ...p, [f.id]: e.target.value })); if (e.target.value) przypisz(f.id, e.target.value, 'reczne'); }}
+                          className="text-xs border border-slate-200 rounded-lg px-2 py-1.5 bg-white text-slate-600">
+                          <option value="">Przypisz do…</option>
+                          {scen.dzialy.map(d => <option key={d.id} value={d.id}>{d.nazwa}</option>)}
+                        </select>
+                      </>
+                    )}
+                    {zakladka === 'wDochodzeniu' && (
+                      <>
+                        <span className="text-[11px] px-2 py-0.5 rounded-full border bg-sky-50 text-sky-700 border-sky-200">wszyscy zaprzeczyli</span>
+                        <select value={wybor[f.id] ?? ''}
+                          onChange={e => { setWybor(p => ({ ...p, [f.id]: e.target.value })); if (e.target.value) przypisz(f.id, e.target.value, 'reczne'); }}
+                          className="text-xs border border-slate-200 rounded-lg px-2 py-1.5 bg-white text-slate-600">
+                          <option value="">Przypisz do…</option>
+                          {scen.dzialy.map(d => <option key={d.id} value={d.id}>{d.nazwa}</option>)}
+                        </select>
+                      </>
+                    )}
+                    {zakladka === 'przypisane' && (() => {
+                      const badge = ZRODLO_BADGE[f.zrodlo ?? 'reczne'];
+                      return (
+                        <>
+                          <span className="text-xs font-semibold text-slate-700">{dzialName(f.wlasciciel)}</span>
+                          <span className={`text-[11px] px-2 py-0.5 rounded-full border ${badge.cls}`}>{badge.label}</span>
+                        </>
+                      );
+                    })()}
+                  </div>
+                </div>
+                {zakladka === 'niczyje' && dochodzenieOpen === f.id && (
+                  <div className="mt-2 bg-white rounded-xl border border-sky-200 p-3">
+                    <p className="text-xs font-semibold text-slate-600 mb-2">Kto mógł zamówić? Każdy wybrany dostanie mail z magic-linkiem:</p>
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {scen.dzialy.map(d => (
+                        <label key={d.id} className={`text-xs px-2.5 py-1.5 rounded-lg border cursor-pointer select-none ${kandydaci.has(d.id) ? 'bg-sky-600 text-white border-sky-600' : 'bg-white text-slate-600 border-slate-200 hover:border-sky-300'}`}>
+                          <input type="checkbox" className="hidden" checked={kandydaci.has(d.id)}
+                            onChange={() => setKandydaci(prev => { const s = new Set(prev); s.has(d.id) ? s.delete(d.id) : s.add(d.id); return s; })} />
+                          {d.nazwa}
+                        </label>
+                      ))}
+                    </div>
+                    <button onClick={() => startDochodzenie(f.id)} disabled={kandydaci.size === 0}
+                      className="text-xs px-3 py-2 rounded-lg bg-sky-600 text-white hover:bg-sky-700 disabled:opacity-50 flex items-center gap-1">
+                      <MailQuestion className="w-3 h-3" /> Wyślij zapytania ({kandydaci.size})
                     </button>
                   </div>
-                </div>
-              ))}
-            </div>
+                )}
+              </div>
+            ))}
           </div>
-        )}
+        </div>
 
-        {/* Niczyje */}
-        {niczyje.length > 0 && (
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5">
-            <h3 className="text-sm font-bold text-amber-700 mb-2">Niczyje — nikt się nie przyznaje ({niczyje.length})</h3>
-            <div className="bg-amber-50/50 rounded-2xl px-4 py-1">
-              {niczyje.map(f => (
-                <div key={f.id} className="py-2.5 border-b border-amber-100 last:border-0">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-slate-700">{f.sprzedawca}</p>
-                      <p className="text-xs text-slate-500">{new Date(f.data).toLocaleDateString('pl-PL')} · NIP {f.nip} · {zl(f.kwota)}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button onClick={() => { setDochodzenieOpen(dochodzenieOpen === f.id ? null : f.id); setKandydaci(new Set()); }}
-                        className="text-xs px-2.5 py-1.5 rounded-lg bg-sky-100 text-sky-700 hover:bg-sky-200 flex items-center gap-1">
-                        <MailQuestion className="w-3.5 h-3.5" /> Zapytaj {scen.vocab.celMn}
-                      </button>
-                      <select value={wybor[f.id] ?? ''}
-                        onChange={e => { setWybor(p => ({ ...p, [f.id]: e.target.value })); if (e.target.value) przypisz(f.id, e.target.value, 'reczne'); }}
-                        className="text-xs border border-slate-200 rounded-lg px-2 py-1.5 bg-white text-slate-600">
-                        <option value="">Przypisz do…</option>
-                        {scen.dzialy.map(d => <option key={d.id} value={d.id}>{d.nazwa}</option>)}
-                      </select>
-                    </div>
-                  </div>
-                  {dochodzenieOpen === f.id && (
-                    <div className="mt-2 bg-white rounded-xl border border-sky-200 p-3">
-                      <p className="text-xs font-semibold text-slate-600 mb-2">Kto mógł zamówić? Każdy wybrany dostanie mail z magic-linkiem:</p>
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {scen.dzialy.map(d => (
-                          <label key={d.id} className={`text-xs px-2.5 py-1.5 rounded-lg border cursor-pointer select-none ${kandydaci.has(d.id) ? 'bg-sky-600 text-white border-sky-600' : 'bg-white text-slate-600 border-slate-200 hover:border-sky-300'}`}>
-                            <input type="checkbox" className="hidden" checked={kandydaci.has(d.id)}
-                              onChange={() => setKandydaci(prev => { const s = new Set(prev); s.has(d.id) ? s.delete(d.id) : s.add(d.id); return s; })} />
-                            {d.nazwa}
-                          </label>
-                        ))}
-                      </div>
-                      <button onClick={() => startDochodzenie(f.id)} disabled={kandydaci.size === 0}
-                        className="text-xs px-3 py-2 rounded-lg bg-sky-600 text-white hover:bg-sky-700 disabled:opacity-50 flex items-center gap-1">
-                        <MailQuestion className="w-3 h-3" /> Wyślij zapytania ({kandydaci.size})
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {niczyje.length === 0 && sugestie.length === 0 && (
+        {/* Cała pula niczyja rozwiązana */}
+        {liczby.sugestie + liczby.niczyje + liczby.wDochodzeniu === 0 && (
           <div className="bg-emerald-50 border border-emerald-200 rounded-3xl p-6 mb-5 text-center">
             <p className="text-lg font-extrabold text-emerald-800">100% faktur ma właściciela kosztu 🎉</p>
             <p className="text-sm text-emerald-700 mt-1">Dokładnie o to chodzi: księgowość nie goni nikogo telefonami, a kontroling widzi koszty per {scen.vocab.perCo} od ręki.</p>
@@ -573,29 +604,6 @@ export default function KorpoDemo() {
             </button>
           </div>
         )}
-
-        {/* Przypisane */}
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5">
-          <h3 className="text-sm font-bold text-slate-600 mb-2">Przypisane ({przypisane.length}/{stats.total})</h3>
-          <div className="bg-slate-50 rounded-2xl px-4 py-1 max-h-[420px] overflow-y-auto">
-            {przypisane.map(f => {
-              const badge = ZRODLO_BADGE[f.zrodlo ?? 'reczne'];
-              return (
-                <div key={f.id} className="flex flex-wrap items-center justify-between gap-3 py-2.5 border-b border-slate-100 last:border-0">
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-slate-700">{f.sprzedawca}</p>
-                    <p className="text-xs text-slate-500">{zl(f.kwota)}{f.opis ? <> · <i>„{f.opis}"</i></> : null}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-slate-700">{dzialName(f.wlasciciel)}</span>
-                    <span className={`text-[11px] px-2 py-0.5 rounded-full border ${badge.cls}`}>{badge.label}</span>
-                  </div>
-                </div>
-              );
-            })}
-            {przypisane.length === 0 && <p className="text-xs text-slate-400 italic py-2">Jeszcze nic — zacznij od sugestii powyżej.</p>}
-          </div>
-        </div>
 
         {/* Reguły */}
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 mb-5">
