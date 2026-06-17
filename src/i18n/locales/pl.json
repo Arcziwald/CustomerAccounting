@@ -373,7 +373,7 @@
   "flow_klient_title": "Klient",
   "flow_klient_desc": "Wgrywa dokumenty z telefonu lub komputera",
   "flow_system_title": "Brakomat",
-  "flow_system_desc": "Odczytuje dane, sprawdza NIP, pilnuje terminów",
+  "flow_system_desc": "Rozumie dokumenty, porządkuje je i automatyzuje całą robotę",
   "flow_biuro_title": "Twoje biuro",
   "flow_biuro_desc": "Widzi wszystko i decyduje jednym kliknięciem",
   "description": "Wersja demonstracyjna — dane są fikcyjne. Kliknij poniżej, żeby zobaczyć jak to działa.",
