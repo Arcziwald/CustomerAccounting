@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Client, STATUS_COLORS, DocumentStatus, OCRRecord } from '../types';
+import { Client, STATUS_COLORS, DocumentStatus, OCRRecord, KsefFaktura, KsefStatus } from '../types';
 // DODANE IKONY: FileText, Download, X (były już w Twoim kodzie, ale upewniam się, że są użyte)
 import { Bell, Copy, Check, ExternalLink, Search, Settings2, Plus, Trash2, X, Users, Clock, AlertTriangle, Folder, Lock, Unlock, History, ChevronDown, Download, Eye, FileText, Info, Zap, MessageSquare, Users2, Archive, BarChart3, ShieldCheck, ChevronRight, Sparkles, Paperclip, CalendarDays, Link2, UserPlus, UserCheck } from 'lucide-react';
 import LeadModal from './LeadModal';
@@ -120,6 +120,8 @@ interface DashboardProps {
   addActivity: (clientName: string, action: string, detail: string) => void;
   addClient?: (name: string, email?: string, nip?: string) => void;
   setDocRejection?: (clientId: string, docId: string, reason: string | null) => void;
+  ksefFaktury: KsefFaktura[];
+  updateKsefDecision: (id: string, status: KsefStatus) => void;
 }
 
 export default function Dashboard({
@@ -135,6 +137,8 @@ export default function Dashboard({
   addActivity,
   addClient,
   setDocRejection,
+  ksefFaktury,
+  updateKsefDecision,
 }: DashboardProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -161,6 +165,28 @@ export default function Dashboard({
   const [verifyingClientId, setVerifyingClientId] = useState<string | null>(null);
   const [expandedOcrClients, setExpandedOcrClients] = useState<Set<string>>(new Set());
   const [nudgeRecord, setNudgeRecord] = useState<OCRRecord | null>(null);
+  // ─── Stan sekcji KSeF (jak w produkcji) ───
+  const [ksefLoaded, setKsefLoaded] = useState(false);
+  const [ksefLoading, setKsefLoading] = useState(false);
+  const [ksefStatusFilter, setKsefStatusFilter] = useState<string>('all');
+  const [expandedKsefClients, setExpandedKsefClients] = useState<Set<string>>(new Set());
+  const [expandedKsefZakupowe, setExpandedKsefZakupowe] = useState<Set<string>>(new Set());
+  const [expandedKsefSprzedaz, setExpandedKsefSprzedaz] = useState<Set<string>>(new Set());
+  const toggleKsefClient = (id: string) => setExpandedKsefClients(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; });
+  const toggleKsefZakupowe = (id: string) => setExpandedKsefZakupowe(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; });
+  const toggleKsefSprzedaz = (id: string) => setExpandedKsefSprzedaz(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; });
+  const loadKsefFaktury = () => {
+    setKsefLoading(true);
+    setTimeout(() => { setKsefLoaded(true); setKsefLoading(false); }, 900);
+  };
+  const handleKsefDecision = (id: string, status: KsefStatus, label: string) => {
+    updateKsefDecision(id, status);
+    toast.success(label, { icon: '✅', style: { borderRadius: '12px' } });
+  };
+  // Eksport — pakujemy dane do programu księgowego (nie zastępujemy go)
+  const handleExport = (program: string) => {
+    toast.success(t('exports.toast', { program }), { icon: '📦', duration: 3500, style: { borderRadius: '12px' } });
+  };
   const [showAddClient, setShowAddClient] = useState(false);
   const [copiedPortalId, setCopiedPortalId] = useState<string | null>(null);
   const [invitingId, setInvitingId] = useState<string | null>(null);
@@ -1056,12 +1082,23 @@ export default function Dashboard({
 
       <div className="w-full mt-12 px-0">
         <div className={`w-full bg-white rounded-[2rem] p-4 lg:p-8 shadow-sm border border-slate-100 mb-12 transition-all duration-500 ${subscriptionTier === '1' ? 'opacity-40 pointer-events-none select-none blur-[2px]' : ''}`}>
-          <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div className="w-full flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-4">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl shrink-0"><FileText className="w-7 h-7" /></div>
               <div><h2 className="text-2xl font-bold text-slate-900">{t('dashboard.title')}</h2><p className="text-slate-500">{t('dashboard.subtitle')}</p></div>
             </div>
-            <Tooltip text={t('tooltips.export')}><button onClick={() => toast('Eksport Excel — w pełnej wersji generuje arkusz ze wszystkimi danymi OCR 📊', { icon: '📥', duration: 3000 })} className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-600 rounded-2xl font-bold hover:bg-emerald-100 transition-all shadow-sm w-full sm:w-auto"><Download className="w-5 h-5" />{t('common.export')}</button></Tooltip>
+            <div className="flex flex-col items-stretch lg:items-end gap-2 w-full lg:w-auto">
+              <div className="flex flex-wrap gap-2 justify-start lg:justify-end">
+                <button onClick={() => handleExport('Excel / CSV')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-600 rounded-2xl font-bold text-sm hover:bg-emerald-100 transition-all shadow-sm"><Download className="w-4 h-4" />Excel / CSV</button>
+                <button onClick={() => handleExport('Comarch ERP Optima')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-50 text-blue-600 rounded-2xl font-bold text-sm hover:bg-blue-100 transition-all shadow-sm"><Download className="w-4 h-4" />Comarch Optima</button>
+                <button onClick={() => handleExport('Symfonia')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-50 text-rose-600 rounded-2xl font-bold text-sm hover:bg-rose-100 transition-all shadow-sm"><Download className="w-4 h-4" />Symfonia</button>
+                <button onClick={() => handleExport('InsERT (GT / nexo)')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-50 text-indigo-600 rounded-2xl font-bold text-sm hover:bg-indigo-100 transition-all shadow-sm"><Download className="w-4 h-4" />InsERT</button>
+                <button onClick={() => handleExport('QuickBooks Online')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-violet-50 text-violet-600 rounded-2xl font-bold text-sm hover:bg-violet-100 transition-all shadow-sm"><Download className="w-4 h-4" />QB Online</button>
+                <button onClick={() => handleExport('Sage Business Cloud')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-green-50 text-green-700 rounded-2xl font-bold text-sm hover:bg-green-100 transition-all shadow-sm"><Download className="w-4 h-4" />Sage</button>
+                <button onClick={() => handleExport('Xero')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-cyan-50 text-cyan-600 rounded-2xl font-bold text-sm hover:bg-cyan-100 transition-all shadow-sm"><Download className="w-4 h-4" />Xero</button>
+              </div>
+              <p className="text-[11px] text-slate-400 lg:text-right flex items-center gap-1.5 px-1"><Info className="w-3.5 h-3.5 shrink-0" />{t('exports.hint')}</p>
+            </div>
           </div>
 
           {/* NOWA TABELA OCR — grouped accordion + 4 kolumny */}
@@ -1321,6 +1358,186 @@ export default function Dashboard({
           </div>
         )}
         </AnimatePresence>
+      </div>
+
+      {/* ─── SEKCJA KSeF — pod OCR, jak w produkcji ─── */}
+      <div className="w-full mt-12 px-0">
+        <div className="w-full bg-white rounded-[2rem] p-4 lg:p-8 shadow-sm border border-slate-100 mb-12">
+          <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl shrink-0"><FileText className="w-7 h-7" /></div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900">{t('ksef.dashboard_title')}</h2>
+                <p className="text-slate-500">{t('ksef.dashboard_subtitle')}</p>
+              </div>
+            </div>
+            <button
+              onClick={ksefLoaded ? () => toast.success(t('ksef.refreshed'), { icon: '↻', style: { borderRadius: '12px' } }) : loadKsefFaktury}
+              disabled={ksefLoading}
+              className={`flex items-center gap-2 font-bold transition-all disabled:opacity-50 w-full sm:w-auto justify-center ${!ksefLoaded ? 'px-6 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 shadow-sm' : 'px-4 py-2 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 text-sm'}`}
+            >
+              {ksefLoading ? t('ksef.loading_faktury') : !ksefLoaded ? t('ksef.load_all_faktury') : '↻ ' + t('ksef.refresh')}
+            </button>
+          </div>
+
+          {!ksefLoaded ? (
+            <div className="py-14 text-center text-slate-400 flex flex-col items-center gap-3">
+              <div className="p-4 bg-blue-50 rounded-2xl"><FileText className="w-9 h-9 text-blue-300" /></div>
+              <p className="text-sm max-w-md">{t('ksef.intro_hint')}</p>
+            </div>
+          ) : (() => {
+            const zakupowe = ksefFaktury.filter(f => f.invoiceType !== 'sprzedazowa');
+            const sprzedazowe = ksefFaktury.filter(f => f.invoiceType === 'sprzedazowa');
+            const nowe = zakupowe.filter(f => f.status === 'nowa').length;
+            const czeka = zakupowe.filter(f => f.status === 'czeka_na_klienta').length;
+            const overdue = zakupowe.filter(f => f.status === 'czeka_na_klienta' && f.deadlineAt && new Date(f.deadlineAt) < new Date()).length;
+            const dupl = ksefFaktury.filter(f => f.duplicateInOcr).length;
+
+            const matchesFilter = (f: KsefFaktura) => {
+              if (ksefStatusFilter === 'all') return true;
+              if (ksefStatusFilter === 'sprzedazowe') return f.invoiceType === 'sprzedazowa';
+              if (ksefStatusFilter === 'duplikaty') return !!f.duplicateInOcr;
+              if (f.invoiceType === 'sprzedazowa') return false;
+              if (ksefStatusFilter === 'overdue') return f.status === 'czeka_na_klienta' && !!f.deadlineAt && new Date(f.deadlineAt) < new Date();
+              return f.status === ksefStatusFilter;
+            };
+
+            const byKlient = new Map<string, KsefFaktura[]>();
+            ksefFaktury.forEach(f => { const arr = byKlient.get(f.clientName) ?? []; arr.push(f); byKlient.set(f.clientName, arr); });
+            const sorted = Array.from(byKlient.entries()).sort(([a], [b]) => a.localeCompare(b));
+
+            const statBtns = [
+              { label: t('ksef.stats_zakupowe'), value: zakupowe.length, filter: 'all', color: 'text-slate-700', bg: 'bg-slate-50' },
+              { label: t('ksef.stats_nowe'), value: nowe, filter: 'nowa', color: 'text-blue-700', bg: 'bg-blue-50' },
+              { label: t('ksef.stats_czekaja'), value: czeka, filter: 'czeka_na_klienta', color: 'text-amber-700', bg: 'bg-amber-50' },
+              { label: t('ksef.stats_deadline'), value: overdue, filter: 'overdue', color: 'text-red-700', bg: 'bg-red-50' },
+              { label: t('ksef.stats_duplikaty'), value: dupl, filter: 'duplikaty', color: 'text-orange-700', bg: 'bg-orange-50' },
+              { label: t('ksef.stats_sprzedazowe'), value: sprzedazowe.length, filter: 'sprzedazowe', color: 'text-violet-700', bg: 'bg-violet-50' },
+            ];
+
+            const renderFaktura = (f: KsefFaktura, readOnly: boolean) => {
+              const isOverdue = f.deadlineAt && new Date(f.deadlineAt) < new Date();
+              return (
+                <div key={f.id} className={`bg-white rounded-2xl border p-4 ${f.duplicateInOcr ? 'border-orange-200 ring-1 ring-orange-100' : readOnly ? 'border-violet-100' : 'border-slate-100'}`}>
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-bold text-slate-800 truncate">{readOnly ? (f.buyerName ?? f.sellerName ?? '—') : (f.sellerName ?? '—')}</p>
+                      <p className="text-[11px] text-slate-500 font-mono truncate">{new Date(f.ksefDate).toLocaleDateString('pl-PL')} · {f.ksefNumber}</p>
+                      {f.duplicateInOcr && (
+                        <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] px-2 py-0.5 rounded-full font-bold bg-orange-50 text-orange-700 border border-orange-200">⚠ {t('ksef.duplicate_badge')}</span>
+                      )}
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-sm font-bold text-slate-800">{f.grossAmount != null ? `${f.grossAmount.toFixed(2)} ${f.currency}` : '—'}</p>
+                      {readOnly ? (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full font-bold border bg-violet-50 text-violet-700 border-violet-100">↗ {t('ksef.type_sprzedazowa')}</span>
+                      ) : (
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${
+                          f.status === 'nowa' ? 'bg-blue-50 text-blue-700 border-blue-100' :
+                          f.status === 'czeka_na_klienta' ? (isOverdue ? 'bg-red-50 text-red-700 border-red-100' : 'bg-amber-50 text-amber-700 border-amber-100') :
+                          f.status === 'koszt_firmowy' || f.status === 'potwierdzona' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' :
+                          'bg-slate-100 text-slate-600 border-slate-200'
+                        }`}>
+                          {isOverdue && f.status === 'czeka_na_klienta' ? t('ksef.deadline_passed') : t(`ksef.status_${f.status}`)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-1.5 flex-wrap">
+                    <button onClick={() => toast(t('ksef.preview_toast'), { icon: '👁', duration: 2500 })} className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">{t('ksef.preview')}</button>
+                    {f.duplicateInOcr && (
+                      <button onClick={() => { handleKsefDecision(f.id, 'prywatny', t('ksef.toast_dup_merged')); }} className="text-xs px-2.5 py-1 rounded-lg bg-orange-100 text-orange-700 hover:bg-orange-200 transition-colors">🔗 {t('ksef.merge_dup')}</button>
+                    )}
+                    {!readOnly && f.status === 'nowa' && (<>
+                      <button onClick={() => handleKsefDecision(f.id, 'koszt_firmowy', t('ksef.toast_koszt'))} className="text-xs px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors">✅ {t('ksef.decision_koszt')}</button>
+                      <button onClick={() => handleKsefDecision(f.id, 'prywatny', t('ksef.toast_prywatny'))} className="text-xs px-2.5 py-1 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors">❌ {t('ksef.decision_prywatny')}</button>
+                      <button onClick={() => handleKsefDecision(f.id, 'czeka_na_klienta', t('ksef.toast_zapytaj'))} className="text-xs px-2.5 py-1 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors">❓ {t('ksef.decision_zapytaj')}</button>
+                    </>)}
+                    {!readOnly && f.status === 'czeka_na_klienta' && (<>
+                      <button onClick={() => handleKsefDecision(f.id, 'koszt_firmowy', t('ksef.toast_koszt'))} className="text-xs px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors">✅ {t('ksef.decision_override_koszt')}</button>
+                      <button onClick={() => handleKsefDecision(f.id, 'prywatny', t('ksef.toast_prywatny'))} className="text-xs px-2.5 py-1 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors">❌ {t('ksef.decision_override_prywatny')}</button>
+                    </>)}
+                  </div>
+                </div>
+              );
+            };
+
+            return (
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+                  {statBtns.map(s => (
+                    <button key={s.filter} onClick={() => setKsefStatusFilter(ksefStatusFilter === s.filter ? 'all' : s.filter)}
+                      className={`${s.bg} rounded-2xl p-4 text-left transition-all border-2 ${ksefStatusFilter === s.filter ? 'border-blue-500' : 'border-transparent'}`}>
+                      <div className={`text-2xl font-black ${s.color}`}>{s.value}</div>
+                      <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-1 leading-tight">{s.label}</div>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="space-y-1">
+                  {sorted.map(([clientName, faktury]) => {
+                    const visible = faktury.filter(matchesFilter);
+                    if (visible.length === 0) return null;
+                    const isExpanded = expandedKsefClients.has(clientName);
+                    const zakupoweCount = faktury.filter(f => f.invoiceType !== 'sprzedazowa').length;
+                    const sprzedazoweCount = faktury.filter(f => f.invoiceType === 'sprzedazowa').length;
+                    const noweCount = faktury.filter(f => f.invoiceType !== 'sprzedazowa' && f.status === 'nowa').length;
+                    const zakupowe = faktury.filter(f => f.invoiceType !== 'sprzedazowa' && matchesFilter(f));
+                    const sprzedazowe = (ksefStatusFilter === 'all' || ksefStatusFilter === 'sprzedazowe')
+                      ? faktury.filter(f => f.invoiceType === 'sprzedazowa') : [];
+                    const zakupoweCollapsed = !expandedKsefZakupowe.has(clientName);
+                    const sprzedazCollapsed = !expandedKsefSprzedaz.has(clientName);
+                    return (
+                      <div key={clientName}>
+                        <button onClick={() => toggleKsefClient(clientName)} className="w-full flex items-center gap-3 group text-left pt-4 pb-2">
+                          <div className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl transition-colors">
+                            <span className="text-xs font-black uppercase tracking-wider">{clientName}</span>
+                            <span className="text-[10px] font-bold bg-white/20 px-1.5 py-0.5 rounded-lg">{faktury.length}</span>
+                            {noweCount > 0 && <span className="text-[10px] font-bold bg-blue-400 text-white px-1.5 py-0.5 rounded-lg">{noweCount} {t('ksef.new_short')}</span>}
+                            <span className="text-slate-300 ml-1">{isExpanded ? '▲' : '▼'}</span>
+                          </div>
+                          <div className="flex-1 h-px bg-slate-100 group-hover:bg-slate-200 transition-colors" />
+                          <div className="hidden sm:flex gap-2 shrink-0 text-[10px] font-bold text-slate-400">
+                            {zakupoweCount > 0 && <span className="bg-slate-100 px-2 py-0.5 rounded-lg">↙ {zakupoweCount} {t('ksef.purchase_short')}</span>}
+                            {sprzedazoweCount > 0 && <span className="bg-violet-50 text-violet-500 px-2 py-0.5 rounded-lg">↗ {sprzedazoweCount} {t('ksef.sale_short')}</span>}
+                          </div>
+                        </button>
+
+                        {isExpanded && (
+                          <div className="pl-2 sm:pl-4 space-y-2 pb-4">
+                            {zakupowe.length > 0 && (
+                              <div className="rounded-2xl border border-slate-100 overflow-hidden">
+                                <button onClick={() => toggleKsefZakupowe(clientName)} className="w-full flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 transition-colors text-left">
+                                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">↙ {t('ksef.section_zakupowe')}</span>
+                                  <span className="text-[10px] font-bold bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-lg">{zakupowe.length}</span>
+                                  <div className="flex-1" />
+                                  <span className="text-slate-400 text-xs">{zakupoweCollapsed ? '▼' : '▲'}</span>
+                                </button>
+                                {!zakupoweCollapsed && <div className="p-3 space-y-2">{zakupowe.map(f => renderFaktura(f, false))}</div>}
+                              </div>
+                            )}
+                            {sprzedazowe.length > 0 && (
+                              <div className="rounded-2xl border border-violet-100 overflow-hidden">
+                                <button onClick={() => toggleKsefSprzedaz(clientName)} className="w-full flex items-center gap-2 px-4 py-2.5 bg-violet-50 hover:bg-violet-100 transition-colors text-left">
+                                  <span className="text-[10px] font-black text-violet-500 uppercase tracking-widest">↗ {t('ksef.section_sprzedazowe')}</span>
+                                  <span className="text-[10px] font-bold bg-violet-200 text-violet-700 px-1.5 py-0.5 rounded-lg">{sprzedazowe.length}</span>
+                                  <div className="flex-1" />
+                                  <span className="text-violet-400 text-xs">{sprzedazCollapsed ? '▼' : '▲'}</span>
+                                </button>
+                                {!sprzedazCollapsed && <div className="p-3 space-y-2">{sprzedazowe.map(f => renderFaktura(f, true))}</div>}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            );
+          })()}
+        </div>
+
         {/* SEKCJA PREMIUM FEATURES */}
         <div className="mt-16 mb-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 px-2">

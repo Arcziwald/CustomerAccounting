@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import ClientView from './components/ClientView';
 import KorpoDemo from './components/KorpoDemo';
-import { Client, DocumentStatus, UploadedFile, ActivityEntry, ClientTier, OCRRecord } from './types';
+import { Client, DocumentStatus, UploadedFile, ActivityEntry, ClientTier, OCRRecord, KsefFaktura, KsefStatus } from './types';
 import { Toaster } from 'react-hot-toast';
 import { toast } from 'react-hot-toast'; // Dodaj to
 import i18n from './i18n/config'; // Dodaj to (upewnij się, że ścieżka jest poprawna)
@@ -386,6 +386,24 @@ export default function App() {
   },
 ]);
 
+  // ─── Faktury KSeF (mock) — pobrane automatycznie z Krajowego Systemu e-Faktur ───
+  const [ksefFaktury, setKsefFaktury] = useState<KsefFaktura[]>([
+    // Tech Solutions
+    { id: 'ksef-1', ksefNumber: '5260000000-20260311-A1B2C3-44', ksefDate: '2026-03-11', clientName: 'Tech Solutions Sp. z o.o.', sellerName: 'OVH Sp. z o.o.', sellerNip: '1130020817', buyerName: 'Tech Solutions Sp. z o.o.', grossAmount: 1845.00, currency: 'PLN', status: 'nowa', invoiceType: 'zakupowa' },
+    { id: 'ksef-2', ksefNumber: '5260000000-20260309-D4E5F6-12', ksefDate: '2026-03-09', clientName: 'Tech Solutions Sp. z o.o.', sellerName: 'Orange Polska S.A.', sellerNip: '5260250995', buyerName: 'Tech Solutions Sp. z o.o.', grossAmount: 246.00, currency: 'PLN', status: 'nowa', invoiceType: 'zakupowa', duplicateInOcr: true },
+    { id: 'ksef-3', ksefNumber: '5262012345-20260312-99XY01-03', ksefDate: '2026-03-12', clientName: 'Tech Solutions Sp. z o.o.', sellerName: 'Tech Solutions Sp. z o.o.', buyerName: 'Globalna Korporacja S.A.', grossAmount: 12300.00, currency: 'PLN', status: 'potwierdzona', invoiceType: 'sprzedazowa' },
+    // MedCare Clinic
+    { id: 'ksef-4', ksefNumber: '7272800001-20260306-AA77BB-08', ksefDate: '2026-03-06', clientName: 'MedCare Clinic Sp. z o.o.', sellerName: 'Allegro sp. z o.o.', sellerNip: '5252674798', buyerName: 'MedCare Clinic Sp. z o.o.', grossAmount: 530.00, currency: 'PLN', status: 'czeka_na_klienta', invoiceType: 'zakupowa', deadlineAt: '2026-03-13' },
+    { id: 'ksef-5', ksefNumber: '7272800001-20260308-CC33DD-21', ksefDate: '2026-03-08', clientName: 'MedCare Clinic Sp. z o.o.', sellerName: 'Medicover Polska Sp. z o.o.', sellerNip: '7272800001', buyerName: 'MedCare Clinic Sp. z o.o.', grossAmount: 5166.00, currency: 'PLN', status: 'koszt_firmowy', invoiceType: 'zakupowa' },
+    // AutoService Marek Nowak
+    { id: 'ksef-6', ksefNumber: '6760000012-20260305-EE11FF-77', ksefDate: '2026-03-05', clientName: 'AutoService Marek Nowak', sellerName: 'PKN Orlen S.A.', sellerNip: '7740001454', buyerName: 'AutoService Marek Nowak', grossAmount: 615.00, currency: 'PLN', status: 'nowa', invoiceType: 'zakupowa' },
+    { id: 'ksef-7', ksefNumber: '6760000012-20260310-GG22HH-90', ksefDate: '2026-03-10', clientName: 'AutoService Marek Nowak', sellerName: 'AutoService Marek Nowak', buyerName: 'Erbud S.A.', grossAmount: 4920.00, currency: 'PLN', status: 'potwierdzona', invoiceType: 'sprzedazowa' },
+  ]);
+
+  const updateKsefDecision = (id: string, status: KsefStatus) => {
+    setKsefFaktury(prev => prev.map(f => f.id === id ? { ...f, status } : f));
+  };
+
 const addActivity = (clientName: string, action: string, detail: string) => {
   const newActivity: ActivityEntry = {
     id: Math.random().toString(36).substr(2, 9),
@@ -676,6 +694,8 @@ addActivity(
               addActivity={addActivity}
               addClient={addClient}
               setDocRejection={setDocRejection}
+              ksefFaktury={ksefFaktury}
+              updateKsefDecision={updateKsefDecision}
             />
           } />
           <Route path="/korpo" element={<KorpoDemo />} />

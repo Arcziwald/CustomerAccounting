@@ -39,6 +39,24 @@ export interface OCRRecord {
   suggestedCategory?: string;
 }
 
+export type KsefStatus = 'nowa' | 'czeka_na_klienta' | 'koszt_firmowy' | 'prywatny' | 'potwierdzona';
+
+export interface KsefFaktura {
+  id: string;
+  ksefNumber: string;
+  ksefDate: string;            // ISO
+  clientName: string;
+  sellerName: string | null;
+  sellerNip?: string | null;
+  buyerName: string | null;
+  grossAmount: number | null;
+  currency: string;
+  status: KsefStatus;
+  invoiceType: 'zakupowa' | 'sprzedazowa';
+  deadlineAt?: string | null;
+  duplicateInOcr?: boolean;    // duplikat względem kolejki OCR — bolączka biur po wejściu KSeF
+}
+
 export interface DocumentItem {
   id: string;
   label: string;
