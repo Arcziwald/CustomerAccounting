@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Client, STATUS_COLORS, DocumentStatus, OCRRecord, KsefFaktura, KsefStatus } from '../types';
 // DODANE IKONY: FileText, Download, X (były już w Twoim kodzie, ale upewniam się, że są użyte)
-import { Bell, Copy, Check, ExternalLink, Search, Settings2, Plus, Trash2, X, Users, Clock, AlertTriangle, Folder, Lock, Unlock, History, ChevronDown, Download, Eye, FileText, Info, Zap, MessageSquare, Users2, Archive, BarChart3, ShieldCheck, ChevronRight, Sparkles, Paperclip, CalendarDays, Link2, UserPlus, UserCheck } from 'lucide-react';
+import { Bell, Copy, Check, ExternalLink, Search, Settings2, Plus, Trash2, X, Users, Clock, AlertTriangle, Folder, Lock, Unlock, History, ChevronDown, Download, Eye, FileText, Info, Zap, MessageSquare, Users2, Archive, BarChart3, ShieldCheck, ChevronRight, Sparkles, Paperclip, CalendarDays, Link2, UserPlus, UserCheck, Upload, LayoutDashboard } from 'lucide-react';
 import LeadModal from './LeadModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -1890,17 +1890,28 @@ export default function Dashboard({
           </h2>
           <p className="text-blue-100/70 text-sm md:text-base mb-6 md:mb-8 px-1">{t('welcome.intro')}</p>
 
-          {/* PAIN STATS */}
-          <div className="grid grid-cols-3 gap-3 mb-6 md:mb-8 px-1">
+          {/* PRZEPŁYW: Klient → Brakomat → Twoje biuro (natywny, dwujęzyczny, lekki) */}
+          <div className="flex flex-col sm:flex-row items-stretch gap-2 sm:gap-1 mb-6 md:mb-8 px-1">
             {[
-              { value: '8h', label: t('welcome.stat1_label') },
-              { value: '1/4', label: t('welcome.stat2_label') },
-              { value: '0', label: t('welcome.stat3_label') },
-            ].map((stat) => (
-              <div key={stat.label} className="bg-white/5 border border-white/10 rounded-2xl p-3 md:p-4 text-center">
-                <div className="text-2xl md:text-3xl font-black text-white">{stat.value}</div>
-                <div className="text-[9px] md:text-[10px] text-blue-300/80 uppercase tracking-wider mt-1 leading-tight">{stat.label}</div>
-              </div>
+              { icon: Upload, tint: 'text-blue-300', title: t('welcome.flow_klient_title'), desc: t('welcome.flow_klient_desc') },
+              { icon: Sparkles, tint: 'text-emerald-300', title: t('welcome.flow_system_title'), desc: t('welcome.flow_system_desc') },
+              { icon: LayoutDashboard, tint: 'text-cyan-300', title: t('welcome.flow_biuro_title'), desc: t('welcome.flow_biuro_desc') },
+            ].map((step, i, arr) => (
+              <React.Fragment key={step.title}>
+                <div className="flex-1 bg-white/5 border border-white/10 rounded-2xl p-3 md:p-4 flex flex-col items-center text-center gap-2">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-emerald-500/20 border border-white/10 flex items-center justify-center shrink-0">
+                    <step.icon className={`w-5 h-5 ${step.tint}`} />
+                  </div>
+                  <div className="text-sm font-black text-white leading-none">{step.title}</div>
+                  <div className="text-[10px] text-blue-200/70 leading-tight">{step.desc}</div>
+                </div>
+                {i < arr.length - 1 && (
+                  <>
+                    <ChevronRight className="hidden sm:block w-5 h-5 text-white/30 self-center shrink-0" />
+                    <ChevronDown className="sm:hidden w-4 h-4 text-white/30 self-center" />
+                  </>
+                )}
+              </React.Fragment>
             ))}
           </div>
 

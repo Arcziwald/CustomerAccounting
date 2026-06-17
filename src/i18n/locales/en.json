@@ -368,6 +368,12 @@
   "stat1_label": "hours/month lost on collecting documents",
   "stat2_label": "clients regularly late with documents",
   "stat3_label": "of these problems with Brakomat",
+  "flow_klient_title": "Client",
+  "flow_klient_desc": "Uploads documents from phone or computer",
+  "flow_system_title": "Brakomat",
+  "flow_system_desc": "Reads the data, checks VAT numbers, tracks deadlines",
+  "flow_biuro_title": "Your office",
+  "flow_biuro_desc": "Sees everything and decides in one click",
   "description": "Demo version — all data is fictional. Click below to explore.",
   "button": "Show me the demo →",
   "cta_button": "I want this for my office"
