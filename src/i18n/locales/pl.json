@@ -363,9 +363,9 @@
     "export": "Generuj arkusz zbiorczy (.xlsx) ze statystykami wszystkich klientów, statusem dokumentów i danymi z analizy OCR do celów raportowych."
   },
   "welcome": {
-  "title": "Koniec gonienia klientów",
-  "highlight": "po dokumenty",
-  "intro": "Brakomat to system zarządzania dokumentami dla biur rachunkowych — automatyzuje to, co kosztuje Cię czas i nerwy.",
+  "title": "Zmień chaos dokumentów",
+  "highlight": "w usługę premium dla klientów",
+  "intro": "Brakomat sprawia, że dokumenty docierają szybciej, są zweryfikowane, uporządkowane i gotowe do księgowania.",
   "security_note": "W pełnej wersji systemu znajduje się tu bezpieczny panel logowania z weryfikacją dostępu dla Ciebie i osobny dla Twoich klientów.",
   "stat1_label": "godzin/mies. traconych na zbieranie dokumentów",
   "stat2_label": "klientów regularnie spóźnia się z dokumentami",
