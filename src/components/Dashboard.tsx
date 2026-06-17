@@ -1091,9 +1091,11 @@ export default function Dashboard({
               <div className="flex flex-wrap gap-2 justify-start lg:justify-end">
                 <button onClick={() => handleExport('Excel / CSV')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-600 rounded-2xl font-bold text-sm hover:bg-emerald-100 transition-all shadow-sm"><Download className="w-4 h-4" />Excel / CSV</button>
                 <button onClick={() => handleExport('Comarch ERP Optima')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-50 text-blue-600 rounded-2xl font-bold text-sm hover:bg-blue-100 transition-all shadow-sm"><Download className="w-4 h-4" />Comarch Optima</button>
+                <button onClick={() => handleExport('QuickBooks Online')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-violet-50 text-violet-600 rounded-2xl font-bold text-sm hover:bg-violet-100 transition-all shadow-sm"><Download className="w-4 h-4" />QB Online</button>
+              </div>
+              <div className="flex flex-wrap gap-2 justify-start lg:justify-end">
                 <button onClick={() => handleExport('Symfonia')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-50 text-rose-600 rounded-2xl font-bold text-sm hover:bg-rose-100 transition-all shadow-sm"><Download className="w-4 h-4" />Symfonia</button>
                 <button onClick={() => handleExport('InsERT (GT / nexo)')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-50 text-indigo-600 rounded-2xl font-bold text-sm hover:bg-indigo-100 transition-all shadow-sm"><Download className="w-4 h-4" />InsERT</button>
-                <button onClick={() => handleExport('QuickBooks Online')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-violet-50 text-violet-600 rounded-2xl font-bold text-sm hover:bg-violet-100 transition-all shadow-sm"><Download className="w-4 h-4" />QB Online</button>
                 <button onClick={() => handleExport('Sage Business Cloud')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-green-50 text-green-700 rounded-2xl font-bold text-sm hover:bg-green-100 transition-all shadow-sm"><Download className="w-4 h-4" />Sage</button>
                 <button onClick={() => handleExport('Xero')} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-cyan-50 text-cyan-600 rounded-2xl font-bold text-sm hover:bg-cyan-100 transition-all shadow-sm"><Download className="w-4 h-4" />Xero</button>
               </div>
