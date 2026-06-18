@@ -1,0 +1,1960 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brakomat - jak to działa (przewodnik)</title>
+<meta name="description" content="Brakomat w 5 minut: po co to jest i jak z tego korzystać. Przewodnik krok po kroku dla biura rachunkowego.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* marka - niebieski jak w żywym demo (welcome blue-600 + gradient blue→emerald) */
+    --brand:#2563eb; --brand-700:#1d4ed8; --brand-500:#3b82f6; --brand-400:#60a5fa;
+    --brand-50:#eff6ff; --brand-100:#dbeafe; --emerald:#34d399; --emerald-500:#10b981;
+    /* sukces / OK */
+    --teal:#0d9488; --teal-700:#0f766e; --teal-50:#f0fdfa; --teal-100:#ccfbf1;
+    /* neutralne */
+    --slate-950:#020617; --slate-900:#0f172a; --slate-800:#1e293b; --slate-700:#334155;
+    --slate-600:#475569; --slate-500:#64748b; --slate-400:#94a3b8; --slate-300:#cbd5e1;
+    --slate-200:#e2e8f0; --slate-100:#f1f5f9; --slate-50:#f8fafc;
+    /* statusy (zgodne ze STATUS_COLORS w apce) */
+    --amber:#f59e0b; --amber-50:#fffbeb; --rose:#f43f5e; --rose-50:#fff1f2; --pink:#ec4899;
+    --sky:#0ea5e9; --sky-50:#f0f9ff; --violet:#8b5cf6; --violet-50:#f5f3ff;
+    --shadow:0 1px 3px rgba(15,23,42,.08),0 8px 24px -8px rgba(15,23,42,.12);
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Inter",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color:var(--slate-900);background:var(--slate-50);line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+  #progress{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--brand-400),var(--emerald));width:0;z-index:100;transition:width .1s}
+
+  /* ---------- top nav ---------- */
+  nav.top{position:sticky;top:0;z-index:50;background:rgba(248,250,252,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--slate-200)}
+  nav.top .wrap{display:flex;align-items:center;gap:14px;height:62px}
+  nav.top .brand{font-weight:900;letter-spacing:.5px;color:var(--brand-700);font-size:18px}
+  nav.top .brand span{color:var(--slate-400);font-weight:600;font-size:13px;letter-spacing:0}
+  nav.top .links{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+  nav.top .links a{font-size:13px;color:var(--slate-600);text-decoration:none;padding:6px 11px;border-radius:999px;transition:.15s;white-space:nowrap}
+  nav.top .links a:hover{background:var(--brand-50);color:var(--brand-700)}
+  nav.top .mobile-menu{display:none;margin-left:auto;position:relative}
+  nav.top .mobile-menu summary{
+    list-style:none;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    min-height:40px;
+    padding:9px 12px;
+    border-radius:9px;
+    border:1px solid var(--slate-200);
+    background:#fff;
+    color:var(--slate-900);
+    font-size:13px;
+    font-weight:850;
+    user-select:none;
+    box-shadow:0 10px 24px -22px rgba(15,23,42,.55);
+  }
+  nav.top .mobile-menu summary::-webkit-details-marker{display:none}
+  nav.top .mobile-menu summary svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+  nav.top .mobile-menu[open] summary{border-color:#bfdbfe;color:#1d4ed8;background:#eff6ff}
+  nav.top .mobile-links{
+    position:absolute;
+    top:calc(100% + 10px);
+    right:0;
+    width:min(82vw,310px);
+    display:grid;
+    gap:6px;
+    padding:10px;
+    border-radius:12px;
+    border:1px solid var(--slate-200);
+    background:rgba(255,255,255,.98);
+    box-shadow:0 18px 42px -24px rgba(15,23,42,.55);
+  }
+  nav.top .mobile-links a{
+    display:flex;
+    align-items:center;
+    min-height:40px;
+    padding:9px 11px;
+    border-radius:8px;
+    color:#334155;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:750;
+  }
+  nav.top .mobile-links a:hover{background:#eff6ff;color:#1d4ed8}
+  @media(max-width:720px){nav.top .links{display:none}nav.top .mobile-menu{display:block}}
+
+  /* ---------- hero: animowane logo (lew) na CAŁĄ szerokość jako tło ---------- */
+  header.hero{background:#020617;color:#fff;padding:84px 0 92px;position:relative;overflow:hidden;min-height:clamp(440px,62vh,620px);display:flex;align-items:center}
+  /* warstwa wideo - tło; media (poster+wideo) zakotwiczone do prawej, ~64% szer., by lew był po prawej a tekst na granacie po lewej */
+  header.hero .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;background:#020617}
+  header.hero .hero-bg .hero-media{position:absolute;top:0;right:0;left:auto;width:64%;height:100%;object-fit:cover;object-position:center;display:block}
+  @media(max-width:640px){header.hero .hero-bg .hero-media{width:100%}}
+  /* przyciemnienie pod tekstem: mocno po lewej, lew prześwituje po prawej + winiety góra/dół */
+  header.hero .hero-bg::after{content:"";position:absolute;inset:0;background:
+    linear-gradient(90deg,rgba(2,6,23,.96) 0%,rgba(2,6,23,.88) 30%,rgba(2,6,23,.5) 52%,rgba(2,6,23,.12) 78%,rgba(2,6,23,.28) 100%),
+    linear-gradient(180deg,rgba(2,6,23,.5) 0%,transparent 24%,transparent 74%,rgba(2,6,23,.55) 100%)}
+  header.hero .wrap{position:relative;z-index:1;width:100%}
+  header.hero .hero-text{max-width:600px}
+  header.hero .badge{display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);padding:5px 14px;border-radius:999px;font-size:13px;font-weight:600;margin-bottom:20px;color:#dbeafe}
+  header.hero h1{font-size:clamp(30px,5vw,46px);line-height:1.12;font-weight:900;letter-spacing:-.5px;margin-bottom:16px;text-shadow:0 2px 24px rgba(2,6,23,.6)}
+  header.hero h1 .hl{background:linear-gradient(90deg,var(--brand-400),var(--emerald));-webkit-background-clip:text;background-clip:text;color:transparent}
+  header.hero p.lead{font-size:clamp(17px,2.4vw,20px);max-width:560px;color:rgba(226,238,255,.92);text-shadow:0 1px 14px rgba(2,6,23,.55)}
+  @media(max-width:640px){header.hero .hero-bg::after{background:linear-gradient(180deg,rgba(2,6,23,.62),rgba(2,6,23,.86))}}
+  header.hero .cta-row{margin-top:30px;display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:800;text-decoration:none;border-radius:14px;padding:13px 22px;font-size:15px;transition:.18s;border:none;cursor:pointer}
+  .btn-primary{background:var(--brand);color:#fff}
+  .btn-primary:hover{background:var(--brand-700);transform:translateY(-2px);box-shadow:0 12px 26px -8px rgba(37,99,235,.6)}
+  .btn-ghost{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.22)}
+  .btn-ghost:hover{background:rgba(255,255,255,.18)}
+  header.hero .meta{margin-top:26px;font-size:13px;color:rgba(219,234,254,.6)}
+
+  /* ---------- sections ---------- */
+  section{padding:58px 0;border-bottom:1px solid var(--slate-200)}
+  section:last-of-type{border-bottom:none}
+  .eyebrow{text-transform:uppercase;letter-spacing:1.5px;font-size:12px;font-weight:700;color:var(--brand);margin-bottom:10px}
+  h2{font-size:clamp(24px,3.4vw,32px);font-weight:800;letter-spacing:-.4px;color:var(--slate-900);margin-bottom:14px}
+  h2 .n{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:11px;background:var(--brand-100);color:var(--brand-700);font-size:18px;margin-right:12px;vertical-align:middle}
+  section > .wrap > p.intro{font-size:18px;color:var(--slate-600);max-width:820px;margin-bottom:8px}
+
+  /* ---------- cards ---------- */
+  .grid{display:grid;gap:18px;margin-top:28px}
+  .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+  .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:720px){.grid.cols-3,.grid.cols-2{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+  .card .ico{font-size:26px;margin-bottom:12px;display:block}
+  .card h3{font-size:17px;font-weight:700;color:var(--slate-900);margin-bottom:6px}
+  .card p{font-size:14.5px;color:var(--slate-600)}
+  .pain{background:var(--rose-50);border-color:#fecdd3}
+  .pain h3{color:#be123c}
+  .gain{background:var(--teal-50);border-color:var(--teal-100)}
+  .gain h3{color:var(--teal-700)}
+
+  /* ======================================================
+     INFOGRAFIKA - przepływ: Klient → Brakomat → Biuro (+ pętla zwrotna)
+     ====================================================== */
+  .flow-wrap{margin-top:34px}
+  .flow{display:grid;grid-template-columns:1fr 64px 1fr 64px 1fr;align-items:stretch;gap:0}
+  .node{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 20px;text-align:center;position:relative}
+  .node .nico{width:54px;height:54px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px}
+  .node h3{font-size:16px;font-weight:800;color:var(--slate-900);margin-bottom:6px}
+  .node p{font-size:13.5px;color:var(--slate-600);line-height:1.5}
+  .node .tagline{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:3px 10px;border-radius:999px}
+  /* kolory węzłów */
+  .node.klient .nico{background:var(--brand-50);color:var(--brand)}
+  .node.klient .tagline{background:var(--brand-50);color:var(--brand-700)}
+  .node.system .nico{background:var(--violet-50);color:var(--violet)}
+  .node.system .tagline{background:var(--violet-50);color:#6d28d9}
+  .node.biuro .nico{background:var(--teal-50);color:var(--teal-700)}
+  .node.biuro .tagline{background:var(--teal-50);color:var(--teal-700)}
+  /* warianty graficzne węzłów - gotowe infografiki zamiast kart tekstowych */
+  .node-img{width:100%;height:auto;border-radius:var(--radius);box-shadow:var(--shadow);display:block;align-self:center}
+  /* gotowe ilustracje sekcji „Po co to?" - samodzielne karty, bez dodatkowej ramki */
+  .illu{width:100%;height:auto;display:block;align-self:center;border-radius:24px}
+  /* mini-przyciski w węźle Biuro */
+  .node .decide{display:flex;gap:8px;justify-content:center;margin-top:12px}
+  .node .decide span{font-size:12.5px;font-weight:800;padding:6px 11px;border-radius:9px;display:inline-flex;align-items:center;gap:5px}
+  .node .decide .ok{background:var(--teal-50);color:var(--teal-700);border:1px solid var(--teal-100)}
+  .node .decide .no{background:var(--rose-50);color:#be123c;border:1px solid #fecdd3}
+  /* łączniki + płynący dokument */
+  .conn{position:relative;display:flex;align-items:center;justify-content:center}
+  .conn .line{width:100%;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--brand-100),var(--brand-400));position:relative}
+  .conn .line::after{content:"";position:absolute;right:-2px;top:50%;transform:translateY(-50%);border-left:9px solid var(--brand-400);border-top:6px solid transparent;border-bottom:6px solid transparent}
+  .conn .chip{position:absolute;top:50%;left:2%;transform:translateY(-50%);background:#fff;border:1px solid var(--brand-200,#bfdbfe);box-shadow:0 4px 12px -3px rgba(37,99,235,.35);border-radius:8px;padding:3px 7px;font-size:11px;font-weight:800;color:var(--brand-700);white-space:nowrap;display:flex;align-items:center;gap:3px;animation:travel 2.6s cubic-bezier(.5,0,.5,1) infinite}
+  .conn.c2 .chip{animation-delay:1.3s}
+  @keyframes travel{0%{left:2%;opacity:0}12%{opacity:1}80%{opacity:1}100%{left:84%;opacity:0}}
+  /* pętla zwrotna */
+  .return{margin-top:14px;display:flex;align-items:center;gap:12px;background:linear-gradient(90deg,var(--rose-50),#fff);border:1.5px dashed #fda4af;border-radius:14px;padding:13px 18px}
+  .return .ricon{font-size:20px;color:var(--rose);flex:none}
+  .return p{font-size:13.5px;color:var(--slate-700);margin:0}
+  .return p b{color:#be123c}
+  /* responsywność infografiki - pion na telefonie */
+  @media(max-width:760px){
+    .flow{grid-template-columns:1fr}
+    .conn{height:46px}
+    .conn .line{width:3px;height:100%;background:linear-gradient(180deg,var(--brand-100),var(--brand-400))}
+    .conn .line::after{right:auto;top:auto;left:50%;bottom:-2px;transform:translateX(-50%);border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid var(--brand-400);border-bottom:none}
+    .conn .chip{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){.conn .chip{animation:none;left:42%;opacity:1}}
+
+  /* ---------- before/after ---------- */
+  .ba{display:grid;grid-template-columns:1fr 56px 1fr;align-items:center;gap:14px;margin-top:30px}
+  @media(max-width:720px){.ba{grid-template-columns:1fr;gap:10px}.ba .arrow{transform:rotate(90deg);justify-self:center}}
+  .ba .col{border-radius:var(--radius);padding:22px}
+  .ba .arrow{font-size:28px;color:var(--brand);text-align:center}
+  .ba ul{list-style:none;margin-top:8px}
+  .ba li{font-size:14.5px;padding:5px 0 5px 26px;position:relative}
+  .ba .before{background:#fff;border:1px dashed var(--slate-300)}
+  .ba .before li::before{content:"✕";position:absolute;left:0;color:var(--rose);font-weight:700}
+  .ba .after{background:linear-gradient(160deg,var(--teal-50),#fff);border:1px solid var(--teal-100)}
+  .ba .after li::before{content:"✓";position:absolute;left:0;color:var(--teal);font-weight:800}
+  .ba h3{font-size:15px;font-weight:700;margin-bottom:4px}
+
+  /* ---------- steps ---------- */
+  .steps{margin-top:30px;display:flex;flex-direction:column;gap:16px}
+  .step{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .step .head{display:flex;align-items:center;gap:16px;padding:20px 22px;cursor:pointer;user-select:none}
+  .step .num{flex:none;width:42px;height:42px;border-radius:12px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+  .step .head h3{font-size:17px;font-weight:700;color:var(--slate-900)}
+  .step .head .sub{font-size:13.5px;color:var(--slate-500);font-weight:500}
+  .step .chev{margin-left:auto;color:var(--slate-400);transition:.2s;font-size:20px;flex:none}
+  .step.open .chev{transform:rotate(180deg)}
+  .step .body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+  .step.open .body{max-height:1400px}
+  .step .body-inner{padding:0 22px 22px 80px;max-width:1000px}
+  .step .body-inner p{max-width:860px}
+  @media(max-width:560px){.step .body-inner{padding:0 20px 20px 20px}}
+  .step .body-inner p{font-size:15px;color:var(--slate-700);margin-bottom:10px}
+  .step .tip{background:var(--brand-50);border-left:3px solid var(--brand);padding:10px 14px;border-radius:8px;font-size:14px;color:var(--brand-700);margin-top:6px}
+  .setup-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
+  .setup-card{background:#f8fafc;border:1px solid #dbeafe;border-radius:10px;padding:14px 15px}
+  .setup-card b{display:block;color:#0f172a;font-size:14px;margin-bottom:4px}
+  .setup-card span{display:block;color:#475569;font-size:13.5px;line-height:1.55}
+  @media(max-width:680px){.setup-grid{grid-template-columns:1fr}}
+  .kbd{display:inline-block;background:var(--slate-100);border:1px solid var(--slate-200);border-bottom-width:2px;border-radius:6px;padding:1px 8px;font-size:13.5px;font-weight:600;color:var(--slate-700);font-family:inherit}
+  .pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12.5px;font-weight:700}
+
+  /* status legend */
+  .legend{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:26px}
+  @media(max-width:560px){.legend{grid-template-columns:1fr}}
+  .legend .row{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--slate-200);border-radius:12px;padding:12px 16px}
+  .dot{width:30px;height:30px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800}
+  .legend .row .txt b{display:block;font-size:14.5px;color:var(--slate-900)}
+  .legend .row .txt span{font-size:13px;color:var(--slate-500)}
+
+  /* CTA */
+  .cta-final{background:linear-gradient(160deg,var(--slate-950),var(--brand-700));color:#fff;border-radius:24px;padding:48px 36px;text-align:center;margin-top:10px}
+  .cta-final h2{color:#fff;margin-bottom:12px}
+  .cta-final p{color:rgba(219,234,254,.85);max-width:540px;margin:0 auto 26px;font-size:17px}
+
+  footer{padding:34px 0 60px;text-align:center;color:var(--slate-400);font-size:13px}
+  footer a{color:var(--slate-500)}
+  a.inline{color:var(--brand-700);font-weight:600;text-decoration:none;border-bottom:1px solid var(--brand-100)}
+  a.inline:hover{border-color:var(--brand)}
+  .tag{font-size:12.5px;color:var(--slate-500);background:var(--slate-100);padding:3px 9px;border-radius:6px;font-weight:600}
+
+  /* ======================================================
+     STREFA KLIENTA - „Panel klienta" (telefon + 2 zielone boxy jako grafiki)
+     ====================================================== */
+  .client-panel-section{padding:66px 20px 66px;background:radial-gradient(circle at top left,rgba(34,197,94,.10),transparent 34%),linear-gradient(180deg,#f8fbff 0%,#ffffff 100%)}
+  .client-panel-wrap{max-width:1180px;margin:0 auto}
+  .section-kicker{display:inline-flex;margin-bottom:14px;padding:8px 14px;border-radius:999px;background:#ecfdf5;color:#047857;font-weight:700;font-size:14px}
+  .client-panel-copy{max-width:820px;margin-bottom:34px}
+  .client-panel-copy h2{margin:0 0 14px;color:#0f172a;font-size:clamp(28px,3.4vw,44px);line-height:1.08}
+  .client-panel-copy p{margin:0;color:#334155;font-size:19px;line-height:1.6}
+  .client-panel-layout{display:grid;grid-template-columns:390px 1fr;gap:34px;align-items:center}
+  .phone-preview{padding:16px;border-radius:34px;background:#fff;box-shadow:0 24px 60px rgba(15,23,42,.16);border:1px solid rgba(148,163,184,.25)}
+  .phone-preview img{width:100%;display:block;border-radius:24px}
+  .client-benefits{display:grid;gap:22px;align-content:center}
+  /* natywne kafle korzyści (zastępują wypalone PNG box-*.png - ostre, skalowalne, edytowalne) */
+  .benefit-card{display:flex;gap:18px;align-items:flex-start;background:linear-gradient(155deg,#ecfdf5,#ffffff);border:1px solid var(--teal-100);border-radius:22px;padding:26px 28px;box-shadow:0 12px 34px -16px rgba(16,185,129,.35)}
+  .benefit-card .benefit-ico{flex:none;width:56px;height:56px;border-radius:16px;background:#fff;border:1px solid var(--teal-100);display:flex;align-items:center;justify-content:center;font-size:27px}
+  .benefit-card h3{font-size:20px;font-weight:800;color:var(--teal-700);margin-bottom:7px;line-height:1.2}
+  .benefit-card p{font-size:15.5px;color:var(--slate-600);line-height:1.55}
+  .benefit-card strong{color:var(--teal-700)}
+  .client-demo-tip{margin-top:30px;background:rgba(255,255,255,.72);border:1px solid var(--teal-100);border-left:3px solid var(--teal);border-radius:12px;padding:14px 18px;font-size:14.5px;color:var(--teal-700);max-width:780px}
+  .client-guide{display:grid;gap:14px}
+  .client-guide-intro{
+    background:#fff;
+    border:1px solid var(--teal-100);
+    border-radius:10px;
+    padding:18px 20px;
+    box-shadow:var(--shadow);
+    border-left:4px solid var(--teal);
+  }
+  .client-guide-intro h3{font-size:20px;font-weight:850;color:#0f172a;margin-bottom:7px}
+  .client-guide-intro p{font-size:14.5px;color:#475569;line-height:1.6}
+  .client-guide .steps{margin-top:0;gap:12px}
+  .client-guide .step{border-radius:10px;box-shadow:0 1px 2px rgba(15,23,42,.05),0 14px 30px -26px rgba(15,23,42,.45)}
+  .client-guide .step .head{padding:15px 16px;gap:12px}
+  .client-guide .step .num{width:36px;height:36px;border-radius:9px;font-size:15px;background:linear-gradient(135deg,#0d9488,#2563eb)}
+  .client-guide .step .head h3{font-size:15.5px}
+  .client-guide .step .head .sub{font-size:12.8px;line-height:1.35}
+  .client-guide .step .body-inner{padding:0 16px 17px 64px}
+  .client-guide .step .body-inner p{font-size:14px;line-height:1.58;margin-bottom:8px}
+  .client-guide .step .tip{font-size:13px;margin-top:8px}
+  .client-preview-tip{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    max-width:920px;
+  }
+  .preview-icon-sample{
+    flex:none;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 10px;
+    border-radius:10px;
+    background:#fff;
+    border:1px solid #bfdbfe;
+    color:#1d4ed8;
+    font-weight:850;
+    box-shadow:0 8px 18px -14px rgba(37,99,235,.8);
+  }
+  .preview-icon-sample svg{
+    width:20px;
+    height:20px;
+    stroke:currentColor;
+    fill:none;
+    stroke-width:2.2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+  .preview-icon-sample span{
+    font-size:12px;
+    color:#1e293b;
+    white-space:nowrap;
+  }
+  .client-preview-tip p{
+    margin:0;
+    color:#334155;
+    line-height:1.55;
+  }
+  @media(max-width:860px){
+    .client-panel-section{padding:46px 16px 46px}
+    .client-panel-copy{margin-bottom:24px}
+    .client-panel-copy p{font-size:17px}
+    .client-panel-layout{grid-template-columns:1fr;gap:22px}
+    .phone-preview{max-width:520px;margin:0 auto}
+    .client-benefits{gap:16px}
+    .benefit-card{padding:22px 22px}
+    .benefit-card h3{font-size:18px}
+    .client-guide .step .body-inner{padding:0 16px 17px 16px}
+    .client-preview-tip{align-items:flex-start;flex-direction:column}
+  }
+
+  /* final CTA contrast fix */
+  .cta-final{
+    text-align:center;
+    background:
+      radial-gradient(circle at 78% 16%,rgba(45,212,191,.26),transparent 30%),
+      linear-gradient(135deg,#07172f 0%,#0f2a54 44%,#0f766e 100%);
+  }
+  .cta-final h2{
+    color:#ffffff;
+    text-shadow:0 1px 18px rgba(2,6,23,.28);
+  }
+  .cta-final p{
+    color:#eaf3ff;
+    max-width:690px;
+    margin-left:auto;
+    margin-right:auto;
+    font-weight:560;
+    text-shadow:0 1px 14px rgba(2,6,23,.26);
+  }
+  .cta-final .btn-ghost{
+    background:rgba(255,255,255,.16) !important;
+    border-color:rgba(255,255,255,.42) !important;
+    color:#fff;
+  }
+  .cta-final .btn-ghost:hover{
+    background:rgba(255,255,255,.24) !important;
+  }
+
+  /* ======================================================
+     SPIS TREŚCI - wybór ścieżki: demo vs subskrybent (poziom 1 / 2)
+     ====================================================== */
+  #spis{background:linear-gradient(180deg,#fff, var(--slate-50))}
+  .toc{margin-top:30px;display:grid;gap:16px}
+  .toc-group{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .toc-group summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:20px 22px;user-select:none}
+  .toc-group summary::-webkit-details-marker{display:none}
+  .toc-group summary::after{content:"⌄";margin-left:auto;color:var(--slate-400);font-size:22px;line-height:1;transition:.2s}
+  .toc-group[open] summary::after{transform:rotate(180deg)}
+  .toc-ico{font-size:24px;flex:none}
+  .toc-mark{
+    width:52px;
+    height:52px;
+    border-radius:14px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex:none;
+    position:relative;
+    color:#1d4ed8;
+    background:
+      radial-gradient(circle at 72% 22%,rgba(255,255,255,.92) 0 12%,transparent 13%),
+      linear-gradient(145deg,#dbeafe,#ffffff 58%,#ecfdf5);
+    border:1px solid rgba(37,99,235,.22);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.86),0 16px 30px -24px rgba(37,99,235,.9);
+  }
+  .toc-mark::after{
+    content:"";
+    position:absolute;
+    right:9px;
+    top:8px;
+    width:7px;
+    height:7px;
+    border-radius:3px;
+    background:#14b8a6;
+    box-shadow:0 0 0 4px rgba(20,184,166,.13);
+  }
+  .toc-mark svg{
+    width:31px;
+    height:31px;
+    stroke:currentColor;
+    fill:none;
+    stroke-width:1.85;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    filter:drop-shadow(0 7px 8px rgba(15,23,42,.10));
+  }
+  .toc-mark.demo{color:#0f766e;background:linear-gradient(145deg,#ccfbf1,#ffffff 58%,#eff6ff);border-color:rgba(13,148,136,.24)}
+  .toc-mark.assistant{color:#2563eb;background:linear-gradient(145deg,#dbeafe,#ffffff 58%,#f5f3ff);border-color:rgba(37,99,235,.23)}
+  .toc-mark.order{color:#b45309;background:linear-gradient(145deg,#fef3c7,#ffffff 58%,#ecfdf5);border-color:rgba(217,119,6,.26)}
+  .toc-txt{display:flex;flex-direction:column}
+  .toc-h{font-size:17px;font-weight:800;color:var(--slate-900)}
+  .toc-sub{font-size:13.5px;color:var(--slate-500);font-weight:500}
+  @media(max-width:560px){.toc-sub{display:none}}
+  .toc-body{padding:0 22px 24px 22px;display:grid;gap:8px}
+  .toc-body > a{display:block;font-size:15px;color:var(--brand-700);text-decoration:none;padding:10px 14px;border-radius:10px;background:var(--brand-50);font-weight:600;transition:.15s}
+  .toc-body > a:hover{background:var(--brand-100);transform:translateX(3px)}
+
+  /* ======================================================
+     POLISH LIFT - bardziej produktowy, spójny przewodnik
+     ====================================================== */
+  :root{
+    --radius:10px;
+    --shadow:0 1px 2px rgba(15,23,42,.06),0 12px 28px -18px rgba(15,23,42,.35);
+    --surface:#ffffff;
+    --line:#dbe3ef;
+  }
+  body{
+    background:
+      linear-gradient(180deg,#f8fbff 0,#f8fafc 360px,#ffffff 900px,#f8fafc 100%);
+    color:#0f172a;
+  }
+  .wrap{max-width:1120px}
+  #progress{height:3px;background:linear-gradient(90deg,#2563eb,#14b8a6,#22c55e)}
+  nav.top{
+    background:rgba(255,255,255,.88);
+    border-bottom:1px solid rgba(203,213,225,.76);
+    box-shadow:0 8px 24px -24px rgba(15,23,42,.42);
+  }
+  nav.top .wrap{height:58px}
+  nav.top .wrap{max-width:1280px}
+  nav.top .brand{letter-spacing:.02em;color:#0f172a}
+  nav.top .brand{white-space:nowrap;display:flex;align-items:center;gap:0}
+  nav.top .brand span{white-space:nowrap;margin-left:4px}
+  nav.top .brand::before{
+    content:"";display:inline-block;width:10px;height:10px;border-radius:3px;
+    margin-right:9px;background:linear-gradient(135deg,var(--brand),var(--emerald));
+    box-shadow:0 0 0 4px rgba(37,99,235,.09);
+  }
+  nav.top .links{gap:3px;flex-wrap:nowrap}
+  nav.top .links a{border-radius:8px;color:#475569;font-weight:650;font-size:12px;padding:6px 8px}
+  nav.top .links a:hover{background:#eff6ff;color:#1d4ed8}
+
+  header.hero{
+    min-height:clamp(500px,72vh,680px);
+    padding:96px 0 108px;
+    background:#050b18;
+  }
+  header.hero::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:86px;z-index:1;
+    background:linear-gradient(180deg,rgba(248,250,252,0),#f8fafc);
+    pointer-events:none;
+  }
+  header.hero .hero-bg .hero-media{width:68%;filter:saturate(1.05) contrast(1.03)}
+  header.hero .hero-bg::after{background:
+    linear-gradient(90deg,rgba(5,11,24,.98) 0%,rgba(5,11,24,.93) 34%,rgba(5,11,24,.62) 58%,rgba(5,11,24,.20) 82%,rgba(5,11,24,.35) 100%),
+    linear-gradient(180deg,rgba(5,11,24,.55) 0%,transparent 38%,rgba(5,11,24,.68) 100%)}
+  header.hero .badge{
+    display:inline-flex;align-items:center;
+    background:rgba(219,234,254,.11);
+    border-color:rgba(191,219,254,.28);
+    color:#dbeafe;border-radius:8px;
+    letter-spacing:.01em;
+  }
+  header.hero h1{
+    max-width:650px;
+    letter-spacing:0;
+    font-size:clamp(36px,5.6vw,62px);
+    line-height:1.02;
+    margin-bottom:22px;
+  }
+  header.hero h1 .hl{display:block;margin-top:4px}
+  header.hero p.lead{font-size:clamp(17px,2vw,20px);line-height:1.65;color:rgba(241,245,249,.9)}
+  header.hero .meta{color:rgba(226,232,240,.72)}
+  .btn{
+    border-radius:9px;
+    min-height:46px;
+    padding:12px 18px;
+    letter-spacing:0;
+    box-shadow:none;
+  }
+  .btn-primary{background:linear-gradient(135deg,#2563eb,#0d9488)}
+  .btn-primary:hover{background:linear-gradient(135deg,#1d4ed8,#0f766e);box-shadow:0 18px 36px -22px rgba(37,99,235,.75)}
+  .btn-ghost{border-color:rgba(255,255,255,.28)}
+
+  section{padding:70px 0;border-bottom:1px solid rgba(203,213,225,.72)}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    color:#1d4ed8;background:#eff6ff;border:1px solid #dbeafe;
+    padding:6px 10px;border-radius:8px;
+    letter-spacing:.08em;font-size:11px;margin-bottom:14px;
+  }
+  .eyebrow::before{content:"";width:6px;height:6px;border-radius:2px;background:#2563eb}
+  h2{letter-spacing:0;font-size:clamp(28px,3.5vw,40px);line-height:1.1;margin-bottom:16px}
+  h2 .n{border-radius:8px}
+  section > .wrap > p.intro,
+  .client-panel-copy p,
+  .cta-final p{
+    color:#475569;
+    line-height:1.72;
+  }
+  section > .wrap > p.intro{font-size:17px}
+
+  .grid{gap:20px}
+  .card,
+  .toc-group,
+  .step,
+  .legend .row,
+  .node,
+  .phone-preview,
+  .benefit-card{
+    border-color:var(--line);
+    border-radius:10px;
+    box-shadow:var(--shadow);
+  }
+  .card{padding:24px;background:rgba(255,255,255,.92)}
+  .plan-icon{
+    width:62px;
+    height:62px;
+    border-radius:18px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:15px;
+    color:#047857;
+    background:
+      radial-gradient(circle at 72% 24%,rgba(255,255,255,.95) 0 12%,transparent 13%),
+      linear-gradient(145deg,#d1fae5,#eff6ff 58%,#ffffff);
+    border:1px solid rgba(20,184,166,.28);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.82),0 18px 34px -24px rgba(13,148,136,.8);
+    position:relative;
+  }
+  .plan-icon::after{
+    content:"";
+    position:absolute;
+    right:10px;
+    top:9px;
+    width:8px;
+    height:8px;
+    border-radius:3px;
+    background:#f59e0b;
+    box-shadow:0 0 0 4px rgba(245,158,11,.14);
+  }
+  .plan-icon svg{
+    width:36px;
+    height:36px;
+    stroke:currentColor;
+    fill:none;
+    stroke-width:1.85;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    filter:drop-shadow(0 8px 10px rgba(15,23,42,.10));
+  }
+  .plan-icon.order{
+    color:#2563eb;
+    background:
+      radial-gradient(circle at 72% 24%,rgba(255,255,255,.95) 0 12%,transparent 13%),
+      linear-gradient(145deg,#dbeafe,#f5f3ff 58%,#ffffff);
+    border-color:rgba(37,99,235,.25);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.82),0 18px 34px -24px rgba(37,99,235,.8);
+  }
+  .plan-icon.order::after{background:#34d399;box-shadow:0 0 0 4px rgba(52,211,153,.14)}
+  .plan-icon.scale{
+    color:#b45309;
+    background:
+      radial-gradient(circle at 72% 24%,rgba(255,255,255,.95) 0 12%,transparent 13%),
+      linear-gradient(145deg,#fef3c7,#ecfdf5 62%,#ffffff);
+    border-color:rgba(217,119,6,.28);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.82),0 18px 34px -24px rgba(217,119,6,.76);
+  }
+  .plan-icon.scale::after{background:#2563eb;box-shadow:0 0 0 4px rgba(37,99,235,.13)}
+  .card .ico,
+  .toc-ico,
+  .benefit-card .benefit-ico{
+    font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;
+  }
+  .card h3,.step .head h3,.toc-h,.benefit-card h3{letter-spacing:0}
+  .gain{
+    background:linear-gradient(180deg,#f0fdfa,#fff);
+    border-color:#bdeee5;
+  }
+  .pain{
+    background:linear-gradient(180deg,#fff1f2,#fff);
+    border-color:#fecdd3;
+  }
+
+  #spis{background:linear-gradient(180deg,#ffffff,#f8fafc)}
+  .toc{grid-template-columns:repeat(3,1fr);gap:18px}
+  .toc-group{overflow:clip}
+  .toc-group summary{padding:18px 18px;border-bottom:1px solid transparent}
+  .toc-group[open] summary{border-bottom-color:#e2e8f0;background:#fbfdff}
+  .toc-group summary::after{font-size:18px}
+  .toc-body{padding:14px 18px 18px}
+  .toc-body > a{
+    background:transparent;
+    border:1px solid #e2e8f0;
+    color:#334155;
+    border-radius:8px;
+  }
+  .toc-body > a:hover{background:#eff6ff;border-color:#bfdbfe;transform:none;color:#1d4ed8}
+
+  .illu,
+  .node-img{
+    border-radius:10px;
+    box-shadow:0 1px 2px rgba(15,23,42,.05),0 18px 40px -24px rgba(15,23,42,.38);
+    border:1px solid rgba(203,213,225,.66);
+    background:#fff;
+  }
+  .flow{grid-template-columns:1fr 72px 1fr 72px 1fr}
+  .conn .line{height:2px;background:linear-gradient(90deg,#bfdbfe,#2563eb)}
+  .conn .chip{
+    border-color:#bfdbfe;
+    border-radius:8px;
+    box-shadow:0 10px 22px -14px rgba(37,99,235,.55);
+  }
+
+  .step{background:rgba(255,255,255,.94);overflow:clip}
+  .step .head{padding:18px 20px}
+  .step .head:hover{background:#fbfdff}
+  .step .num{
+    border-radius:8px;
+    background:linear-gradient(135deg,#2563eb,#0d9488);
+    box-shadow:0 10px 22px -16px rgba(37,99,235,.8);
+  }
+  .step .body-inner{padding:0 22px 24px 80px}
+  .step .body-inner p{line-height:1.72}
+  .step .tip,
+  .client-demo-tip{
+    background:#f8fafc;
+    border:1px solid #dbeafe;
+    border-left:4px solid #2563eb;
+    color:#334155;
+    border-radius:8px;
+  }
+  .kbd{
+    border-radius:6px;
+    background:#f8fafc;
+    border-color:#cbd5e1;
+  }
+  .pill{border-radius:7px}
+
+  .client-panel-section{
+    padding:76px 20px;
+    background:
+      linear-gradient(90deg,rgba(20,184,166,.10),transparent 36%),
+      linear-gradient(180deg,#ffffff,#f8fafc);
+  }
+  .client-panel-copy h2{font-size:clamp(30px,3.8vw,42px);letter-spacing:0}
+  .client-panel-layout{grid-template-columns:minmax(360px,470px) 1fr}
+  .phone-preview{border-radius:16px;padding:10px}
+  .phone-preview img{border-radius:10px}
+  .benefit-card{
+    border-radius:10px;
+    background:#fff;
+    border-left:4px solid #0d9488;
+  }
+  .benefit-card .benefit-ico{border-radius:8px;background:#ecfdf5}
+
+  .legend{gap:14px}
+  .legend .row{padding:14px 16px;background:#fff}
+  .dot{border-radius:8px}
+  .ba .col{border-radius:10px}
+  .ba .arrow{font-weight:900}
+  .cta-final{
+    border-radius:12px;
+    background:
+      radial-gradient(circle at 78% 20%,rgba(52,211,153,.18),transparent 24%),
+      linear-gradient(135deg,#06111f,#102a56 48%,#0f766e);
+    box-shadow:0 24px 60px -38px rgba(15,23,42,.85);
+  }
+  footer{background:#f8fafc}
+
+  @media(max-width:920px){
+    .toc{grid-template-columns:1fr}
+    header.hero .hero-bg .hero-media{width:100%;opacity:.55}
+  }
+  @media(max-width:760px){
+    section{padding:52px 0}
+    header.hero{min-height:560px;padding:84px 0 96px}
+    header.hero .hero-bg::after{background:linear-gradient(180deg,rgba(5,11,24,.66),rgba(5,11,24,.94))}
+    .flow{grid-template-columns:1fr}
+    .conn .line{width:2px}
+    .client-panel-layout{grid-template-columns:1fr}
+    .step .head{align-items:flex-start}
+    .step .body-inner{padding:0 20px 22px}
+    .btn{width:100%;justify-content:center}
+    header.hero h1 .hl{display:inline}
+  }
+
+  /* ======================================================
+     KORZYSCI - cztery bloki językiem biura i klienta
+     ====================================================== */
+  .profit-section{
+    margin:38px 0 34px;
+    position:relative;
+  }
+  .profit-head{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:28px;
+    align-items:end;
+    margin-bottom:22px;
+  }
+  .profit-head h3{
+    font-size:clamp(25px,3.2vw,38px);
+    line-height:1.08;
+    letter-spacing:0;
+    color:#0f172a;
+    max-width:680px;
+  }
+  .profit-head p{
+    color:#475569;
+    font-size:16.5px;
+    line-height:1.7;
+    max-width:520px;
+  }
+  .profit-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+  }
+  .profit-card{
+    --accent:#2563eb;
+    --soft:#eff6ff;
+    background:linear-gradient(180deg,#ffffff 0%,#fbfdff 100%);
+    border:1px solid #dbe3ef;
+    border-top:4px solid var(--accent);
+    border-radius:12px;
+    padding:22px 20px 18px;
+    min-height:342px;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 1px 2px rgba(15,23,42,.05),0 22px 42px -30px rgba(15,23,42,.45);
+    position:relative;
+    overflow:hidden;
+  }
+  .profit-card::after{
+    content:"";
+    position:absolute;
+    width:150px;
+    height:150px;
+    right:-70px;
+    top:-80px;
+    border-radius:50%;
+    background:var(--soft);
+    opacity:.88;
+    pointer-events:none;
+  }
+  .profit-card.time{--accent:#2563eb;--soft:#dbeafe}
+  .profit-card.control{--accent:#0d9488;--soft:#ccfbf1}
+  .profit-card.money{--accent:#d97706;--soft:#fef3c7}
+  .profit-card.client{--accent:#6d28d9;--soft:#ede9fe}
+  .profit-icon{
+    width:52px;
+    height:52px;
+    border-radius:12px;
+    background:var(--soft);
+    color:var(--accent);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:18px;
+    position:relative;
+    z-index:1;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.72);
+  }
+  .profit-icon svg{
+    width:27px;
+    height:27px;
+    stroke:currentColor;
+    stroke-width:2.25;
+    fill:none;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+  .profit-card h4{
+    font-size:21px;
+    line-height:1.16;
+    color:#0f172a;
+    margin-bottom:10px;
+    position:relative;
+    z-index:1;
+  }
+  .profit-card .lead{
+    font-size:14.5px;
+    line-height:1.58;
+    color:#475569;
+    margin-bottom:16px;
+    position:relative;
+    z-index:1;
+  }
+  .profit-card ul{
+    list-style:none;
+    display:grid;
+    gap:9px;
+    margin:0 0 18px;
+    position:relative;
+    z-index:1;
+  }
+  .profit-card li{
+    font-size:13.5px;
+    line-height:1.45;
+    color:#334155;
+    padding-left:22px;
+    position:relative;
+  }
+  .profit-card li::before{
+    content:"";
+    width:8px;
+    height:8px;
+    border-radius:3px;
+    background:var(--accent);
+    position:absolute;
+    left:0;
+    top:.52em;
+    box-shadow:0 0 0 4px var(--soft);
+  }
+  .profit-instead{
+    position:relative;
+    z-index:1;
+    margin:0 0 14px;
+    padding:11px 12px;
+    border-radius:9px;
+    background:linear-gradient(180deg,#fff7f7,#fff);
+    border:1px solid #fee2e2;
+  }
+  .profit-instead b{
+    display:block;
+    color:#be123c;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin-bottom:6px;
+  }
+  .profit-instead span{
+    display:block;
+    color:#475569;
+    font-size:12.8px;
+    line-height:1.42;
+  }
+  .profit-effect{
+    margin-top:auto;
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:9px;
+    padding:10px 11px;
+    color:#0f172a;
+    font-size:12.5px;
+    line-height:1.35;
+    font-weight:760;
+    position:relative;
+    z-index:1;
+  }
+  .profit-effect span{
+    flex:none;
+    color:var(--accent);
+    font-weight:900;
+  }
+  .profit-summary{
+    margin-top:16px;
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:16px;
+    align-items:center;
+    padding:20px 22px;
+    border-radius:12px;
+    border:1px solid #bfdbfe;
+    background:
+      linear-gradient(90deg,rgba(239,246,255,.96),rgba(240,253,250,.96)),
+      #fff;
+    box-shadow:0 16px 34px -28px rgba(37,99,235,.58);
+  }
+  .profit-summary .summary-icon{
+    width:58px;
+    height:58px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#2563eb,#0d9488);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .profit-summary svg{
+    width:30px;
+    height:30px;
+    stroke:currentColor;
+    fill:none;
+    stroke-width:2.35;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+  .profit-summary b{
+    display:block;
+    color:#0f172a;
+    font-size:18px;
+    line-height:1.25;
+    margin-bottom:3px;
+  }
+  .profit-summary span{
+    display:block;
+    color:#475569;
+    font-size:14.5px;
+    line-height:1.55;
+  }
+  .compact-compare{
+    margin:16px 0 0;
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:stretch;
+    gap:14px;
+  }
+  .compare-panel{
+    background:#fff;
+    border:1px solid #dbe3ef;
+    border-radius:12px;
+    padding:18px;
+    box-shadow:0 1px 2px rgba(15,23,42,.05),0 18px 36px -30px rgba(15,23,42,.45);
+  }
+  .compare-panel.bad{border-bottom:3px solid #fb7185}
+  .compare-panel.good{border-bottom:3px solid #10b981}
+  .compare-panel h4{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:18px;
+    margin-bottom:12px;
+    color:#0f172a;
+  }
+  .compare-mark{
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+  }
+  .compare-panel.bad .compare-mark{background:#ffe4e6;color:#be123c}
+  .compare-panel.good .compare-mark{background:#d1fae5;color:#047857}
+  .compare-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    list-style:none;
+  }
+  .compare-list li{
+    font-size:13px;
+    color:#334155;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:999px;
+    padding:7px 10px;
+    line-height:1.2;
+  }
+  .compare-arrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#2563eb;
+    font-weight:900;
+    font-size:26px;
+    padding:0 2px;
+  }
+  .ops-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-top:30px;
+  }
+  .ops-card{
+    background:#fff;
+    border:1px solid #dbe3ef;
+    border-radius:12px;
+    padding:24px;
+    box-shadow:0 1px 2px rgba(15,23,42,.05),0 20px 42px -32px rgba(15,23,42,.5);
+    position:relative;
+    overflow:hidden;
+  }
+  .ops-card::before{
+    content:"";
+    position:absolute;
+    inset:0 0 auto;
+    height:4px;
+    background:linear-gradient(90deg,var(--ops-a,#2563eb),var(--ops-b,#0d9488));
+  }
+  .ops-card:nth-child(2){--ops-a:#8b5cf6;--ops-b:#0ea5e9}
+  .ops-card:nth-child(3){--ops-a:#0d9488;--ops-b:#f59e0b}
+  .ops-num{
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    color:#fff;
+    background:linear-gradient(135deg,var(--ops-a,#2563eb),var(--ops-b,#0d9488));
+    margin-bottom:16px;
+  }
+  .ops-card h3{
+    font-size:20px;
+    line-height:1.18;
+    margin-bottom:10px;
+    color:#0f172a;
+  }
+  .ops-card p{
+    color:#475569;
+    font-size:14.5px;
+    line-height:1.62;
+    margin-bottom:16px;
+  }
+  .ops-list{
+    list-style:none;
+    display:grid;
+    gap:9px;
+    margin:0;
+  }
+  .ops-list li{
+    display:flex;
+    gap:9px;
+    color:#334155;
+    font-size:13.5px;
+    line-height:1.42;
+  }
+  .ops-list li::before{
+    content:"";
+    flex:none;
+    width:8px;
+    height:8px;
+    border-radius:3px;
+    background:var(--ops-a,#2563eb);
+    margin-top:.48em;
+    box-shadow:0 0 0 4px rgba(37,99,235,.10);
+  }
+  .ops-proof{
+    margin-top:16px;
+    border-radius:9px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    padding:10px 11px;
+    color:#0f172a;
+    font-weight:760;
+    font-size:12.5px;
+    line-height:1.38;
+  }
+  @media(max-width:1040px){
+    .profit-grid{grid-template-columns:repeat(2,1fr)}
+    .ops-grid{grid-template-columns:1fr}
+    .profit-card{min-height:300px}
+  }
+  @media(max-width:720px){
+    .profit-head{grid-template-columns:1fr;gap:10px}
+    .profit-grid{grid-template-columns:1fr}
+    .profit-card{min-height:0}
+    .profit-summary{grid-template-columns:1fr;padding:18px}
+    .profit-summary .summary-icon{width:48px;height:48px}
+    .compact-compare{grid-template-columns:1fr;gap:10px}
+    .compare-arrow{transform:rotate(90deg);padding:2px 0}
+  }
+
+  /* Must stay last: final CTA sits on a dark gradient. */
+  .cta-final{
+    text-align:center;
+    background:
+      radial-gradient(circle at 78% 16%,rgba(45,212,191,.26),transparent 30%),
+      linear-gradient(135deg,#07172f 0%,#0f2a54 44%,#0f766e 100%);
+  }
+  .cta-final h2{
+    color:#fff;
+    text-shadow:0 1px 18px rgba(2,6,23,.28);
+  }
+  .cta-final p{
+    color:#eaf3ff;
+    max-width:690px;
+    margin-left:auto;
+    margin-right:auto;
+    font-weight:560;
+    text-shadow:0 1px 14px rgba(2,6,23,.26);
+  }
+  .cta-final .btn-ghost{
+    background:rgba(255,255,255,.16) !important;
+    border-color:rgba(255,255,255,.42) !important;
+    color:#fff;
+  }
+  .cta-final .btn-ghost:hover{
+    background:rgba(255,255,255,.24) !important;
+  }
+  @media(max-width:720px){
+    nav.top .wrap{height:58px}
+    nav.top .brand{font-size:16px}
+    nav.top .brand span{font-size:12px}
+    nav.top .mobile-menu{display:block}
+    nav.top .links{display:none}
+  }
+
+  /* manifest — „to nie jest program księgowy" */
+  .manifest{background:var(--slate-900);color:#fff;border-radius:var(--radius);padding:38px 34px;text-align:center;box-shadow:var(--shadow)}
+  .manifest .kick{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-400);margin-bottom:14px}
+  .manifest h2{font-size:25px;font-weight:800;color:#fff;line-height:1.25;max-width:760px;margin:0 auto 14px}
+  .manifest h2 .hl{color:var(--brand-400)}
+  .manifest p{font-size:16px;color:var(--slate-300);max-width:680px;margin:0 auto;line-height:1.6}
+  .manifest p strong{color:#fff}
+  @media(max-width:720px){.manifest{padding:30px 22px}.manifest h2{font-size:21px}}
+
+  /* ====== „Ankieta bez ankiety" — wybór profilu biura (nie blokuje treści) ====== */
+  .seg{background:linear-gradient(180deg,#f8fafc,#fff);border-bottom:1px solid var(--slate-100)}
+  .seg .wrap{padding-top:30px;padding-bottom:30px}
+  .seg-q{font-size:14.5px;font-weight:700;color:var(--slate-600);text-align:center}
+  .seg-q .muted{font-weight:500;color:var(--slate-400)}
+  .seg-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:700px;margin:16px auto 0}
+  .seg-btn{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;cursor:pointer;font:inherit;
+    background:#fff;border:1.5px solid var(--slate-200);border-radius:14px;padding:18px 20px;transition:.16s}
+  .seg-btn:hover{border-color:var(--brand-400);transform:translateY(-2px);box-shadow:var(--shadow)}
+  .seg-btn .seg-ico{font-size:26px}
+  .seg-btn .seg-t{font-size:16.5px;font-weight:800;color:var(--slate-900)}
+  .seg-btn .seg-s{font-size:13.5px;color:var(--slate-500)}
+  .seg-btn[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-50);box-shadow:0 0 0 3px var(--brand-100)}
+  .seg-done{display:none;text-align:center;margin:15px auto 0;max-width:700px;font-size:14.5px;color:var(--teal-700);font-weight:600}
+  body[data-seg] .seg-done{display:block}
+  @media(max-width:560px){.seg-row{grid-template-columns:1fr}}
+  /* treść zależna od wybranego profilu */
+  .seg-only{display:none}
+  body[data-seg="small"] .seg-only.small{display:block}
+  body[data-seg="large"] .seg-only.large{display:block}
+  /* podświetlenie rekomendowanego pakietu po wyborze profilu */
+  .pkg-rec{position:relative}
+  body[data-seg="small"] .pkg-rec-small,
+  body[data-seg="large"] .pkg-rec-large{box-shadow:0 0 0 2px var(--brand),var(--shadow);border-color:var(--brand)}
+  body[data-seg="small"] .pkg-rec-small::before,
+  body[data-seg="large"] .pkg-rec-large::before{content:"Dla Ciebie";position:absolute;top:-11px;left:18px;
+    background:var(--brand);color:#fff;font-size:11px;font-weight:800;letter-spacing:.05em;padding:3px 11px;border-radius:999px;text-transform:uppercase}
+</style>
+
+<!-- Microsoft Clarity — darmowa analityka nagrań sesji (przewijanie, kliknięcia, mapy ciepła).
+     Wklej Project ID z clarity.microsoft.com (Settings → Overview) w CLARITY_ID poniżej, a nagrania ruszą.
+     Puste = nic się nie ładuje i żadne dane nie wychodzą na zewnątrz. -->
+<script>
+  window.CLARITY_ID = "vu2cqxtm8e"; // Microsoft Clarity — projekt artwebcraft
+  (function(){var id=window.CLARITY_ID;if(!id)return;
+    (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script",id);
+  })();
+</script>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav class="top">
+  <div class="wrap">
+    <div class="brand">BRAKOMAT <span>· przewodnik</span></div>
+    <div class="links">
+      <a href="#spis">Spis treści</a>
+      <a href="#po-co">Po co to?</a>
+      <a href="#start">Jak zacząć</a>
+      <a href="#klient">Strefa klienta</a>
+      <a href="#panel">Strefa Biura</a>
+      <a href="#obsluga">Obsługa</a>
+      <a href="#wdrozenie">Wdrożenie</a>
+      <a href="#demo">Wypróbuj</a>
+    </div>
+    <details class="mobile-menu">
+      <summary>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg>
+        Menu
+      </summary>
+      <div class="mobile-links">
+        <a href="#spis">Spis treści</a>
+        <a href="#po-co">Po co to?</a>
+        <a href="#start">Jak zacząć</a>
+        <a href="#klient">Strefa klienta</a>
+        <a href="#panel">Strefa Biura</a>
+        <a href="#obsluga">Obsługa</a>
+        <a href="#wdrozenie">Wdrożenie</a>
+        <a href="#demo">Wypróbuj demo</a>
+      </div>
+    </details>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-bg">
+    <!-- poster jako warstwa pod wideo: eliminuje czarne mignięcie i jest widoczny na zrzucie; kadr identyczny jak wideo -->
+    <img class="hero-media" src="logo_artwebcraft.gif" alt="" aria-hidden="true">
+    <video class="hero-media" autoplay muted loop playsinline preload="metadata" poster="logo_artwebcraft.gif">
+      <source src="logo_artwebcraft.mp4" type="video/mp4">
+      <!-- awaryjnie, gdyby przeglądarka nie odtwarzała wideo -->
+      <img src="logo_artwebcraft.gif" alt="Animowane logo ArtWebCraft / Brakomat" style="width:100%;height:100%;object-fit:cover;display:block">
+    </video>
+  </div>
+  <div class="wrap">
+    <div class="hero-text">
+      <span class="badge">⏱️ Przeczytasz w 5 minut · obejrzysz demo w 3</span>
+      <h1>Nie goń klientów po dokumenty. <span class="hl">Niech system robi to za Ciebie.</span></h1>
+      <p class="lead">Brakomat to panel dla biura rachunkowego, który sam pilnuje terminów, dopomina się o brakujące dokumenty i na żywo pokazuje status każdej faktury Twoich klientów. Ten przewodnik pokazuje <strong>po co to jest</strong> i <strong>jak z tego korzystać</strong> - bez żargonu.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#start">Pokaż mi jak to działa →</a>
+        <a class="btn btn-ghost" href="https://client.accounting.artwebcraft.com" target="_blank" rel="noopener">Otwórz żywe demo ↗</a>
+      </div>
+      <div class="meta">Dane w demo są fikcyjne. Niczego nie zepsujesz - klikaj śmiało.</div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ WYBÓR PROFILU — „ankieta bez ankiety" (nie blokuje treści) ============ -->
+<section id="profil" class="seg">
+  <div class="wrap">
+    <div class="seg-q">Powiesz, kogo prowadzisz? <span class="muted">Dopasujemy przewodnik w 1 kliknięciu — nic nie blokujemy.</span></div>
+    <div class="seg-row" role="group" aria-label="Wybierz profil biura">
+      <button type="button" class="seg-btn" data-seg-pick="small" aria-pressed="false">
+        <span class="seg-ico">👩‍💻</span>
+        <span class="seg-t">Zarządzam biurem 2–5 osób</span>
+        <span class="seg-s">Mniejszy zespół, dużo klientów na głowie</span>
+      </button>
+      <button type="button" class="seg-btn" data-seg-pick="large" aria-pressed="false">
+        <span class="seg-ico">🏢</span>
+        <span class="seg-t">Zarządzam większym zespołem</span>
+        <span class="seg-s">Wielu pracowników i klientów naraz</span>
+      </button>
+    </div>
+    <div class="seg-done" id="seg-done"></div>
+  </div>
+</section>
+
+<!-- ============ SPIS TREŚCI / WYBÓR ŚCIEŻKI ============ -->
+<section id="spis">
+  <div class="wrap">
+    <div class="eyebrow">Spis treści · wybierz swoją ścieżkę</div>
+    <h2>Od czego zacząć?</h2>
+    <p class="intro">Rozwiń ścieżkę, która Cię dotyczy, i przejdź prosto do interesującego Cię tematu.</p>
+
+    <div class="toc">
+      <details class="toc-group" open>
+        <summary>
+          <span class="toc-mark demo" aria-hidden="true">
+            <svg viewBox="0 0 32 32">
+              <rect x="5" y="6" width="19" height="14" rx="3"></rect>
+              <path d="M10 25h10"></path>
+              <path d="M15 20v5"></path>
+              <path d="M20 17l6 3-3 1.2 2.1 3.7-2.4 1.3-2-3.7-2 2z"></path>
+              <path d="M9 11h9"></path>
+            </svg>
+          </span>
+          <span class="toc-txt"><span class="toc-h">Demo</span><span class="toc-sub">Klikaj bez konta · dane są fikcyjne</span></span>
+        </summary>
+        <div class="toc-body">
+          <a href="#po-co">Po co to jest? - problem i przepływ dokumentów</a>
+          <a href="#start">Jak otworzyć demo</a>
+          <a href="#klient">Jak to widzi Twój klient</a>
+          <a href="#panel">Strefa Biura krok po kroku</a>
+        </div>
+      </details>
+
+      <details class="toc-group">
+        <summary>
+          <span class="toc-mark assistant" aria-hidden="true">
+            <svg viewBox="0 0 32 32">
+              <path d="M9 4h10l5 5v18H9z"></path>
+              <path d="M19 4v6h5"></path>
+              <path d="M13 14h8"></path>
+              <path d="M13 18h6"></path>
+              <circle cx="23" cy="23" r="5"></circle>
+              <path d="M20.7 23.1l1.6 1.6 3-3.2"></path>
+            </svg>
+          </span>
+          <span class="toc-txt"><span class="toc-h">Asystent Dokumentów</span><span class="toc-sub">Pakiet 1</span></span>
+        </summary>
+        <div class="toc-body">
+          <a href="#po-co">Po co to jest?</a>
+          <a href="#klient">Jak to widzi Twój klient</a>
+          <a href="#panel">Strefa Biura krok po kroku</a>
+          <a href="#obsluga">Obsługa na co dzień</a>
+          <a href="#wdrozenie">Jak zacząć u siebie</a>
+        </div>
+      </details>
+
+      <details class="toc-group">
+        <summary>
+          <span class="toc-mark order" aria-hidden="true">
+            <svg viewBox="0 0 32 32">
+              <path d="M5 10.5h8l2 2.5h12v12.5H5z"></path>
+              <path d="M5 10.5V8h7l2 2.5"></path>
+              <path d="M11 18h5"></path>
+              <path d="M19 18h2.5a3 3 0 0 1 0 6H19"></path>
+              <path d="M14 24h-2.5a3 3 0 0 1 0-6H14"></path>
+              <path d="M14 21h5"></path>
+            </svg>
+          </span>
+          <span class="toc-txt"><span class="toc-h">Pakiet Porządkujący</span><span class="toc-sub">Pakiet 2 · + odczyt faktur, KSeF, zespół</span></span>
+        </summary>
+        <div class="toc-body">
+          <a href="#po-co">Po co to jest?</a>
+          <a href="#klient">Jak to widzi Twój klient</a>
+          <a href="#panel">Strefa Biura krok po kroku</a>
+          <a href="#obsluga">Obsługa na co dzień</a>
+          <a href="#wdrozenie">Jak zacząć u siebie</a>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PO CO TO ============ -->
+<section id="po-co">
+  <div class="wrap">
+    <div class="eyebrow">Część 1 · Dla każdego</div>
+    <h2>Po co to jest?</h2>
+    <p class="intro">Najpierw najważniejsze: jaki problem Brakomat rozwiązuje. Jeśli kiedykolwiek goniłaś klienta o brakujący wyciąg na trzy dni przed terminem - to jest dla Ciebie.</p>
+
+    <div class="profit-section" aria-label="Cztery główne korzyści Brakomatu">
+      <div class="profit-head">
+        <h3>4 sposoby, w jakie Brakomat pracuje na zysk biura</h3>
+        <p>To jest system do sprzedania klientowi lepszej obsługi: portal dokumentów, porządek, automatyzacja, KSeF-ready i mniej ręcznej pracy po stronie biura. Technologia jest w tle, a na froncie widać standard premium.</p>
+      </div>
+
+      <div class="profit-grid">
+        <article class="profit-card time">
+          <div class="profit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+          </div>
+          <h4>Biuro odzyskuje przepustowość</h4>
+          <p class="lead">Brakomat zdejmuje z zespołu operacyjne pilnowanie dokumentów, żeby księgowi mogli obsłużyć więcej klientów bez dokładania kolejnych godzin.</p>
+          <ul>
+            <li>automatyczne przypomnienia o brakach,</li>
+            <li>zbiorcze „pogoń spóźnialskich” dla całego portfela,</li>
+            <li>mniej pracy administracyjnej na jednego klienta.</li>
+          </ul>
+          <div class="profit-instead">
+            <b>Zamiast</b>
+            <span>Maile, SMS-y i telefony co miesiąc do tych samych osób.</span>
+          </div>
+          <div class="profit-effect"><span>Efekt:</span> większa liczba klientów na tym samym zespole.</div>
+        </article>
+
+        <article class="profit-card control">
+          <div class="profit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path><path d="m7 5 1.5 1.5L11 4"></path><path d="m7 12 1.5 1.5L11 11"></path><path d="m7 19 1.5 1.5L11 18"></path></svg>
+          </div>
+          <h4>Biuro ma centrum dowodzenia</h4>
+          <p class="lead">Właściciel i zespół widzą statusy, braki, poprawki, historię miesięcy i kompletność klientów w jednym panelu.</p>
+          <ul>
+            <li>status każdego klienta i każdej kategorii,</li>
+            <li>historia miesięcy oraz archiwum: klient / miesiąc / kategoria,</li>
+            <li>role zespołu i log aktywności dla porządku pracy.</li>
+          </ul>
+          <div class="profit-instead">
+            <b>Zamiast</b>
+            <span>Faktury w mailu, na WhatsAppie i na dysku. Nie wiadomo, kto co przysłał i czego brakuje.</span>
+          </div>
+          <div class="profit-effect"><span>Efekt:</span> zatwierdzone dokumenty są od razu w dedykowanych folderach.</div>
+        </article>
+
+        <article class="profit-card money">
+          <div class="profit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 19h16"></path><path d="M7 16l3-4 3 2 4-7"></path><path d="M17 7h-4"></path><path d="M17 7v4"></path></svg>
+          </div>
+          <h4>Biuro sprzedaje pakiet premium</h4>
+          <p class="lead">Mniej administracyjnego chaosu oznacza więcej czasu na rentowne doradztwo, obsługę klientów premium albo po prostu święty spokój po 16:00.</p>
+          <ul>
+            <li>klient widzi portal, statusy i archiwum,</li>
+            <li>AI odczytuje faktury, a eksporty wspierają Optimę, QuickBooks i Excela,</li>
+            <li>KSeF-ready: faktury mogą trafiać do procesu automatycznie.</li>
+          </ul>
+          <div class="profit-instead">
+            <b>Zamiast</b>
+            <span>„Jesteśmy kolejnym biurem od księgowania” - bez widocznej różnicy, za którą klient chce dopłacić.</span>
+          </div>
+          <div class="profit-effect"><span>Efekt:</span> łatwiejsza sprzedaż droższej, uporządkowanej obsługi.</div>
+        </article>
+
+        <article class="profit-card client">
+          <div class="profit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"></rect><path d="M10 18h4"></path><path d="M9.5 7.5h5"></path><path d="M9.5 11h3.5"></path></svg>
+          </div>
+          <h4>Klient czuje lepszy standard</h4>
+          <p class="lead">Zamiast wysyłać pliki „gdziekolwiek”, klient dostaje własny portal, jasną listę braków i komunikaty, które prowadzą go krok po kroku.</p>
+          <ul>
+            <li>portal klienta z logowaniem i możliwością instalacji jako PWA,</li>
+            <li>powody odrzucenia i poprawki widoczne bez telefonu,</li>
+            <li>przypomnienia podatkowe ZUS, VAT, PIT, CIT, JPK.</li>
+          </ul>
+          <div class="profit-instead">
+            <b>Zamiast</b>
+            <span>Klient dopytuje, czy wszystko doszło, albo nie wie, co było źle w dokumencie.</span>
+          </div>
+          <div class="profit-effect"><span>Efekt:</span> klient widzi wartość obsługi zanim dostanie rozliczenie.</div>
+        </article>
+      </div>
+
+      <div class="profit-summary">
+        <div class="summary-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M20 7 10 17l-5-5"></path></svg>
+        </div>
+        <div>
+          <b>Klient nie kupuje „kolejnego systemu”. Kupuje spokojniejszą, bardziej uporządkowaną obsługę.</b>
+          <span>Brakomat daje biuru widoczną warstwę premium: klient ma portal i jasne statusy, a zespół dostaje dokumenty szybciej, czyściej i bliżej księgowania.</span>
+        </div>
+      </div>
+
+      <div class="compact-compare" aria-label="Porównanie pracy bez Brakomatu i z Brakomatem">
+        <div class="compare-panel bad">
+          <h4><span class="compare-mark">×</span> Bez Brakomatu</h4>
+          <ul class="compare-list">
+            <li>ręczne przypomnienia</li>
+            <li>szukanie braków</li>
+            <li>przepisywanie danych</li>
+            <li>praca bez widocznej wartości premium</li>
+          </ul>
+        </div>
+        <div class="compare-arrow" aria-hidden="true">→</div>
+        <div class="compare-panel good">
+          <h4><span class="compare-mark">✓</span> Z Brakomatem</h4>
+          <ul class="compare-list">
+            <li>statusy na żywo</li>
+            <li>automatyczne przypomnienia</li>
+            <li>odczyt faktur przez AI</li>
+            <li>portal, KSeF-ready i eksporty</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAK TO DZIAŁA - przepływ dokumentów (klient → Brakomat → biuro) -->
+    <h3 style="font-size:19px;font-weight:800;color:var(--slate-900);margin-top:6px;text-align:center">A tak to działa z Brakomatem - w trzech krokach</h3>
+    <div class="flow-wrap" style="margin-top:18px">
+      <div class="flow">
+        <img class="node-img klient" src="brakomat_przewodnik_klient.png" alt="Klient - przeciąga faktury i wyciągi na swoją podstronę, z telefonu albo komputera; system potwierdza przesłanie.">
+
+        <div class="conn c1"><div class="line"></div><div class="chip">📄 FV</div></div>
+
+        <img class="node-img system" src="brakomat_przewodnik_system.png" alt="Brakomat - pilnuje terminu i porządkuje dokument, a brakujące sam upomina u klienta.">
+
+        <div class="conn c2"><div class="line"></div><div class="chip">📄 dane</div></div>
+
+        <img class="node-img biuro" src="brakomat_przewodnik_biuro.png" alt="Twoje biuro - widzisz wszystko w jednym panelu i decydujesz jednym kliknięciem: Zatwierdź albo Odeślij.">
+      </div>
+
+      <img class="illu" style="margin-top:14px" src="po%20co%20to_01-alert-dokument-do-poprawki.png" alt="Coś nie tak z dokumentem? Wraca do klienta z powodem - a klient poprawia i wysyła ponownie, bez telefonu z Twojej strony.">
+    </div>
+
+    <p class="intro" style="margin-top:18px;text-align:center">Resztę przewodnika poświęcamy na to, jak to wygląda w praktyce.</p>
+  </div>
+</section>
+
+<!-- ============ MANIFEST — to nie jest program księgowy ============ -->
+<section id="nie-program">
+  <div class="wrap">
+    <div class="manifest">
+      <div class="kick">Ważne, żeby się nie pomylić</div>
+      <h2>To nie jest program księgowy.<br>To <span class="hl">warstwa porządku i zysku</span> nad księgowością.</h2>
+      <p>Program księgowy pomaga <strong>zaksięgować</strong> dokument. Brakomat pomaga sprawić, żeby dokument <strong>w ogóle dotarł</strong> — był czytelny, opisany, sprawdzony i gotowy do pracy. Działa <strong>obok</strong> Twojej Optimy, Insertu czy enova — niczego nie wymienia.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ JAK ZACZĄĆ ============ -->
+<section id="start">
+  <div class="wrap">
+    <div class="eyebrow">Część 2 · Pierwsze 30 sekund</div>
+    <h2>Jak otworzyć demo</h2>
+    <p class="intro">Nie trzeba nic instalować ani zakładać konta. Demo działa w przeglądarce.</p>
+
+    <div class="steps">
+      <div class="step open">
+        <div class="head"><div class="num">1</div><div><h3>Wejdź na stronę demo</h3><div class="sub">Otwiera się w każdej przeglądarce - komputer lub telefon</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Kliknij: <a class="inline" href="https://client.accounting.artwebcraft.com" target="_blank" rel="noopener">client.accounting.artwebcraft.com</a></p>
+          <p>Zobaczysz ekran powitalny z hasłem „Nie goń klientów po dokumenty. Niech system robi to za Ciebie.". To wersja demonstracyjna - wszystkie firmy i faktury są wymyślone.</p>
+          <div class="tip">💡 W pełnej, wdrożonej wersji w tym miejscu jest bezpieczne logowanie - osobne dla Ciebie i osobne dla każdego klienta.</div>
+        </div></div>
+      </div>
+      <div class="step">
+        <div class="head"><div class="num">2</div><div><h3>Kliknij „Pokaż mi demo →"</h3><div class="sub">Wchodzisz do panelu biura rachunkowego</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Duży przycisk na środku ekranu powitalnego. Po kliknięciu trafiasz do <strong>panelu</strong> - to Twój główny widok pracy, jako księgowej.</p>
+          <p>Na górze zobaczysz powitanie („Dzień dobry") i podsumowanie tego, co dzieje się dziś w biurze.</p>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STREFA KLIENTA (najpierw - stąd płyną dokumenty) ============ -->
+<section id="klient" style="padding:0">
+  <div class="client-panel-section">
+    <div class="client-panel-wrap">
+      <div class="client-panel-copy">
+        <div class="eyebrow">Część 3 · Stąd płyną dokumenty</div>
+        <h2>Jak to widzi Twój klient</h2>
+        <p>Tu wszystko się zaczyna: większość pracy robi sam klient, na swojej prostej podstronie - a do biura trafia już gotowy komplet. Panel klienta nie wymaga instrukcji obsługi; Ty zobaczysz ten ekran przez podgląd „strefy klienta" przy dowolnej firmie.</p>
+      </div>
+
+      <div class="client-panel-layout">
+        <div class="phone-preview">
+          <img src="panel-klienta-real.png" alt="Panel klienta Brakomat - lista wymaganych dokumentów, statusy, alerty i przyciski dodawania plików">
+        </div>
+
+        <div class="client-guide">
+          <div class="client-guide-intro">
+            <h3>Instrukcja, którą biuro może przekazać klientowi</h3>
+            <p>Prosty scenariusz bez żargonu: klient wie, gdzie wejść, co wgrać, jak poprawić błędy i kiedy kliknąć, że komplet dokumentów jest gotowy.</p>
+          </div>
+
+          <div class="steps">
+            <div class="step open">
+              <div class="head"><div class="num">1</div><div><h3>Wejdź w swój link</h3><div class="sub">Biuro wysyła prywatny link lub zaproszenie e-mail</div></div><div class="chev">⌄</div></div>
+              <div class="body"><div class="body-inner">
+                <p>Klient otwiera link od biura. Przy pierwszym wejściu może ustawić konto, a później loguje się swoim e-mailem i hasłem.</p>
+                <div class="tip">Dla klienta: nie instalujesz programu księgowego. Wchodzisz w prosty portal dokumentów.</div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="head"><div class="num">2</div><div><h3>Zobacz, czego brakuje</h3><div class="sub">Lista kategorii pokazuje, o co prosi biuro</div></div><div class="chev">⌄</div></div>
+              <div class="body"><div class="body-inner">
+                <p>Na ekranie klient widzi kategorie dokumentów, np. faktury kosztowe, sprzedażowe, wyciągi, ZUS, kadry albo inne pozycje ustawione przez biuro.</p>
+                <p>Status mówi jasno, czy dokument jest brakujący, w toku, zatwierdzony albo do poprawki.</p>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="head"><div class="num">3</div><div><h3>Wgraj pliki z komputera albo telefonu</h3><div class="sub">PDF, zdjęcie lub skan trafia od razu do właściwej kategorii</div></div><div class="chev">⌄</div></div>
+              <div class="body"><div class="body-inner">
+                <p>Klient przeciąga plik albo wybiera go z telefonu. Może dopisać krótki opis, np. „zaliczka za remont biura” albo „paliwo, auto firmowe”.</p>
+                <div class="tip">Dla biura: mniej dokumentów w mailach, Messengerze i folderach „różne”.</div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="head"><div class="num">4</div><div><h3>Popraw, jeśli biuro odeśle dokument</h3><div class="sub">Powód odrzucenia jest widoczny w portalu</div></div><div class="chev">⌄</div></div>
+              <div class="body"><div class="body-inner">
+                <p>Jeśli plik jest niewyraźny, niepełny albo w złej kategorii, klient widzi powód i może wgrać poprawioną wersję bez dzwonienia do biura.</p>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="head"><div class="num">5</div><div><h3>Kliknij „Zakończ przesyłanie”</h3><div class="sub">Biuro od razu widzi, że komplet jest gotowy</div></div><div class="chev">⌄</div></div>
+              <div class="body"><div class="body-inner">
+                <p>Gdy klient wgra wszystko, klika zakończenie przesyłania. W panelu biura firma przechodzi do pracy bez pytania „czy to już wszystko?”.</p>
+                <div class="tip">Efekt: klient ma jasną checklistę, a biuro dostaje uporządkowany komplet.</div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="client-demo-tip client-preview-tip">
+        <div class="preview-icon-sample" aria-label="Ikonka podglądu strefy klienta">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h6"></path><path d="M14 7h6"></path><circle cx="12" cy="7" r="2"></circle><path d="M4 17h3"></path><path d="M11 17h9"></path><circle cx="9" cy="17" r="2"></circle></svg>
+          <span>podgląd</span>
+        </div>
+        <p>Na liście klientów kliknij taką ikonkę podglądu „strefy klienta” przy dowolnej firmie, żeby zobaczyć ten ekran oczami klienta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STREFA BIURA - 3 FILARY OPERACYJNE ============ -->
+<section id="panel">
+  <div class="wrap">
+    <div class="eyebrow">Część 4 · Dla Ciebie, do pracy</div>
+    <h2>Strefa Biura w 3 filarach</h2>
+    <p class="intro">Nie musisz poznawać siedmiu zakładek, żeby zrozumieć wartość panelu. W praktyce Brakomat robi trzy rzeczy: pokazuje priorytety, przygotowuje dokumenty i pomaga zamknąć temat bez chaosu.</p>
+
+    <div class="ops-grid">
+      <article class="ops-card">
+        <div class="ops-num">1</div>
+        <h3>Podgląd i priorytety</h3>
+        <p>Na jednym ekranie widzisz, którzy klienci są gotowi, komu czego brakuje i gdzie miesiąc zaczyna się opóźniać.</p>
+        <ul class="ops-list">
+          <li>kafelki: gotowe, brakujące, spóźnione, do poprawki,</li>
+          <li>lista klientów z paskami kompletności dokumentów,</li>
+          <li>filtry problemów i szybkie przypomnienia do spóźnialskich.</li>
+        </ul>
+        <div class="ops-proof">Wartość: mniej szukania, więcej decyzji.</div>
+      </article>
+
+      <article class="ops-card">
+        <div class="ops-num">2</div>
+        <h3>AI przygotowuje dokumenty</h3>
+        <p>Inteligentny rejestr odczytuje faktury, porządkuje dane i wyłapuje dokumenty, które nie nadają się jeszcze do pracy.</p>
+        <ul class="ops-list">
+          <li>odczyt numerów, dat, kwot i stawek VAT,</li>
+          <li>sugerowana kategoria oraz status „do weryfikacji”,</li>
+          <li>obsługa faktur z KSeF w wyższych pakietach.</li>
+        </ul>
+        <div class="ops-proof">Wartość: mniej przepisywania, lepszy wsad do księgowania.</div>
+      </article>
+
+      <article class="ops-card">
+        <div class="ops-num">3</div>
+        <h3>Decyzja i eksport</h3>
+          <p>Księgowy nie szuka plików po kanałach komunikacji. Sprawdza, zatwierdza, odsyła z powodem, a zatwierdzone dokumenty trafiają do uporządkowanego archiwum.</p>
+        <ul class="ops-list">
+          <li>zatwierdź dokument albo odeślij go klientowi z jasnym powodem,</li>
+          <li>zamknij miesiąc i zablokuj dalsze zmiany,</li>
+          <li>magazynuj zatwierdzone dokumenty w folderach klient / miesiąc / kategoria,</li>
+          <li>eksportuj dane do Excela, Optimy lub QuickBooks.</li>
+        </ul>
+        <div class="ops-proof">Wartość: szybciej zamknięty miesiąc i mniej niedomówień z klientem.</div>
+      </article>
+    </div>
+
+    <div class="eyebrow" style="margin-top:46px">Dla osób, które chcą szczegółów</div>
+    <h2 style="font-size:clamp(24px,3vw,32px)">Strefa Biura krok po kroku</h2>
+    <p class="intro">Jeśli chcesz przejść przez panel dokładniej, rozwiń poniższe punkty. To część instrukcyjna - przydatna po pierwszym zainteresowaniu, gdy ktoś chce zobaczyć, co dokładnie robi każdy element.</p>
+
+    <div class="steps">
+
+      <div class="step open">
+        <div class="head"><div class="num">A</div><div><h3>Kafelki na górze - stan całego biura w 1 sekundę</h3><div class="sub">Wszyscy klienci · Gotowe · Brakujące · Spóźnione · Do poprawki</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>U góry panelu są kolorowe liczniki. To „deska rozdzielcza" Twojego miesiąca:</p>
+          <p>• <strong>Gotowe</strong> - firmy, które dostarczyły wszystko i są zatwierdzone.<br>
+             • <strong>Brakujące</strong> - czegoś brakuje, ale termin jeszcze nie minął.<br>
+             • <strong>Spóźnione</strong> - alarm: klient po terminie. System już przygotował dla nich przypomnienia.<br>
+             • <strong>Do poprawki</strong> - faktury niewyraźne lub źle opisane, które trzeba poprawić.</p>
+          <div class="tip">💡 Najedź myszką na każdy kafelek - pojawi się dymek z dokładnym wyjaśnieniem.</div>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">B</div><div><h3>Lista klientów - kto, co przysłał, czego brak</h3><div class="sub">Każdy wiersz = jedna firma, z paskiem statusów dokumentów</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Pod kafelkami jest lista wszystkich Twoich klientów (Tech Solutions, Kawiarnia „Pod Chmurką", MedCare Clinic…). Przy każdym widać kolorowe statusy poszczególnych kategorii: Faktury Kosztowe, Przychodowe, Wyciągi, ZUS, Kadry.</p>
+          <p>Kolor mówi wszystko bez czytania - zielony to porządek, czerwony to spóźnienie. (Pełna ściąga kolorów jest w następnej części.)</p>
+          <div class="tip">💡 U góry listy jest wyszukiwarka („Szukaj klienta…") i filtr „wg problemu", żeby od razu pokazać tylko spóźnialskich.</div>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">C</div><div><h3>Przypomnienia - system goni klientów za Ciebie</h3><div class="sub">Przycisk „przypomnienie" przy kliencie + „Pogoń spóźnialskich" zbiorczo</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Przy każdym kliencie jest ikonka przypomnienia. Klikasz - i Agent AI wysyła do klienta gotową, grzeczną wiadomość (e-mail / WhatsApp) o brakujących dokumentach. Treść jest już przygotowana, nic nie piszesz.</p>
+          <p>Jest też duży przycisk <span class="kbd">POGOŃ SPÓŹNIALSKICH</span> - jednym kliknięciem wysyła przypomnienia do wszystkich, którzy są po terminie.</p>
+          <div class="tip">💡 W pełnej wersji te przypomnienia wysyłają się <strong>same</strong>, według Twoich reguł - nie musisz nawet klikać.</div>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">D</div><div><h3>Inteligentny Rejestr - AI czyta faktury</h3><div class="sub">Tabela na dole: „Analizuj AI" odczytuje NIP, kwoty, daty</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Na dole panelu jest <strong>Inteligentny Rejestr Dokumentów</strong>. Każdy wgrany plik tu trafia. Klikasz <span class="kbd">Analizuj AI</span> przy fakturze, a system sam wyciąga z niej: numer, datę, NIP sprzedawcy, kwotę netto, VAT i brutto.</p>
+          <p>Spróbuj na przykładowych wierszach:</p>
+          <p>• Faktura Microsoft / Medicover → AI ładnie odczyta wszystkie dane (status zmieni się na „Do weryfikacji").<br>
+             • „zdjecie_z_wakacji.jpg" → AI rozpozna, że to <strong>nie</strong> faktura i grzecznie odeśle z prośbą o właściwy plik.</p>
+          <div class="tip">💡 To pokazuje sedno: AI odwala czytanie i przepisywanie, a Ty tylko sprawdzasz, czy się zgadza.</div>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">E</div><div><h3>Weryfikacja NIP - Biała Lista i VIES</h3><div class="sub">Automatyczne sprawdzenie kontrahenta przed płatnością</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Przy danych z faktury Brakomat sam sprawdza NIP sprzedawcy w <strong>Białej Liście VAT</strong> Ministerstwa Finansów oraz w <strong>VIES</strong> (dla kontrahentów z UE). Widzisz od razu, czy podatnik jest aktywny i jaki ma numer konta.</p>
+          <p>Jeśli coś jest nie tak, pojawia się ostrzeżenie: <span class="pill" style="background:var(--rose-50);color:#be123c">⚠ Ryzyko podatkowe</span> - żeby nie zapłacić na zły rachunek.</p>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">F</div><div><h3>Zatwierdź albo odrzuć dokument</h3><div class="sub">Zielony „Zatwierdź dane" / czerwony „Odrzuć i powiadom klienta"</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Po analizie decydujesz jednym kliknięciem:</p>
+          <p>• <strong>Zatwierdź dane</strong> - dokument jest OK, idzie dalej.<br>
+             • <strong>Odrzuć i powiadom klienta</strong> - wybierasz powód (nieczytelny skan, brak stron, zła kategoria…), a klient od razu dostaje informację <em>i widzi ją u siebie w portalu</em>, więc wie, co poprawić.</p>
+          <div class="tip">💡 Klient nie dzwoni z pytaniem „co było nie tak" - powód odrzucenia widzi sam.</div>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">G</div><div><h3>Zamknięcie miesiąca i eksport do Excela</h3><div class="sub">„Zatwierdź miesiąc" blokuje edycję · „Eksport do Excel" robi zestawienie</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Gdy klient jest kompletny, klikasz kłódkę / <span class="kbd">Zatwierdź</span> przy nim - to blokuje miesiąc (klient nie może już nic zmieniać) i przygotowuje dane do Twojego programu księgowego.</p>
+          <p>Przycisk <span class="kbd">Eksport do Excel</span> generuje zbiorczy arkusz: wszyscy klienci, statusy i odczytane dane - do raportów albo do wczytania gdzie indziej.</p>
+          <p>A <span class="kbd">Zamknij miesiąc</span> archiwizuje wszystko i otwiera czysty kolejny miesiąc.</p>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ OBSŁUGA NA CO DZIEŃ (instrukcja subskrybenta) ============ -->
+<section id="obsluga">
+  <div class="wrap">
+    <div class="eyebrow">Część 5 · Codzienna praca</div>
+    <h2>Obsługa na co dzień</h2>
+    <p class="intro">Gdy masz już konto, codzienna praca to kilka prostych ruchów. Dwie najważniejsze rzeczy Brakomat robi za Ciebie: <strong>sam dopomina się o braki</strong> i <strong>na żywo pokazuje status każdego dokumentu</strong> - od „czekamy" po „zatwierdzone". To jest sedno; reszta to wygoda.</p>
+
+    <div class="steps">
+
+      <div class="step open">
+        <div class="head"><div class="num">1</div><div><h3>Dodaj klienta i ustaw zasady zbierania dokumentów</h3><div class="sub">Klient, termin, kategorie i link do jego strefy</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Ten krok robisz raz dla klienta, zanim wyślesz mu link. Brakomat musi wiedzieć, <strong>kogo pilnuje</strong>, <strong>do kiedy ma zebrać dokumenty</strong> i <strong>jakie kategorie mają być widoczne w panelu klienta</strong>.</p>
+          <div class="setup-grid">
+            <div class="setup-card">
+              <b>1. Dodaj klienta</b>
+              <span>Klikasz <span class="kbd">Dodaj klienta</span>, wpisujesz nazwę firmy i dane kontaktowe potrzebne do zaproszenia oraz przypomnień.</span>
+            </div>
+            <div class="setup-card">
+              <b>2. Ustaw termin miesiąca</b>
+              <span>Wybierasz datę dostarczenia dokumentów. Po jej przekroczeniu klient trafia do spóźnionych, a biuro widzi priorytet bez ręcznego sprawdzania.</span>
+            </div>
+            <div class="setup-card">
+              <b>3. Wybierz kategorie dokumentów</b>
+              <span>Tworzysz “szuflady” dla dokumentów: faktury kosztowe, sprzedażowe, wyciągi, ZUS, kadry, delegacje albo własne kategorie klienta.</span>
+            </div>
+            <div class="setup-card">
+              <b>4. Wyślij prywatny link</b>
+              <span>Klient dostaje swoją strefę z listą kategorii i widzi, co ma dodać. Biuro nie tłumaczy tego za każdym razem od nowa.</span>
+            </div>
+          </div>
+          <p>Kategorie ustawiasz pod sposób pracy biura. Dla prostego klienta wystarczą 3-4 pozycje, a dla bardziej wymagającego możesz dodać osobne kategorie dla kadr, banku, umów, raportów kasowych czy dokumentów do poprawki.</p>
+          <div class="tip">💡 Kategorie i terminy nie są tylko “ustawieniami”. To szablon porządku, który potem wraca co miesiąc i ogranicza chaos w mailach.</div>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">2</div><div><h3>Wyślij klientowi jego prywatny link</h3><div class="sub">Klient wrzuca dokumenty u siebie, bez instalacji</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Przy każdym kliencie możesz <strong>skopiować jego prywatny link</strong> albo kliknąć <span class="kbd">Wyślij zaproszenie</span> - klient dostaje e-mail i wchodzi na swoją prostą podstronę. Może ustawić sobie hasło, żeby logować się stale, bez szukania linku co miesiąc.</p>
+          <div class="tip">💡 Klient nie potrzebuje żadnego programu - wszystko robi w przeglądarce, też z telefonu.</div>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">3</div><div><h3>Brakomat sam pilnuje braków <span class="pill" style="background:var(--brand-50);color:var(--brand-700)">to robi różnicę</span></h3><div class="sub">Automat + komunikat z karty klienta lub dokumentu</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Nie musisz pamiętać, kto czego nie przysłał - Brakomat pamięta za Ciebie. Gdy zbliża się termin albo minął, do klienta idzie <strong>grzeczne przypomnienie</strong> o brakujących dokumentach, według Twoich reguł. Możesz też jednym przyciskiem <span class="kbd">pogonić wszystkich spóźnialskich</span> naraz.</p>
+          <p>Masz też ręczną kontrolę wtedy, gdy chcesz zareagować konkretnie: z <strong>karty danego klienta</strong> możesz wysłać komunikat tylko do tej jednej firmy, a z poziomu <strong>wybranego dokumentu</strong> możesz wysłać wiadomość dotyczącą konkretnego pliku - na przykład przy odrzuceniu, błędnej kategorii albo nieczytelnym skanie.</p>
+          <div class="tip">💡 To zdejmuje z Ciebie najgorszą część miesiąca: automat pilnuje rutyny, a Ty dosyłasz punktowy komunikat tylko tam, gdzie naprawdę trzeba.</div>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">4</div><div><h3>Status każdego dokumentu - na żywo <span class="pill" style="background:var(--brand-50);color:var(--brand-700)">to robi różnicę</span></h3><div class="sub">Zawsze wiesz, na czym stoisz, bez otwierania maili</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Każda kategoria u każdego klienta ma swój kolor i status na bieżącym etapie: <em>czekamy → przyszło → sprawdzone → zatwierdzone</em>, a gdy coś jest nie tak - <em>do poprawki</em>. Jeden rzut oka na panel i wiesz, kto jest gotowy, a kto nie.</p>
+          <div class="tip">💡 W panelu status jest opisany także tekstem, więc nie musisz zapamiętywać samych kolorów.</div>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">5</div><div><h3>Sprawdź i zatwierdź - albo odeślij z powodem</h3><div class="sub">Klient od razu wie, co poprawić</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Dokument w porządku? <strong>Zatwierdzasz</strong> jednym kliknięciem. Coś nie tak (nieczytelny skan, zła kategoria, brak strony)? <strong>Odsyłasz z powodem</strong> - a klient widzi tę informację u siebie i poprawia, bez telefonu z Twojej strony.</p>
+          <p>Komunikat możesz wysłać bezpośrednio z poziomu dokumentu, którego dotyczy sprawa. Dzięki temu klient nie dostaje ogólnego “proszę poprawić dokumenty”, tylko konkretną informację: co jest nie tak i który plik ma wymienić.</p>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">6</div><div><h3>Automatyczny odczyt faktur <span class="pill" style="background:var(--violet-50);color:#6d28d9">Pakiet Porządkujący +</span></h3><div class="sub">Mniej ręcznego przepisywania</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>W wyższych pakietach Brakomat sam odczytuje z faktury numer, datę, sprzedawcę, NIP i kwoty - nie musisz ich przepisywać ręcznie. Przy okazji sprawdza NIP sprzedawcy na <strong>Białej Liście VAT</strong> i w <strong>VIES</strong>, więc od razu widzisz, czy z kontrahentem wszystko gra.</p>
+          <div class="tip">💡 To miły dodatek, nie clou - najwięcej czasu i nerwów oszczędza Ci pilnowanie braków i kontrola statusów.</div>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">7</div><div><h3>Nic nie ginie - Kosz i archiwum</h3><div class="sub">Usunięte da się przywrócić, miesiące się archiwizują</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Skasowany plik trafia najpierw do <strong>Kosza</strong> - można go przywrócić. Gdy zamykasz miesiąc, cały komplet ląduje w <strong>archiwum</strong>, a Brakomat otwiera czysty kolejny miesiąc. Historia zawsze pod ręką.</p>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">8</div><div><h3>Porządek w plikach i eksport</h3><div class="sub">Uporządkowane foldery w chmurze + zestawienie do Excela</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Zatwierdzone dokumenty Brakomat odkłada na dysku w dedykowanym folderze każdego klienta, z podziałem na <strong>miesiące</strong> i <strong>kategorie</strong> (klient / miesiąc / kategoria). Dzięki temu dokument nie tylko jest zatwierdzony, ale od razu trafia w miejsce, w którym da się go później szybko znaleźć.</p>
+          <p>Przycisk <span class="kbd">Eksport do Excel</span> robi zbiorcze zestawienie wszystkich klientów i dokumentów - do raportu albo do wczytania w innym programie.</p>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">9</div><div><h3>Praca zespołowa <span class="pill" style="background:var(--violet-50);color:#6d28d9">Pakiet Porządkujący +</span></h3><div class="sub">Zaproś pracowników do jednego panelu</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Zapraszasz pracowników e-mailem i każdy pracuje na tym samym panelu. Rozliczenia i ustawienia konta widzi tylko właściciel - pracownicy zajmują się dokumentami.</p>
+        </div></div>
+      </div>
+
+      <div class="step">
+        <div class="head"><div class="num">10</div><div><h3>e-Faktury prosto z KSeF <span class="pill" style="background:var(--violet-50);color:#6d28d9">Pakiet Porządkujący +</span></h3><div class="sub">Część dokumentów masz, zanim klient cokolwiek wgra</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Brakomat potrafi pobierać faktury klienta wprost z rządowego systemu e-Faktur (KSeF). Przy fakturach zakupowych decydujesz jednym kliknięciem: <strong>koszt firmy</strong>, <strong>prywatne</strong> albo <strong>zapytaj klienta</strong> - a klient sam potwierdza u siebie.</p>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ OD DEMO DO WDROŻENIA (trial) ============ -->
+<section id="wdrozenie">
+  <div class="wrap">
+    <div class="eyebrow">Część 6 · Gdy chcesz to u siebie</div>
+    <h2>Od demo do wdrożenia u Ciebie</h2>
+    <p class="intro">Spodobało się klikanie demo? Uruchomienie Brakomatu w swoim biurze to kilkanaście minut. Pierwsze <strong>14 dni jest za darmo</strong> - bez ryzyka.</p>
+
+    <div class="steps">
+      <div class="step open">
+        <div class="head"><div class="num">1</div><div><h3>Załóż konto biura i wybierz pakiet</h3><div class="sub">14 dni za darmo · bez opłat przez pierwsze dwa tygodnie</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Rejestrujesz biuro (e-mail to Twój login), potwierdzasz adres z wiadomości i uzupełniasz krótki profil. Potem wybierasz pakiet i włączasz <strong>14-dniowy okres próbny</strong>.</p>
+          <div class="tip">💡 Przez pierwsze 14 dni nic nie płacisz, a subskrypcję możesz anulować w każdej chwili - bez kosztów.</div>
+        </div></div>
+      </div>
+      <div class="step">
+        <div class="head"><div class="num">2</div><div><h3>Dodaj pierwszego klienta i przetestuj portal</h3><div class="sub">Najlepiej „na sobie", zanim zaprosisz prawdziwych klientów</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Dodaj testowego klienta (np. „TEST - Jan Kowalski"), ustaw kilka kategorii i skopiuj jego link. Otwórz go w nowym oknie, wgraj dowolny plik - i wróć do panelu. Zobaczysz, że status zmienia się <strong>na żywo</strong>.</p>
+        </div></div>
+      </div>
+      <div class="step">
+        <div class="head"><div class="num">3</div><div><h3>Zaproś prawdziwych klientów</h3><div class="sub">Wysyłasz link, ustawiasz termin - i gotowe</div></div><div class="chev">⌄</div></div>
+        <div class="body"><div class="body-inner">
+          <p>Gdy wszystko działa, dodajesz realne firmy, ustawiasz im kategorie i terminy, a potem klikasz „Wyślij zaproszenie". Od tego momentu Brakomat pilnuje braków za Ciebie.</p>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="ba" style="margin-top:34px">
+      <div class="col after">
+        <h3>Co warto przygotować</h3>
+        <ul>
+          <li>Adres e-mail biura</li>
+          <li>Listę klientów (nazwy)</li>
+          <li>Listę kategorii, które zbierasz co miesiąc</li>
+          <li>E-maile i NIP-y klientów - do zaproszeń i sprawdzania kontrahentów</li>
+        </ul>
+      </div>
+      <div class="arrow">+</div>
+      <div class="col before" style="border-style:solid;border-color:var(--slate-200);background:#fff">
+        <h3 style="color:var(--slate-700)">Czego NIE potrzebujesz</h3>
+        <ul>
+          <li>Własnego serwera ani chmury</li>
+          <li>Instalowania programów - działa w przeglądarce</li>
+          <li>Wymiany swojego programu księgowego - Brakomat działa obok niego</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="font-size:18px;font-weight:800;margin-top:40px;margin-bottom:4px">Pakiety</h3>
+    <p class="intro" style="margin-bottom:0">Każdy pakiet pilnuje braków i pokazuje statusy na żywo - wyższe dokładają wygody. Aktualne limity i ceny znajdziesz w cenniku.</p>
+    <p class="intro seg-only small" style="margin-top:10px;margin-bottom:0;color:var(--brand-700)">Dla zespołu 2–5 osób zwykle wystarcza <strong>Asystent Dokumentów</strong> — całe pilnowanie braków i statusy na żywo. Wyższy pakiet włączysz, gdy zechcesz odczyt faktur i pracę zespołową.</p>
+    <p class="intro seg-only large" style="margin-top:10px;margin-bottom:0;color:var(--brand-700)">Przy większym zespole najwięcej daje <strong>Pakiet Porządkujący</strong> — wiele osób na jednym panelu, automatyczny odczyt faktur i e-Faktury z KSeF.</p>
+    <div class="grid cols-3">
+      <div class="card gain pkg-rec pkg-rec-small">
+        <span class="plan-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><path d="M10 5.5h8l5 5V26a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V7.5a2 2 0 0 1 2-2Z"></path><path d="M18 5.5v6h6"></path><path d="M12 16h7"></path><path d="M12 20h4"></path><path d="m12 24 1.7 1.7 3.8-4"></path><path d="M24.5 16.5h3"></path><path d="M26 15v3"></path></svg>
+        </span>
+        <h3>Asystent Dokumentów</h3>
+        <p>Sedno Brakomatu: klient wrzuca dokumenty na swoją podstronę, Ty masz statusy na żywo, automatyczne przypomnienia i porządek w dokumentach klienta.</p>
+      </div>
+      <div class="card gain pkg-rec pkg-rec-large">
+        <span class="plan-icon order" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><path d="M5 11h8l2.2 2.5H27v11.2a2.3 2.3 0 0 1-2.3 2.3H7.3A2.3 2.3 0 0 1 5 24.7Z"></path><path d="M5 11V8.4A2.4 2.4 0 0 1 7.4 6h6.2L16 8.6h8.5a2.5 2.5 0 0 1 2.5 2.5v2.4"></path><path d="M10 17.5h8"></path><path d="M10 21h5.5"></path><path d="M22 18.2c1.7.5 2.6 1.4 2.6 2.5 0 1.5-1.8 2.7-4.1 2.7"></path><path d="m22.7 16.6-.9 1.9 2 .7"></path></svg>
+        </span>
+        <h3>Pakiet Porządkujący</h3>
+        <p>Wszystko z Asystenta + automatyczny odczyt faktur, e-Faktury z KSeF, praca zespołowa i archiwum zatwierdzonych dokumentów: klient / miesiąc / kategoria.</p>
+      </div>
+      <div class="card gain">
+        <span class="plan-icon scale" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><rect x="5" y="18" width="7" height="8" rx="1.5"></rect><rect x="20" y="18" width="7" height="8" rx="1.5"></rect><rect x="12.5" y="6" width="7" height="8" rx="1.5"></rect><path d="M16 14v4"></path><path d="M12 22H9.5"></path><path d="M20 22h2.5"></path><path d="M9.5 18v-2.2A1.8 1.8 0 0 1 11.3 14H16"></path><path d="M22.5 18v-2.2a1.8 1.8 0 0 0-1.8-1.8H16"></path><path d="M7.5 22h2"></path><path d="M22.5 22h2"></path></svg>
+        </span>
+        <h3>Dla dużych biur i wielu oddziałów</h3>
+        <p>Pełna moc dla biur obsługujących wielu klientów, zespołów lub oddziałów naraz - z jednym standardem porządku dokumentów.</p>
+      </div>
+    </div>
+
+    <div class="client-demo-tip" style="margin-top:26px">💡 Po 14 dniach: jeśli zostajesz, nic nie musisz robić - wszyscy klienci, dokumenty i historia zostają na miejscu. Jeśli rezygnujesz, anulujesz przed końcem okresu próbnego i nie płacisz nic.</div>
+  </div>
+</section>
+
+<!-- ============ CTA / DEMO ============ -->
+<section id="demo">
+  <div class="wrap">
+    <div class="cta-final">
+      <h2>Najlepiej po prostu kliknąć</h2>
+      <p>Czytanie o tym zajmuje 5 minut - przeklikanie demo zajmie 3. Dane są fikcyjne, więc możesz wcisnąć każdy przycisk bez obaw.</p>
+      <div class="cta-row" style="justify-content:center;display:flex;gap:12px;flex-wrap:wrap">
+        <a class="btn btn-primary" href="https://client.accounting.artwebcraft.com" target="_blank" rel="noopener">Otwórz żywe demo ↗</a>
+        <a class="btn btn-ghost" href="#po-co" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25)">Wróć na górę przewodnika</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong>BrakomatPro</strong> - Twój asystent w zarządzaniu dokumentami biura rachunkowego.</p>
+    <p style="margin-top:6px">Masz pytania albo chcesz BrakomatPro u siebie? Napisz: <a href="mailto:accounting@artwebcraft.com">accounting@artwebcraft.com</a> · <span class="tag">ArtWebCraft 2026</span></p>
+  </div>
+</footer>
+
+<script>
+  const prog=document.getElementById('progress');
+  const onScroll=()=>{const h=document.documentElement;const sc=(h.scrollTop)/(h.scrollHeight-h.clientHeight);prog.style.width=(sc*100)+'%';};
+  document.addEventListener('scroll',onScroll,{passive:true});onScroll();
+  document.querySelectorAll('.step .head').forEach(h=>{
+    h.addEventListener('click',()=>h.parentElement.classList.toggle('open'));
+  });
+  document.querySelectorAll('.mobile-links a').forEach(a=>{
+    a.addEventListener('click',()=>a.closest('.mobile-menu')?.removeAttribute('open'));
+  });
+
+  // === Analityka zdarzeń — działa z Clarity, gtag lub dataLayer, jeśli są podłączone ===
+  function track(name, props){
+    props = props || {};
+    try{ if(window.clarity){ window.clarity('event', name); var k=Object.keys(props)[0]; if(k) window.clarity('set', k, String(props[k])); } }catch(e){}
+    try{ if(window.gtag){ window.gtag('event', name, props); } }catch(e){}
+    try{ (window.dataLayer=window.dataLayer||[]).push(Object.assign({event:name}, props)); }catch(e){}
+  }
+  track('guide_open');
+
+  // === „Ankieta bez ankiety" — wybór profilu personalizuje treść i wysyła zdarzenie ===
+  (function(){
+    var KEY='brakomat_seg';
+    var labels={small:'biuro 2–5 osób', large:'większy zespół'};
+    var done=document.getElementById('seg-done');
+    var btns=document.querySelectorAll('[data-seg-pick]');
+    function apply(seg, fire){
+      if(!labels[seg]) return;
+      document.body.setAttribute('data-seg', seg);
+      btns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-seg-pick')===seg ? 'true':'false'); });
+      if(done) done.textContent='Dopasowano przewodnik dla profilu: '+labels[seg]+'. Niżej podświetliliśmy rekomendowany pakiet.';
+      if(fire){ track('segment_select', {segment:seg}); try{localStorage.setItem(KEY,seg);}catch(e){} }
+    }
+    btns.forEach(function(b){ b.addEventListener('click', function(){ apply(b.getAttribute('data-seg-pick'), true); }); });
+    try{ var saved=localStorage.getItem(KEY); if(saved) apply(saved, false); }catch(e){}
+  })();
+
+  // === Kliknięcie „Otwórz demo" — zdarzenie + przeniesienie wyboru profilu w UTM ===
+  document.querySelectorAll('a[href*="client.accounting.artwebcraft.com"]').forEach(function(a){
+    a.addEventListener('click', function(){
+      var seg = document.body.getAttribute('data-seg') || 'nieokreslony';
+      try{ var u=new URL(a.href); if(!u.searchParams.get('utm_content')) u.searchParams.set('utm_content', seg); a.href=u.toString(); }catch(e){}
+      track('demo_click', {segment: seg});
+    });
+  });
+</script>
+</body>
+</html>
+
