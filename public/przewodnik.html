@@ -1136,9 +1136,6 @@
   body[data-seg] .seg-done{display:block}
   @media(max-width:560px){.seg-row{grid-template-columns:1fr}}
   /* treść zależna od wybranego profilu */
-  .seg-only{display:none}
-  body[data-seg="small"] .seg-only.small{display:block}
-  body[data-seg="large"] .seg-only.large{display:block}
   /* podświetlenie rekomendowanego pakietu po wyborze profilu */
   .pkg-rec{position:relative}
   body[data-seg="small"] .pkg-rec-small,
@@ -1230,26 +1227,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 </header>
-
-<!-- ============ WYBÓR PROFILU — „ankieta bez ankiety" (nie blokuje treści) ============ -->
-<section id="profil" class="seg">
-  <div class="wrap">
-    <div data-i18n="seg_q" class="seg-q">Powiesz, kogo prowadzisz? <span class="muted">Dopasujemy przewodnik w 1 kliknięciu — nic nie blokujemy.</span></div>
-    <div class="seg-row" role="group" aria-label="Wybierz profil biura">
-      <button type="button" class="seg-btn" data-seg-pick="small" aria-pressed="false">
-        <span class="seg-ico">👩‍💻</span>
-        <span data-i18n="seg_small_t" class="seg-t">Zarządzam biurem 2–5 osób</span>
-        <span data-i18n="seg_small_s" class="seg-s">Mniejszy zespół, dużo klientów na głowie</span>
-      </button>
-      <button type="button" class="seg-btn" data-seg-pick="large" aria-pressed="false">
-        <span class="seg-ico">🏢</span>
-        <span data-i18n="seg_large_t" class="seg-t">Zarządzam większym zespołem</span>
-        <span data-i18n="seg_large_s" class="seg-s">Wielu pracowników i klientów naraz</span>
-      </button>
-    </div>
-    <div class="seg-done" id="seg-done"></div>
-  </div>
-</section>
 
 <!-- ============ SPIS TREŚCI / WYBÓR ŚCIEŻKI ============ -->
 <section id="spis">
@@ -1870,8 +1847,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <h3 data-i18n="pk_h3" style="font-size:18px;font-weight:800;margin-top:40px;margin-bottom:4px">Pakiety</h3>
     <p data-i18n="pk_intro" class="intro" style="margin-bottom:0">Każdy pakiet pilnuje braków i pokazuje statusy na żywo - wyższe dokładają wygody. Aktualne limity i ceny znajdziesz w cenniku.</p>
-    <p data-i18n="pk_small" class="intro seg-only small" style="margin-top:10px;margin-bottom:0;color:var(--brand-700)">Dla zespołu 2–5 osób zwykle wystarcza <strong>Asystent Dokumentów</strong> — całe pilnowanie braków i statusy na żywo. Wyższy pakiet włączysz, gdy zechcesz odczyt faktur i pracę zespołową.</p>
-    <p data-i18n="pk_large" class="intro seg-only large" style="margin-top:10px;margin-bottom:0;color:var(--brand-700)">Przy większym zespole najwięcej daje <strong>Pakiet Porządkujący</strong> — wiele osób na jednym panelu, automatyczny odczyt faktur i e-Faktury z KSeF.</p>
     <div class="grid cols-3">
       <div class="card gain pkg-rec pkg-rec-small">
         <span class="plan-icon" aria-hidden="true">
@@ -1985,30 +1960,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var saved=null; try{ saved=localStorage.getItem('brakomat_lang'); }catch(e){}
     apply(saved || ((navigator.language||'').toLowerCase().indexOf('en')===0 ? 'en' : 'pl'));
     return { lang:function(){return cur;}, onChange:function(fn){subs.push(fn);} };
-  })();
-
-  // === „Ankieta bez ankiety" — wybór profilu personalizuje treść i wysyła zdarzenie (dwujęzyczne) ===
-  (function(){
-    var KEY='brakomat_seg';
-    var L={ pl:{small:'biuro 2–5 osób', large:'większy zespół',
-                done:function(x){return 'Dopasowano przewodnik dla profilu: '+x+'. Niżej podświetliliśmy rekomendowany pakiet.';}},
-            en:{small:'an office of 2–5', large:'a larger team',
-                done:function(x){return 'Guide tailored for: '+x+'. We’ve highlighted the recommended package below.';}} };
-    var done=document.getElementById('seg-done');
-    var btns=document.querySelectorAll('[data-seg-pick]');
-    var sel=null;
-    function render(){ if(!sel||!done) return; var t=L[I18N.lang()]||L.pl; done.textContent=t.done(t[sel]); }
-    function apply(seg, fire){
-      if(seg!=='small' && seg!=='large') return;
-      sel=seg;
-      document.body.setAttribute('data-seg', seg);
-      btns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-seg-pick')===seg ? 'true':'false'); });
-      render();
-      if(fire){ track('segment_select', {segment:seg}); try{localStorage.setItem(KEY,seg);}catch(e){} }
-    }
-    btns.forEach(function(b){ b.addEventListener('click', function(){ apply(b.getAttribute('data-seg-pick'), true); }); });
-    try{ var saved=localStorage.getItem(KEY); if(saved) apply(saved, false); }catch(e){}
-    I18N.onChange(render);
   })();
 
   // === Kliknięcie „Otwórz demo" — zdarzenie + przeniesienie wyboru profilu w UTM ===
