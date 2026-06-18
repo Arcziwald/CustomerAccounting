@@ -1163,19 +1163,29 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <div id="progress"></div>
+<style>
+.lang-switch{display:inline-flex;gap:2px;margin-left:14px;border:1px solid var(--slate-200,#e2e8f0);border-radius:999px;padding:2px;background:#fff;vertical-align:middle}
+.lang-switch button{border:0;background:transparent;font:inherit;font-weight:700;font-size:12px;letter-spacing:.04em;color:var(--slate-500,#64748b);padding:5px 10px;border-radius:999px;cursor:pointer;line-height:1}
+.lang-switch button[aria-pressed="true"]{background:var(--brand,#2563eb);color:#fff}
+@media(max-width:880px){.lang-switch{margin-left:auto}}
+</style>
 
 <nav class="top">
   <div class="wrap">
-    <div class="brand">BRAKOMAT <span>· przewodnik</span></div>
+    <div data-i18n="nav_brand" class="brand">BRAKOMAT <span>· przewodnik</span></div>
     <div class="links">
-      <a href="#spis">Spis treści</a>
-      <a href="#po-co">Po co to?</a>
-      <a href="#start">Jak zacząć</a>
-      <a href="#klient">Strefa klienta</a>
-      <a href="#panel">Strefa Biura</a>
-      <a href="#obsluga">Obsługa</a>
-      <a href="#wdrozenie">Wdrożenie</a>
-      <a href="#demo">Wypróbuj</a>
+      <a data-i18n="nav_spis" href="#spis">Spis treści</a>
+      <a data-i18n="nav_poco" href="#po-co">Po co to?</a>
+      <a data-i18n="nav_start" href="#start">Jak zacząć</a>
+      <a data-i18n="nav_klient" href="#klient">Strefa klienta</a>
+      <a data-i18n="nav_panel" href="#panel">Strefa Biura</a>
+      <a data-i18n="nav_obsluga" href="#obsluga">Obsługa</a>
+      <a data-i18n="nav_wdrozenie" href="#wdrozenie">Wdrożenie</a>
+      <a data-i18n="nav_demo" href="#demo">Wypróbuj</a>
+    </div>
+    <div class="lang-switch" role="group" aria-label="Język / Language">
+      <button type="button" data-lang-pick="pl" aria-pressed="true">PL</button>
+      <button type="button" data-lang-pick="en" aria-pressed="false">EN</button>
     </div>
     <details class="mobile-menu">
       <summary>
@@ -1183,14 +1193,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         Menu
       </summary>
       <div class="mobile-links">
-        <a href="#spis">Spis treści</a>
-        <a href="#po-co">Po co to?</a>
-        <a href="#start">Jak zacząć</a>
-        <a href="#klient">Strefa klienta</a>
-        <a href="#panel">Strefa Biura</a>
-        <a href="#obsluga">Obsługa</a>
-        <a href="#wdrozenie">Wdrożenie</a>
-        <a href="#demo">Wypróbuj demo</a>
+        <a data-i18n="nav_spis" href="#spis">Spis treści</a>
+        <a data-i18n="nav_poco" href="#po-co">Po co to?</a>
+        <a data-i18n="nav_start" href="#start">Jak zacząć</a>
+        <a data-i18n="nav_klient" href="#klient">Strefa klienta</a>
+        <a data-i18n="nav_panel" href="#panel">Strefa Biura</a>
+        <a data-i18n="nav_obsluga" href="#obsluga">Obsługa</a>
+        <a data-i18n="nav_wdrozenie" href="#wdrozenie">Wdrożenie</a>
+        <a data-i18n="nav_demo_m" href="#demo">Wypróbuj demo</a>
       </div>
     </details>
   </div>
@@ -1209,14 +1219,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="wrap">
     <div class="hero-text">
-      <span class="badge">⏱️ Przeczytasz w 5 minut · obejrzysz demo w 3</span>
-      <h1>Nie goń klientów po dokumenty. <span class="hl">Niech system robi to za Ciebie.</span></h1>
-      <p class="lead">Brakomat to panel dla biura rachunkowego, który sam pilnuje terminów, dopomina się o brakujące dokumenty i na żywo pokazuje status każdej faktury Twoich klientów. Ten przewodnik pokazuje <strong>po co to jest</strong> i <strong>jak z tego korzystać</strong> - bez żargonu.</p>
+      <span data-i18n="hero_badge" class="badge">⏱️ Przeczytasz w 5 minut · obejrzysz demo w 3</span>
+      <h1 data-i18n="hero_h1">Nie goń klientów po dokumenty. <span class="hl">Niech system robi to za Ciebie.</span></h1>
+      <p data-i18n="hero_lead" class="lead">Brakomat to panel dla biura rachunkowego, który sam pilnuje terminów, dopomina się o brakujące dokumenty i na żywo pokazuje status każdej faktury Twoich klientów. Ten przewodnik pokazuje <strong>po co to jest</strong> i <strong>jak z tego korzystać</strong> - bez żargonu.</p>
       <div class="cta-row">
-        <a class="btn btn-primary" href="#start">Pokaż mi jak to działa →</a>
-        <a class="btn btn-ghost" href="https://client.accounting.artwebcraft.com/?utm_source=przewodnik&utm_medium=guide&utm_campaign=demo" target="_blank" rel="noopener">Otwórz żywe demo ↗</a>
+        <a data-i18n="hero_cta1" class="btn btn-primary" href="#start">Pokaż mi jak to działa →</a>
+        <a data-i18n="demo_open_btn" class="btn btn-ghost" href="https://client.accounting.artwebcraft.com/?utm_source=przewodnik&utm_medium=guide&utm_campaign=demo" target="_blank" rel="noopener">Otwórz żywe demo ↗</a>
       </div>
-      <div class="meta">Dane w demo są fikcyjne. Niczego nie zepsujesz - klikaj śmiało.</div>
+      <div data-i18n="hero_meta" class="meta">Dane w demo są fikcyjne. Niczego nie zepsujesz - klikaj śmiało.</div>
     </div>
   </div>
 </header>
@@ -1224,17 +1234,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ============ WYBÓR PROFILU — „ankieta bez ankiety" (nie blokuje treści) ============ -->
 <section id="profil" class="seg">
   <div class="wrap">
-    <div class="seg-q">Powiesz, kogo prowadzisz? <span class="muted">Dopasujemy przewodnik w 1 kliknięciu — nic nie blokujemy.</span></div>
+    <div data-i18n="seg_q" class="seg-q">Powiesz, kogo prowadzisz? <span class="muted">Dopasujemy przewodnik w 1 kliknięciu — nic nie blokujemy.</span></div>
     <div class="seg-row" role="group" aria-label="Wybierz profil biura">
       <button type="button" class="seg-btn" data-seg-pick="small" aria-pressed="false">
         <span class="seg-ico">👩‍💻</span>
-        <span class="seg-t">Zarządzam biurem 2–5 osób</span>
-        <span class="seg-s">Mniejszy zespół, dużo klientów na głowie</span>
+        <span data-i18n="seg_small_t" class="seg-t">Zarządzam biurem 2–5 osób</span>
+        <span data-i18n="seg_small_s" class="seg-s">Mniejszy zespół, dużo klientów na głowie</span>
       </button>
       <button type="button" class="seg-btn" data-seg-pick="large" aria-pressed="false">
         <span class="seg-ico">🏢</span>
-        <span class="seg-t">Zarządzam większym zespołem</span>
-        <span class="seg-s">Wielu pracowników i klientów naraz</span>
+        <span data-i18n="seg_large_t" class="seg-t">Zarządzam większym zespołem</span>
+        <span data-i18n="seg_large_s" class="seg-s">Wielu pracowników i klientów naraz</span>
       </button>
     </div>
     <div class="seg-done" id="seg-done"></div>
@@ -1244,9 +1254,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ============ SPIS TREŚCI / WYBÓR ŚCIEŻKI ============ -->
 <section id="spis">
   <div class="wrap">
-    <div class="eyebrow">Spis treści · wybierz swoją ścieżkę</div>
-    <h2>Od czego zacząć?</h2>
-    <p class="intro">Rozwiń ścieżkę, która Cię dotyczy, i przejdź prosto do interesującego Cię tematu.</p>
+    <div data-i18n="spis_eyebrow" class="eyebrow">Spis treści · wybierz swoją ścieżkę</div>
+    <h2 data-i18n="spis_h2">Od czego zacząć?</h2>
+    <p data-i18n="spis_intro" class="intro">Rozwiń ścieżkę, która Cię dotyczy, i przejdź prosto do interesującego Cię tematu.</p>
 
     <div class="toc">
       <details class="toc-group" open>
@@ -1260,13 +1270,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <path d="M9 11h9"></path>
             </svg>
           </span>
-          <span class="toc-txt"><span class="toc-h">Demo</span><span class="toc-sub">Klikaj bez konta · dane są fikcyjne</span></span>
+          <span class="toc-txt"><span data-i18n="toc_demo_h" class="toc-h">Demo</span><span data-i18n="toc_demo_sub" class="toc-sub">Klikaj bez konta · dane są fikcyjne</span></span>
         </summary>
         <div class="toc-body">
-          <a href="#po-co">Po co to jest? - problem i przepływ dokumentów</a>
-          <a href="#start">Jak otworzyć demo</a>
-          <a href="#klient">Jak to widzi Twój klient</a>
-          <a href="#panel">Strefa Biura krok po kroku</a>
+          <a data-i18n="toc_demo_1" href="#po-co">Po co to jest? - problem i przepływ dokumentów</a>
+          <a data-i18n="toc_demo_2" href="#start">Jak otworzyć demo</a>
+          <a data-i18n="toc_demo_3" href="#klient">Jak to widzi Twój klient</a>
+          <a data-i18n="toc_demo_4" href="#panel">Strefa Biura krok po kroku</a>
         </div>
       </details>
 
@@ -1282,14 +1292,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <path d="M20.7 23.1l1.6 1.6 3-3.2"></path>
             </svg>
           </span>
-          <span class="toc-txt"><span class="toc-h">Asystent Dokumentów</span><span class="toc-sub">Pakiet 1</span></span>
+          <span class="toc-txt"><span data-i18n="toc_assist_h" class="toc-h">Asystent Dokumentów</span><span data-i18n="toc_assist_sub" class="toc-sub">Pakiet 1</span></span>
         </summary>
         <div class="toc-body">
-          <a href="#po-co">Po co to jest?</a>
-          <a href="#klient">Jak to widzi Twój klient</a>
-          <a href="#panel">Strefa Biura krok po kroku</a>
-          <a href="#obsluga">Obsługa na co dzień</a>
-          <a href="#wdrozenie">Jak zacząć u siebie</a>
+          <a data-i18n="toc_poco" href="#po-co">Po co to jest?</a>
+          <a data-i18n="toc_demo_3" href="#klient">Jak to widzi Twój klient</a>
+          <a data-i18n="toc_demo_4" href="#panel">Strefa Biura krok po kroku</a>
+          <a data-i18n="toc_obsluga" href="#obsluga">Obsługa na co dzień</a>
+          <a data-i18n="toc_wdrozenie" href="#wdrozenie">Jak zacząć u siebie</a>
         </div>
       </details>
 
@@ -1305,14 +1315,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <path d="M14 21h5"></path>
             </svg>
           </span>
-          <span class="toc-txt"><span class="toc-h">Pakiet Porządkujący</span><span class="toc-sub">Pakiet 2 · + odczyt faktur, KSeF, zespół</span></span>
+          <span class="toc-txt"><span data-i18n="toc_order_h" class="toc-h">Pakiet Porządkujący</span><span data-i18n="toc_order_sub" class="toc-sub">Pakiet 2 · + odczyt faktur, KSeF, zespół</span></span>
         </summary>
         <div class="toc-body">
-          <a href="#po-co">Po co to jest?</a>
-          <a href="#klient">Jak to widzi Twój klient</a>
-          <a href="#panel">Strefa Biura krok po kroku</a>
-          <a href="#obsluga">Obsługa na co dzień</a>
-          <a href="#wdrozenie">Jak zacząć u siebie</a>
+          <a data-i18n="toc_poco" href="#po-co">Po co to jest?</a>
+          <a data-i18n="toc_demo_3" href="#klient">Jak to widzi Twój klient</a>
+          <a data-i18n="toc_demo_4" href="#panel">Strefa Biura krok po kroku</a>
+          <a data-i18n="toc_obsluga" href="#obsluga">Obsługa na co dzień</a>
+          <a data-i18n="toc_wdrozenie" href="#wdrozenie">Jak zacząć u siebie</a>
         </div>
       </details>
     </div>
@@ -1322,14 +1332,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ============ PO CO TO ============ -->
 <section id="po-co">
   <div class="wrap">
-    <div class="eyebrow">Część 1 · Dla każdego</div>
-    <h2>Po co to jest?</h2>
-    <p class="intro">Najpierw najważniejsze: jaki problem Brakomat rozwiązuje. Jeśli kiedykolwiek goniłaś klienta o brakujący wyciąg na trzy dni przed terminem - to jest dla Ciebie.</p>
+    <div data-i18n="poco_eyebrow" class="eyebrow">Część 1 · Dla każdego</div>
+    <h2 data-i18n="poco_h2">Po co to jest?</h2>
+    <p data-i18n="poco_intro" class="intro">Najpierw najważniejsze: jaki problem Brakomat rozwiązuje. Jeśli kiedykolwiek goniłaś klienta o brakujący wyciąg na trzy dni przed terminem - to jest dla Ciebie.</p>
 
     <div class="profit-section" aria-label="Cztery główne korzyści Brakomatu">
       <div class="profit-head">
-        <h3>4 sposoby, w jakie Brakomat pracuje na zysk biura</h3>
-        <p>To jest system do sprzedania klientowi lepszej obsługi: portal dokumentów, porządek, automatyzacja, KSeF-ready i mniej ręcznej pracy po stronie biura. Technologia jest w tle, a na froncie widać standard premium.</p>
+        <h3 data-i18n="poco_head_h3">4 sposoby, w jakie Brakomat pracuje na zysk biura</h3>
+        <p data-i18n="poco_head_p">To jest system do sprzedania klientowi lepszej obsługi: portal dokumentów, porządek, automatyzacja, KSeF-ready i mniej ręcznej pracy po stronie biura. Technologia jest w tle, a na froncie widać standard premium.</p>
       </div>
 
       <div class="profit-grid">
@@ -1337,72 +1347,72 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="profit-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
           </div>
-          <h4>Biuro odzyskuje przepustowość</h4>
-          <p class="lead">Brakomat zdejmuje z zespołu operacyjne pilnowanie dokumentów, żeby księgowi mogli obsłużyć więcej klientów bez dokładania kolejnych godzin.</p>
+          <h4 data-i18n="pc_time_h4">Biuro odzyskuje przepustowość</h4>
+          <p data-i18n="pc_time_lead" class="lead">Brakomat zdejmuje z zespołu operacyjne pilnowanie dokumentów, żeby księgowi mogli obsłużyć więcej klientów bez dokładania kolejnych godzin.</p>
           <ul>
-            <li>automatyczne przypomnienia o brakach,</li>
-            <li>zbiorcze „pogoń spóźnialskich” dla całego portfela,</li>
-            <li>mniej pracy administracyjnej na jednego klienta.</li>
+            <li data-i18n="pc_time_li1">automatyczne przypomnienia o brakach,</li>
+            <li data-i18n="pc_time_li2">zbiorcze „pogoń spóźnialskich” dla całego portfela,</li>
+            <li data-i18n="pc_time_li3">mniej pracy administracyjnej na jednego klienta.</li>
           </ul>
           <div class="profit-instead">
             <b>Zamiast</b>
-            <span>Maile, SMS-y i telefony co miesiąc do tych samych osób.</span>
+            <span data-i18n="pc_time_instead">Maile, SMS-y i telefony co miesiąc do tych samych osób.</span>
           </div>
-          <div class="profit-effect"><span>Efekt:</span> większa liczba klientów na tym samym zespole.</div>
+          <div data-i18n="pc_time_effect" class="profit-effect"><span>Efekt:</span> większa liczba klientów na tym samym zespole.</div>
         </article>
 
         <article class="profit-card control">
           <div class="profit-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path><path d="m7 5 1.5 1.5L11 4"></path><path d="m7 12 1.5 1.5L11 11"></path><path d="m7 19 1.5 1.5L11 18"></path></svg>
           </div>
-          <h4>Biuro ma centrum dowodzenia</h4>
-          <p class="lead">Właściciel i zespół widzą statusy, braki, poprawki, historię miesięcy i kompletność klientów w jednym panelu.</p>
+          <h4 data-i18n="pc_ctrl_h4">Biuro ma centrum dowodzenia</h4>
+          <p data-i18n="pc_ctrl_lead" class="lead">Właściciel i zespół widzą statusy, braki, poprawki, historię miesięcy i kompletność klientów w jednym panelu.</p>
           <ul>
-            <li>status każdego klienta i każdej kategorii,</li>
-            <li>historia miesięcy oraz archiwum: klient / miesiąc / kategoria,</li>
-            <li>role zespołu i log aktywności dla porządku pracy.</li>
+            <li data-i18n="pc_ctrl_li1">status każdego klienta i każdej kategorii,</li>
+            <li data-i18n="pc_ctrl_li2">historia miesięcy oraz archiwum: klient / miesiąc / kategoria,</li>
+            <li data-i18n="pc_ctrl_li3">role zespołu i log aktywności dla porządku pracy.</li>
           </ul>
           <div class="profit-instead">
             <b>Zamiast</b>
-            <span>Faktury w mailu, na WhatsAppie i na dysku. Nie wiadomo, kto co przysłał i czego brakuje.</span>
+            <span data-i18n="pc_ctrl_instead">Faktury w mailu, na WhatsAppie i na dysku. Nie wiadomo, kto co przysłał i czego brakuje.</span>
           </div>
-          <div class="profit-effect"><span>Efekt:</span> zatwierdzone dokumenty są od razu w dedykowanych folderach.</div>
+          <div data-i18n="pc_ctrl_effect" class="profit-effect"><span>Efekt:</span> zatwierdzone dokumenty są od razu w dedykowanych folderach.</div>
         </article>
 
         <article class="profit-card money">
           <div class="profit-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M4 19h16"></path><path d="M7 16l3-4 3 2 4-7"></path><path d="M17 7h-4"></path><path d="M17 7v4"></path></svg>
           </div>
-          <h4>Biuro sprzedaje pakiet premium</h4>
-          <p class="lead">Mniej administracyjnego chaosu oznacza więcej czasu na rentowne doradztwo, obsługę klientów premium albo po prostu święty spokój po 16:00.</p>
+          <h4 data-i18n="pc_money_h4">Biuro sprzedaje pakiet premium</h4>
+          <p data-i18n="pc_money_lead" class="lead">Mniej administracyjnego chaosu oznacza więcej czasu na rentowne doradztwo, obsługę klientów premium albo po prostu święty spokój po 16:00.</p>
           <ul>
-            <li>klient widzi portal, statusy i archiwum,</li>
-            <li>AI odczytuje faktury, a eksporty wspierają Optimę, QuickBooks i Excela,</li>
-            <li>KSeF-ready: faktury mogą trafiać do procesu automatycznie.</li>
+            <li data-i18n="pc_money_li1">klient widzi portal, statusy i archiwum,</li>
+            <li data-i18n="pc_money_li2">AI odczytuje faktury, a eksporty wspierają Optimę, QuickBooks i Excela,</li>
+            <li data-i18n="pc_money_li3">KSeF-ready: faktury mogą trafiać do procesu automatycznie.</li>
           </ul>
           <div class="profit-instead">
             <b>Zamiast</b>
-            <span>„Jesteśmy kolejnym biurem od księgowania” - bez widocznej różnicy, za którą klient chce dopłacić.</span>
+            <span data-i18n="pc_money_instead">„Jesteśmy kolejnym biurem od księgowania” - bez widocznej różnicy, za którą klient chce dopłacić.</span>
           </div>
-          <div class="profit-effect"><span>Efekt:</span> łatwiejsza sprzedaż droższej, uporządkowanej obsługi.</div>
+          <div data-i18n="pc_money_effect" class="profit-effect"><span>Efekt:</span> łatwiejsza sprzedaż droższej, uporządkowanej obsługi.</div>
         </article>
 
         <article class="profit-card client">
           <div class="profit-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"></rect><path d="M10 18h4"></path><path d="M9.5 7.5h5"></path><path d="M9.5 11h3.5"></path></svg>
           </div>
-          <h4>Klient czuje lepszy standard</h4>
-          <p class="lead">Zamiast wysyłać pliki „gdziekolwiek”, klient dostaje własny portal, jasną listę braków i komunikaty, które prowadzą go krok po kroku.</p>
+          <h4 data-i18n="pc_client_h4">Klient czuje lepszy standard</h4>
+          <p data-i18n="pc_client_lead" class="lead">Zamiast wysyłać pliki „gdziekolwiek”, klient dostaje własny portal, jasną listę braków i komunikaty, które prowadzą go krok po kroku.</p>
           <ul>
-            <li>portal klienta z logowaniem i możliwością instalacji jako PWA,</li>
-            <li>powody odrzucenia i poprawki widoczne bez telefonu,</li>
-            <li>przypomnienia podatkowe ZUS, VAT, PIT, CIT, JPK.</li>
+            <li data-i18n="pc_client_li1">portal klienta z logowaniem i możliwością instalacji jako PWA,</li>
+            <li data-i18n="pc_client_li2">powody odrzucenia i poprawki widoczne bez telefonu,</li>
+            <li data-i18n="pc_client_li3">przypomnienia podatkowe ZUS, VAT, PIT, CIT, JPK.</li>
           </ul>
           <div class="profit-instead">
             <b>Zamiast</b>
-            <span>Klient dopytuje, czy wszystko doszło, albo nie wie, co było źle w dokumencie.</span>
+            <span data-i18n="pc_client_instead">Klient dopytuje, czy wszystko doszło, albo nie wie, co było źle w dokumencie.</span>
           </div>
-          <div class="profit-effect"><span>Efekt:</span> klient widzi wartość obsługi zanim dostanie rozliczenie.</div>
+          <div data-i18n="pc_client_effect" class="profit-effect"><span>Efekt:</span> klient widzi wartość obsługi zanim dostanie rozliczenie.</div>
         </article>
       </div>
 
@@ -1411,53 +1421,53 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <svg viewBox="0 0 24 24"><path d="M20 7 10 17l-5-5"></path></svg>
         </div>
         <div>
-          <b>Klient nie kupuje „kolejnego systemu”. Kupuje spokojniejszą, bardziej uporządkowaną obsługę.</b>
-          <span>Brakomat daje biuru widoczną warstwę premium: klient ma portal i jasne statusy, a zespół dostaje dokumenty szybciej, czyściej i bliżej księgowania.</span>
+          <b data-i18n="pc_sum_b">Klient nie kupuje „kolejnego systemu”. Kupuje spokojniejszą, bardziej uporządkowaną obsługę.</b>
+          <span data-i18n="pc_sum_s">Brakomat daje biuru widoczną warstwę premium: klient ma portal i jasne statusy, a zespół dostaje dokumenty szybciej, czyściej i bliżej księgowania.</span>
         </div>
       </div>
 
       <div class="compact-compare" aria-label="Porównanie pracy bez Brakomatu i z Brakomatem">
         <div class="compare-panel bad">
-          <h4><span class="compare-mark">×</span> Bez Brakomatu</h4>
+          <h4 data-i18n="cmp_bad_h4"><span class="compare-mark">×</span> Bez Brakomatu</h4>
           <ul class="compare-list">
-            <li>ręczne przypomnienia</li>
-            <li>szukanie braków</li>
-            <li>przepisywanie danych</li>
-            <li>praca bez widocznej wartości premium</li>
+            <li data-i18n="cmp_bad_1">ręczne przypomnienia</li>
+            <li data-i18n="cmp_bad_2">szukanie braków</li>
+            <li data-i18n="cmp_bad_3">przepisywanie danych</li>
+            <li data-i18n="cmp_bad_4">praca bez widocznej wartości premium</li>
           </ul>
         </div>
         <div class="compare-arrow" aria-hidden="true">→</div>
         <div class="compare-panel good">
-          <h4><span class="compare-mark">✓</span> Z Brakomatem</h4>
+          <h4 data-i18n="cmp_good_h4"><span class="compare-mark">✓</span> Z Brakomatem</h4>
           <ul class="compare-list">
-            <li>statusy na żywo</li>
-            <li>automatyczne przypomnienia</li>
-            <li>odczyt faktur przez AI</li>
-            <li>portal, KSeF-ready i eksporty</li>
+            <li data-i18n="cmp_good_1">statusy na żywo</li>
+            <li data-i18n="cmp_good_2">automatyczne przypomnienia</li>
+            <li data-i18n="cmp_good_3">odczyt faktur przez AI</li>
+            <li data-i18n="cmp_good_4">portal, KSeF-ready i eksporty</li>
           </ul>
         </div>
       </div>
     </div>
 
     <!-- TAK TO DZIAŁA - przepływ dokumentów (klient → Brakomat → biuro) -->
-    <h3 style="font-size:19px;font-weight:800;color:var(--slate-900);margin-top:6px;text-align:center">A tak to działa z Brakomatem - w trzech krokach</h3>
+    <h3 data-i18n="flow_h3" style="font-size:19px;font-weight:800;color:var(--slate-900);margin-top:6px;text-align:center">A tak to działa z Brakomatem - w trzech krokach</h3>
     <div class="flow-wrap" style="margin-top:18px">
       <div class="flow">
-        <img class="node-img klient" src="brakomat_przewodnik_klient.webp" alt="Klient - przeciąga faktury i wyciągi na swoją podstronę, z telefonu albo komputera; system potwierdza przesłanie.">
+        <img data-i18n-alt="alt_klient" class="node-img klient" src="brakomat_przewodnik_klient.webp" alt="Klient - przeciąga faktury i wyciągi na swoją podstronę, z telefonu albo komputera; system potwierdza przesłanie.">
 
         <div class="conn c1"><div class="line"></div><div class="chip">📄 FV</div></div>
 
-        <img class="node-img system" src="brakomat_przewodnik_system.webp" alt="Brakomat - pilnuje terminu i porządkuje dokument, a brakujące sam upomina u klienta.">
+        <img data-i18n-alt="alt_system" class="node-img system" src="brakomat_przewodnik_system.webp" alt="Brakomat - pilnuje terminu i porządkuje dokument, a brakujące sam upomina u klienta.">
 
         <div class="conn c2"><div class="line"></div><div class="chip">📄 dane</div></div>
 
-        <img class="node-img biuro" src="brakomat_przewodnik_biuro.webp" alt="Twoje biuro - widzisz wszystko w jednym panelu i decydujesz jednym kliknięciem: Zatwierdź albo Odeślij.">
+        <img data-i18n-alt="alt_biuro" class="node-img biuro" src="brakomat_przewodnik_biuro.webp" alt="Twoje biuro - widzisz wszystko w jednym panelu i decydujesz jednym kliknięciem: Zatwierdź albo Odeślij.">
       </div>
 
-      <img class="illu" style="margin-top:14px" src="po%20co%20to_01-alert-dokument-do-poprawki.webp" alt="Coś nie tak z dokumentem? Wraca do klienta z powodem - a klient poprawia i wysyła ponownie, bez telefonu z Twojej strony.">
+      <img data-i18n-alt="alt_illu" class="illu" style="margin-top:14px" src="po%20co%20to_01-alert-dokument-do-poprawki.webp" alt="Coś nie tak z dokumentem? Wraca do klienta z powodem - a klient poprawia i wysyła ponownie, bez telefonu z Twojej strony.">
     </div>
 
-    <p class="intro" style="margin-top:18px;text-align:center">Resztę przewodnika poświęcamy na to, jak to wygląda w praktyce.</p>
+    <p data-i18n="poco_outro" class="intro" style="margin-top:18px;text-align:center">Resztę przewodnika poświęcamy na to, jak to wygląda w praktyce.</p>
   </div>
 </section>
 
@@ -1465,9 +1475,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section id="nie-program">
   <div class="wrap">
     <div class="manifest">
-      <div class="kick">Ważne, żeby się nie pomylić</div>
-      <h2>To nie jest program księgowy.<br>To <span class="hl">warstwa porządku i zysku</span> nad księgowością.</h2>
-      <p>Program księgowy pomaga <strong>zaksięgować</strong> dokument. Brakomat pomaga sprawić, żeby dokument <strong>w ogóle dotarł</strong> — był czytelny, opisany, sprawdzony i gotowy do pracy. Działa <strong>obok</strong> Twojej Optimy, Insertu czy enova — niczego nie wymienia.</p>
+      <div data-i18n="np_kick" class="kick">Ważne, żeby się nie pomylić</div>
+      <h2 data-i18n="np_h2">To nie jest program księgowy.<br>To <span class="hl">warstwa porządku i zysku</span> nad księgowością.</h2>
+      <p data-i18n="np_p">Program księgowy pomaga <strong>zaksięgować</strong> dokument. Brakomat pomaga sprawić, żeby dokument <strong>w ogóle dotarł</strong> — był czytelny, opisany, sprawdzony i gotowy do pracy. Działa <strong>obok</strong> Twojej Optimy, Insertu czy enova — niczego nie wymienia.</p>
     </div>
   </div>
 </section>
@@ -1475,24 +1485,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ============ JAK ZACZĄĆ ============ -->
 <section id="start">
   <div class="wrap">
-    <div class="eyebrow">Część 2 · Pierwsze 30 sekund</div>
-    <h2>Jak otworzyć demo</h2>
-    <p class="intro">Nie trzeba nic instalować ani zakładać konta. Demo działa w przeglądarce.</p>
+    <div data-i18n="start_eyebrow" class="eyebrow">Część 2 · Pierwsze 30 sekund</div>
+    <h2 data-i18n="start_h2">Jak otworzyć demo</h2>
+    <p data-i18n="start_intro" class="intro">Nie trzeba nic instalować ani zakładać konta. Demo działa w przeglądarce.</p>
 
     <div class="steps">
       <div class="step open">
-        <div class="head"><div class="num">1</div><div><h3>Wejdź na stronę demo</h3><div class="sub">Otwiera się w każdej przeglądarce - komputer lub telefon</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">1</div><div><h3 data-i18n="start_s1_h3">Wejdź na stronę demo</h3><div data-i18n="start_s1_sub" class="sub">Otwiera się w każdej przeglądarce - komputer lub telefon</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Kliknij: <a class="inline" href="https://client.accounting.artwebcraft.com/?utm_source=przewodnik&utm_medium=guide&utm_campaign=demo" target="_blank" rel="noopener">client.accounting.artwebcraft.com</a></p>
-          <p>Zobaczysz ekran powitalny z hasłem „Nie goń klientów po dokumenty. Niech system robi to za Ciebie.". To wersja demonstracyjna - wszystkie firmy i faktury są wymyślone.</p>
-          <div class="tip">💡 W pełnej, wdrożonej wersji w tym miejscu jest bezpieczne logowanie - osobne dla Ciebie i osobne dla każdego klienta.</div>
+          <p data-i18n="start_s1_p1">Kliknij: <a class="inline" href="https://client.accounting.artwebcraft.com/?utm_source=przewodnik&utm_medium=guide&utm_campaign=demo" target="_blank" rel="noopener">client.accounting.artwebcraft.com</a></p>
+          <p data-i18n="start_s1_p2">Zobaczysz ekran powitalny z hasłem „Nie goń klientów po dokumenty. Niech system robi to za Ciebie.". To wersja demonstracyjna - wszystkie firmy i faktury są wymyślone.</p>
+          <div data-i18n="start_s1_tip" class="tip">💡 W pełnej, wdrożonej wersji w tym miejscu jest bezpieczne logowanie - osobne dla Ciebie i osobne dla każdego klienta.</div>
         </div></div>
       </div>
       <div class="step">
-        <div class="head"><div class="num">2</div><div><h3>Kliknij „Pokaż mi demo →"</h3><div class="sub">Wchodzisz do panelu biura rachunkowego</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">2</div><div><h3 data-i18n="start_s2_h3">Kliknij „Pokaż mi demo →"</h3><div data-i18n="start_s2_sub" class="sub">Wchodzisz do panelu biura rachunkowego</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Duży przycisk na środku ekranu powitalnego. Po kliknięciu trafiasz do <strong>panelu</strong> - to Twój główny widok pracy, jako księgowej.</p>
-          <p>Na górze zobaczysz powitanie („Dzień dobry") i podsumowanie tego, co dzieje się dziś w biurze.</p>
+          <p data-i18n="start_s2_p1">Duży przycisk na środku ekranu powitalnego. Po kliknięciu trafiasz do <strong>panelu</strong> - to Twój główny widok pracy, jako księgowej.</p>
+          <p data-i18n="start_s2_p2">Na górze zobaczysz powitanie („Dzień dobry") i podsumowanie tego, co dzieje się dziś w biurze.</p>
         </div></div>
       </div>
     </div>
@@ -1504,59 +1514,59 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="client-panel-section">
     <div class="client-panel-wrap">
       <div class="client-panel-copy">
-        <div class="eyebrow">Część 3 · Stąd płyną dokumenty</div>
-        <h2>Jak to widzi Twój klient</h2>
-        <p>Tu wszystko się zaczyna: większość pracy robi sam klient, na swojej prostej podstronie - a do biura trafia już gotowy komplet. Panel klienta nie wymaga instrukcji obsługi; Ty zobaczysz ten ekran przez podgląd „strefy klienta" przy dowolnej firmie.</p>
+        <div data-i18n="kl_eyebrow" class="eyebrow">Część 3 · Stąd płyną dokumenty</div>
+        <h2 data-i18n="kl_h2">Jak to widzi Twój klient</h2>
+        <p data-i18n="kl_p">Tu wszystko się zaczyna: większość pracy robi sam klient, na swojej prostej podstronie - a do biura trafia już gotowy komplet. Panel klienta nie wymaga instrukcji obsługi; Ty zobaczysz ten ekran przez podgląd „strefy klienta" przy dowolnej firmie.</p>
       </div>
 
       <div class="client-panel-layout">
         <div class="phone-preview">
-          <img src="brakomat_przzewodnik_panel_klient.webp" alt="Panel klienta Brakomat - lista wymaganych dokumentów, statusy, alerty i przyciski dodawania plików">
+          <img data-i18n-alt="alt_panel" src="brakomat_przzewodnik_panel_klient.webp" alt="Panel klienta Brakomat - lista wymaganych dokumentów, statusy, alerty i przyciski dodawania plików">
         </div>
 
         <div class="client-guide">
           <div class="client-guide-intro">
-            <h3>Instrukcja, którą biuro może przekazać klientowi</h3>
-            <p>Prosty scenariusz bez żargonu: klient wie, gdzie wejść, co wgrać, jak poprawić błędy i kiedy kliknąć, że komplet dokumentów jest gotowy.</p>
+            <h3 data-i18n="kl_guide_h3">Instrukcja, którą biuro może przekazać klientowi</h3>
+            <p data-i18n="kl_guide_p">Prosty scenariusz bez żargonu: klient wie, gdzie wejść, co wgrać, jak poprawić błędy i kiedy kliknąć, że komplet dokumentów jest gotowy.</p>
           </div>
 
           <div class="steps">
             <div class="step open">
-              <div class="head"><div class="num">1</div><div><h3>Wejdź w swój link</h3><div class="sub">Biuro wysyła prywatny link lub zaproszenie e-mail</div></div><div class="chev">⌄</div></div>
+              <div class="head"><div class="num">1</div><div><h3 data-i18n="kl_s1_h3">Wejdź w swój link</h3><div data-i18n="kl_s1_sub" class="sub">Biuro wysyła prywatny link lub zaproszenie e-mail</div></div><div class="chev">⌄</div></div>
               <div class="body"><div class="body-inner">
-                <p>Klient otwiera link od biura. Przy pierwszym wejściu może ustawić konto, a później loguje się swoim e-mailem i hasłem.</p>
-                <div class="tip">Dla klienta: nie instalujesz programu księgowego. Wchodzisz w prosty portal dokumentów.</div>
+                <p data-i18n="kl_s1_p">Klient otwiera link od biura. Przy pierwszym wejściu może ustawić konto, a później loguje się swoim e-mailem i hasłem.</p>
+                <div data-i18n="kl_s1_tip" class="tip">Dla klienta: nie instalujesz programu księgowego. Wchodzisz w prosty portal dokumentów.</div>
               </div></div>
             </div>
 
             <div class="step">
-              <div class="head"><div class="num">2</div><div><h3>Zobacz, czego brakuje</h3><div class="sub">Lista kategorii pokazuje, o co prosi biuro</div></div><div class="chev">⌄</div></div>
+              <div class="head"><div class="num">2</div><div><h3 data-i18n="kl_s2_h3">Zobacz, czego brakuje</h3><div data-i18n="kl_s2_sub" class="sub">Lista kategorii pokazuje, o co prosi biuro</div></div><div class="chev">⌄</div></div>
               <div class="body"><div class="body-inner">
-                <p>Na ekranie klient widzi kategorie dokumentów, np. faktury kosztowe, sprzedażowe, wyciągi, ZUS, kadry albo inne pozycje ustawione przez biuro.</p>
-                <p>Status mówi jasno, czy dokument jest brakujący, w toku, zatwierdzony albo do poprawki.</p>
+                <p data-i18n="kl_s2_p1">Na ekranie klient widzi kategorie dokumentów, np. faktury kosztowe, sprzedażowe, wyciągi, ZUS, kadry albo inne pozycje ustawione przez biuro.</p>
+                <p data-i18n="kl_s2_p2">Status mówi jasno, czy dokument jest brakujący, w toku, zatwierdzony albo do poprawki.</p>
               </div></div>
             </div>
 
             <div class="step">
-              <div class="head"><div class="num">3</div><div><h3>Wgraj pliki z komputera albo telefonu</h3><div class="sub">PDF, zdjęcie lub skan trafia od razu do właściwej kategorii</div></div><div class="chev">⌄</div></div>
+              <div class="head"><div class="num">3</div><div><h3 data-i18n="kl_s3_h3">Wgraj pliki z komputera albo telefonu</h3><div data-i18n="kl_s3_sub" class="sub">PDF, zdjęcie lub skan trafia od razu do właściwej kategorii</div></div><div class="chev">⌄</div></div>
               <div class="body"><div class="body-inner">
-                <p>Klient przeciąga plik albo wybiera go z telefonu. Może dopisać krótki opis, np. „zaliczka za remont biura” albo „paliwo, auto firmowe”.</p>
-                <div class="tip">Dla biura: mniej dokumentów w mailach, Messengerze i folderach „różne”.</div>
+                <p data-i18n="kl_s3_p">Klient przeciąga plik albo wybiera go z telefonu. Może dopisać krótki opis, np. „zaliczka za remont biura” albo „paliwo, auto firmowe”.</p>
+                <div data-i18n="kl_s3_tip" class="tip">Dla biura: mniej dokumentów w mailach, Messengerze i folderach „różne”.</div>
               </div></div>
             </div>
 
             <div class="step">
-              <div class="head"><div class="num">4</div><div><h3>Popraw, jeśli biuro odeśle dokument</h3><div class="sub">Powód odrzucenia jest widoczny w portalu</div></div><div class="chev">⌄</div></div>
+              <div class="head"><div class="num">4</div><div><h3 data-i18n="kl_s4_h3">Popraw, jeśli biuro odeśle dokument</h3><div data-i18n="kl_s4_sub" class="sub">Powód odrzucenia jest widoczny w portalu</div></div><div class="chev">⌄</div></div>
               <div class="body"><div class="body-inner">
-                <p>Jeśli plik jest niewyraźny, niepełny albo w złej kategorii, klient widzi powód i może wgrać poprawioną wersję bez dzwonienia do biura.</p>
+                <p data-i18n="kl_s4_p">Jeśli plik jest niewyraźny, niepełny albo w złej kategorii, klient widzi powód i może wgrać poprawioną wersję bez dzwonienia do biura.</p>
               </div></div>
             </div>
 
             <div class="step">
-              <div class="head"><div class="num">5</div><div><h3>Kliknij „Zakończ przesyłanie”</h3><div class="sub">Biuro od razu widzi, że komplet jest gotowy</div></div><div class="chev">⌄</div></div>
+              <div class="head"><div class="num">5</div><div><h3 data-i18n="kl_s5_h3">Kliknij „Zakończ przesyłanie”</h3><div data-i18n="kl_s5_sub" class="sub">Biuro od razu widzi, że komplet jest gotowy</div></div><div class="chev">⌄</div></div>
               <div class="body"><div class="body-inner">
-                <p>Gdy klient wgra wszystko, klika zakończenie przesyłania. W panelu biura firma przechodzi do pracy bez pytania „czy to już wszystko?”.</p>
-                <div class="tip">Efekt: klient ma jasną checklistę, a biuro dostaje uporządkowany komplet.</div>
+                <p data-i18n="kl_s5_p">Gdy klient wgra wszystko, klika zakończenie przesyłania. W panelu biura firma przechodzi do pracy bez pytania „czy to już wszystko?”.</p>
+                <div data-i18n="kl_s5_tip" class="tip">Efekt: klient ma jasną checklistę, a biuro dostaje uporządkowany komplet.</div>
               </div></div>
             </div>
           </div>
@@ -1566,9 +1576,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="client-demo-tip client-preview-tip">
         <div class="preview-icon-sample" aria-label="Ikonka podglądu strefy klienta">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h6"></path><path d="M14 7h6"></path><circle cx="12" cy="7" r="2"></circle><path d="M4 17h3"></path><path d="M11 17h9"></path><circle cx="9" cy="17" r="2"></circle></svg>
-          <span>podgląd</span>
+          <span data-i18n="kl_preview_label">podgląd</span>
         </div>
-        <p>Na liście klientów kliknij taką ikonkę podglądu „strefy klienta” przy dowolnej firmie, żeby zobaczyć ten ekran oczami klienta.</p>
+        <p data-i18n="kl_preview_p">Na liście klientów kliknij taką ikonkę podglądu „strefy klienta” przy dowolnej firmie, żeby zobaczyć ten ekran oczami klienta.</p>
       </div>
     </div>
   </div>
@@ -1577,120 +1587,120 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ============ STREFA BIURA - 3 FILARY OPERACYJNE ============ -->
 <section id="panel">
   <div class="wrap">
-    <div class="eyebrow">Część 4 · Dla Ciebie, do pracy</div>
-    <h2>Strefa Biura w 3 filarach</h2>
-    <p class="intro">Nie musisz poznawać siedmiu zakładek, żeby zrozumieć wartość panelu. W praktyce Brakomat robi trzy rzeczy: pokazuje priorytety, przygotowuje dokumenty i pomaga zamknąć temat bez chaosu.</p>
+    <div data-i18n="panel_eyebrow" class="eyebrow">Część 4 · Dla Ciebie, do pracy</div>
+    <h2 data-i18n="panel_h2">Strefa Biura w 3 filarach</h2>
+    <p data-i18n="panel_intro" class="intro">Nie musisz poznawać siedmiu zakładek, żeby zrozumieć wartość panelu. W praktyce Brakomat robi trzy rzeczy: pokazuje priorytety, przygotowuje dokumenty i pomaga zamknąć temat bez chaosu.</p>
 
     <div class="ops-grid">
       <article class="ops-card">
         <div class="ops-num">1</div>
-        <h3>Podgląd i priorytety</h3>
-        <p>Na jednym ekranie widzisz, którzy klienci są gotowi, komu czego brakuje i gdzie miesiąc zaczyna się opóźniać.</p>
+        <h3 data-i18n="ops1_h3">Podgląd i priorytety</h3>
+        <p data-i18n="ops1_p">Na jednym ekranie widzisz, którzy klienci są gotowi, komu czego brakuje i gdzie miesiąc zaczyna się opóźniać.</p>
         <ul class="ops-list">
-          <li>kafelki: gotowe, brakujące, spóźnione, do poprawki,</li>
-          <li>lista klientów z paskami kompletności dokumentów,</li>
-          <li>filtry problemów i szybkie przypomnienia do spóźnialskich.</li>
+          <li data-i18n="ops1_li1">kafelki: gotowe, brakujące, spóźnione, do poprawki,</li>
+          <li data-i18n="ops1_li2">lista klientów z paskami kompletności dokumentów,</li>
+          <li data-i18n="ops1_li3">filtry problemów i szybkie przypomnienia do spóźnialskich.</li>
         </ul>
-        <div class="ops-proof">Wartość: mniej szukania, więcej decyzji.</div>
+        <div data-i18n="ops1_proof" class="ops-proof">Wartość: mniej szukania, więcej decyzji.</div>
       </article>
 
       <article class="ops-card">
         <div class="ops-num">2</div>
-        <h3>AI przygotowuje dokumenty</h3>
-        <p>Inteligentny rejestr odczytuje faktury, porządkuje dane i wyłapuje dokumenty, które nie nadają się jeszcze do pracy.</p>
+        <h3 data-i18n="ops2_h3">AI przygotowuje dokumenty</h3>
+        <p data-i18n="ops2_p">Inteligentny rejestr odczytuje faktury, porządkuje dane i wyłapuje dokumenty, które nie nadają się jeszcze do pracy.</p>
         <ul class="ops-list">
-          <li>odczyt numerów, dat, kwot i stawek VAT,</li>
-          <li>sugerowana kategoria oraz status „do weryfikacji”,</li>
-          <li>obsługa faktur z KSeF w wyższych pakietach.</li>
+          <li data-i18n="ops2_li1">odczyt numerów, dat, kwot i stawek VAT,</li>
+          <li data-i18n="ops2_li2">sugerowana kategoria oraz status „do weryfikacji”,</li>
+          <li data-i18n="ops2_li3">obsługa faktur z KSeF w wyższych pakietach.</li>
         </ul>
-        <div class="ops-proof">Wartość: mniej przepisywania, lepszy wsad do księgowania.</div>
+        <div data-i18n="ops2_proof" class="ops-proof">Wartość: mniej przepisywania, lepszy wsad do księgowania.</div>
       </article>
 
       <article class="ops-card">
         <div class="ops-num">3</div>
-        <h3>Decyzja i eksport</h3>
-          <p>Księgowy nie szuka plików po kanałach komunikacji. Sprawdza, zatwierdza, odsyła z powodem, a zatwierdzone dokumenty trafiają do uporządkowanego archiwum.</p>
+        <h3 data-i18n="ops3_h3">Decyzja i eksport</h3>
+          <p data-i18n="ops3_p">Księgowy nie szuka plików po kanałach komunikacji. Sprawdza, zatwierdza, odsyła z powodem, a zatwierdzone dokumenty trafiają do uporządkowanego archiwum.</p>
         <ul class="ops-list">
-          <li>zatwierdź dokument albo odeślij go klientowi z jasnym powodem,</li>
-          <li>zamknij miesiąc i zablokuj dalsze zmiany,</li>
-          <li>magazynuj zatwierdzone dokumenty w folderach klient / miesiąc / kategoria,</li>
-          <li>eksportuj dane do Excela, Optimy lub QuickBooks.</li>
+          <li data-i18n="ops3_li1">zatwierdź dokument albo odeślij go klientowi z jasnym powodem,</li>
+          <li data-i18n="ops3_li2">zamknij miesiąc i zablokuj dalsze zmiany,</li>
+          <li data-i18n="ops3_li3">magazynuj zatwierdzone dokumenty w folderach klient / miesiąc / kategoria,</li>
+          <li data-i18n="ops3_li4">eksportuj dane do Excela, Optimy lub QuickBooks.</li>
         </ul>
-        <div class="ops-proof">Wartość: szybciej zamknięty miesiąc i mniej niedomówień z klientem.</div>
+        <div data-i18n="ops3_proof" class="ops-proof">Wartość: szybciej zamknięty miesiąc i mniej niedomówień z klientem.</div>
       </article>
     </div>
 
-    <div class="eyebrow" style="margin-top:46px">Dla osób, które chcą szczegółów</div>
-    <h2 style="font-size:clamp(24px,3vw,32px)">Strefa Biura krok po kroku</h2>
-    <p class="intro">Jeśli chcesz przejść przez panel dokładniej, rozwiń poniższe punkty. To część instrukcyjna - przydatna po pierwszym zainteresowaniu, gdy ktoś chce zobaczyć, co dokładnie robi każdy element.</p>
+    <div data-i18n="panel_eyebrow2" class="eyebrow" style="margin-top:46px">Dla osób, które chcą szczegółów</div>
+    <h2 data-i18n="panel_h2b" style="font-size:clamp(24px,3vw,32px)">Strefa Biura krok po kroku</h2>
+    <p data-i18n="panel_introb" class="intro">Jeśli chcesz przejść przez panel dokładniej, rozwiń poniższe punkty. To część instrukcyjna - przydatna po pierwszym zainteresowaniu, gdy ktoś chce zobaczyć, co dokładnie robi każdy element.</p>
 
     <div class="steps">
 
       <div class="step open">
-        <div class="head"><div class="num">A</div><div><h3>Kafelki na górze - stan całego biura w 1 sekundę</h3><div class="sub">Wszyscy klienci · Gotowe · Brakujące · Spóźnione · Do poprawki</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">A</div><div><h3 data-i18n="pA_h3">Kafelki na górze - stan całego biura w 1 sekundę</h3><div data-i18n="pA_sub" class="sub">Wszyscy klienci · Gotowe · Brakujące · Spóźnione · Do poprawki</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>U góry panelu są kolorowe liczniki. To „deska rozdzielcza" Twojego miesiąca:</p>
-          <p>• <strong>Gotowe</strong> - firmy, które dostarczyły wszystko i są zatwierdzone.<br>
+          <p data-i18n="pA_p1">U góry panelu są kolorowe liczniki. To „deska rozdzielcza" Twojego miesiąca:</p>
+          <p data-i18n="pA_p2">• <strong>Gotowe</strong> - firmy, które dostarczyły wszystko i są zatwierdzone.<br>
              • <strong>Brakujące</strong> - czegoś brakuje, ale termin jeszcze nie minął.<br>
              • <strong>Spóźnione</strong> - alarm: klient po terminie. System już przygotował dla nich przypomnienia.<br>
              • <strong>Do poprawki</strong> - faktury niewyraźne lub źle opisane, które trzeba poprawić.</p>
-          <div class="tip">💡 Najedź myszką na każdy kafelek - pojawi się dymek z dokładnym wyjaśnieniem.</div>
+          <div data-i18n="pA_tip" class="tip">💡 Najedź myszką na każdy kafelek - pojawi się dymek z dokładnym wyjaśnieniem.</div>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">B</div><div><h3>Lista klientów - kto, co przysłał, czego brak</h3><div class="sub">Każdy wiersz = jedna firma, z paskiem statusów dokumentów</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">B</div><div><h3 data-i18n="pB_h3">Lista klientów - kto, co przysłał, czego brak</h3><div data-i18n="pB_sub" class="sub">Każdy wiersz = jedna firma, z paskiem statusów dokumentów</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Pod kafelkami jest lista wszystkich Twoich klientów (Tech Solutions, Kawiarnia „Pod Chmurką", MedCare Clinic…). Przy każdym widać kolorowe statusy poszczególnych kategorii: Faktury Kosztowe, Przychodowe, Wyciągi, ZUS, Kadry.</p>
-          <p>Kolor mówi wszystko bez czytania - zielony to porządek, czerwony to spóźnienie. (Pełna ściąga kolorów jest w następnej części.)</p>
-          <div class="tip">💡 U góry listy jest wyszukiwarka („Szukaj klienta…") i filtr „wg problemu", żeby od razu pokazać tylko spóźnialskich.</div>
+          <p data-i18n="pB_p1">Pod kafelkami jest lista wszystkich Twoich klientów (Tech Solutions, Kawiarnia „Pod Chmurką", MedCare Clinic…). Przy każdym widać kolorowe statusy poszczególnych kategorii: Faktury Kosztowe, Przychodowe, Wyciągi, ZUS, Kadry.</p>
+          <p data-i18n="pB_p2">Kolor mówi wszystko bez czytania - zielony to porządek, czerwony to spóźnienie. (Pełna ściąga kolorów jest w następnej części.)</p>
+          <div data-i18n="pB_tip" class="tip">💡 U góry listy jest wyszukiwarka („Szukaj klienta…") i filtr „wg problemu", żeby od razu pokazać tylko spóźnialskich.</div>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">C</div><div><h3>Przypomnienia - system goni klientów za Ciebie</h3><div class="sub">Przycisk „przypomnienie" przy kliencie + „Pogoń spóźnialskich" zbiorczo</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">C</div><div><h3 data-i18n="pC_h3">Przypomnienia - system goni klientów za Ciebie</h3><div data-i18n="pC_sub" class="sub">Przycisk „przypomnienie" przy kliencie + „Pogoń spóźnialskich" zbiorczo</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Przy każdym kliencie jest ikonka przypomnienia. Klikasz - i Agent AI wysyła do klienta gotową, grzeczną wiadomość (e-mail / WhatsApp) o brakujących dokumentach. Treść jest już przygotowana, nic nie piszesz.</p>
-          <p>Jest też duży przycisk <span class="kbd">POGOŃ SPÓŹNIALSKICH</span> - jednym kliknięciem wysyła przypomnienia do wszystkich, którzy są po terminie.</p>
-          <div class="tip">💡 W pełnej wersji te przypomnienia wysyłają się <strong>same</strong>, według Twoich reguł - nie musisz nawet klikać.</div>
+          <p data-i18n="pC_p1">Przy każdym kliencie jest ikonka przypomnienia. Klikasz - i Agent AI wysyła do klienta gotową, grzeczną wiadomość (e-mail / WhatsApp) o brakujących dokumentach. Treść jest już przygotowana, nic nie piszesz.</p>
+          <p data-i18n="pC_p2">Jest też duży przycisk <span class="kbd">POGOŃ SPÓŹNIALSKICH</span> - jednym kliknięciem wysyła przypomnienia do wszystkich, którzy są po terminie.</p>
+          <div data-i18n="pC_tip" class="tip">💡 W pełnej wersji te przypomnienia wysyłają się <strong>same</strong>, według Twoich reguł - nie musisz nawet klikać.</div>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">D</div><div><h3>Inteligentny Rejestr - AI czyta faktury</h3><div class="sub">Tabela na dole: „Analizuj AI" odczytuje NIP, kwoty, daty</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">D</div><div><h3 data-i18n="pD_h3">Inteligentny Rejestr - AI czyta faktury</h3><div data-i18n="pD_sub" class="sub">Tabela na dole: „Analizuj AI" odczytuje NIP, kwoty, daty</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Na dole panelu jest <strong>Inteligentny Rejestr Dokumentów</strong>. Każdy wgrany plik tu trafia. Klikasz <span class="kbd">Analizuj AI</span> przy fakturze, a system sam wyciąga z niej: numer, datę, NIP sprzedawcy, kwotę netto, VAT i brutto.</p>
-          <p>Spróbuj na przykładowych wierszach:</p>
-          <p>• Faktura Microsoft / Medicover → AI ładnie odczyta wszystkie dane (status zmieni się na „Do weryfikacji").<br>
+          <p data-i18n="pD_p1">Na dole panelu jest <strong>Inteligentny Rejestr Dokumentów</strong>. Każdy wgrany plik tu trafia. Klikasz <span class="kbd">Analizuj AI</span> przy fakturze, a system sam wyciąga z niej: numer, datę, NIP sprzedawcy, kwotę netto, VAT i brutto.</p>
+          <p data-i18n="pD_p2">Spróbuj na przykładowych wierszach:</p>
+          <p data-i18n="pD_p3">• Faktura Microsoft / Medicover → AI ładnie odczyta wszystkie dane (status zmieni się na „Do weryfikacji").<br>
              • „zdjecie_z_wakacji.jpg" → AI rozpozna, że to <strong>nie</strong> faktura i grzecznie odeśle z prośbą o właściwy plik.</p>
-          <div class="tip">💡 To pokazuje sedno: AI odwala czytanie i przepisywanie, a Ty tylko sprawdzasz, czy się zgadza.</div>
+          <div data-i18n="pD_tip" class="tip">💡 To pokazuje sedno: AI odwala czytanie i przepisywanie, a Ty tylko sprawdzasz, czy się zgadza.</div>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">E</div><div><h3>Weryfikacja NIP - Biała Lista i VIES</h3><div class="sub">Automatyczne sprawdzenie kontrahenta przed płatnością</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">E</div><div><h3 data-i18n="pE_h3">Weryfikacja NIP - Biała Lista i VIES</h3><div data-i18n="pE_sub" class="sub">Automatyczne sprawdzenie kontrahenta przed płatnością</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Przy danych z faktury Brakomat sam sprawdza NIP sprzedawcy w <strong>Białej Liście VAT</strong> Ministerstwa Finansów oraz w <strong>VIES</strong> (dla kontrahentów z UE). Widzisz od razu, czy podatnik jest aktywny i jaki ma numer konta.</p>
-          <p>Jeśli coś jest nie tak, pojawia się ostrzeżenie: <span class="pill" style="background:var(--rose-50);color:#be123c">⚠ Ryzyko podatkowe</span> - żeby nie zapłacić na zły rachunek.</p>
+          <p data-i18n="pE_p1">Przy danych z faktury Brakomat sam sprawdza NIP sprzedawcy w <strong>Białej Liście VAT</strong> Ministerstwa Finansów oraz w <strong>VIES</strong> (dla kontrahentów z UE). Widzisz od razu, czy podatnik jest aktywny i jaki ma numer konta.</p>
+          <p data-i18n="pE_p2">Jeśli coś jest nie tak, pojawia się ostrzeżenie: <span class="pill" style="background:var(--rose-50);color:#be123c">⚠ Ryzyko podatkowe</span> - żeby nie zapłacić na zły rachunek.</p>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">F</div><div><h3>Zatwierdź albo odrzuć dokument</h3><div class="sub">Zielony „Zatwierdź dane" / czerwony „Odrzuć i powiadom klienta"</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">F</div><div><h3 data-i18n="pF_h3">Zatwierdź albo odrzuć dokument</h3><div data-i18n="pF_sub" class="sub">Zielony „Zatwierdź dane" / czerwony „Odrzuć i powiadom klienta"</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Po analizie decydujesz jednym kliknięciem:</p>
-          <p>• <strong>Zatwierdź dane</strong> - dokument jest OK, idzie dalej.<br>
+          <p data-i18n="pF_p1">Po analizie decydujesz jednym kliknięciem:</p>
+          <p data-i18n="pF_p2">• <strong>Zatwierdź dane</strong> - dokument jest OK, idzie dalej.<br>
              • <strong>Odrzuć i powiadom klienta</strong> - wybierasz powód (nieczytelny skan, brak stron, zła kategoria…), a klient od razu dostaje informację <em>i widzi ją u siebie w portalu</em>, więc wie, co poprawić.</p>
-          <div class="tip">💡 Klient nie dzwoni z pytaniem „co było nie tak" - powód odrzucenia widzi sam.</div>
+          <div data-i18n="pF_tip" class="tip">💡 Klient nie dzwoni z pytaniem „co było nie tak" - powód odrzucenia widzi sam.</div>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">G</div><div><h3>Zamknięcie miesiąca i eksport do Excela</h3><div class="sub">„Zatwierdź miesiąc" blokuje edycję · „Eksport do Excel" robi zestawienie</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">G</div><div><h3 data-i18n="pG_h3">Zamknięcie miesiąca i eksport do Excela</h3><div data-i18n="pG_sub" class="sub">„Zatwierdź miesiąc" blokuje edycję · „Eksport do Excel" robi zestawienie</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Gdy klient jest kompletny, klikasz kłódkę / <span class="kbd">Zatwierdź</span> przy nim - to blokuje miesiąc (klient nie może już nic zmieniać) i przygotowuje dane do Twojego programu księgowego.</p>
-          <p>Przycisk <span class="kbd">Eksport do Excel</span> generuje zbiorczy arkusz: wszyscy klienci, statusy i odczytane dane - do raportów albo do wczytania gdzie indziej.</p>
-          <p>A <span class="kbd">Zamknij miesiąc</span> archiwizuje wszystko i otwiera czysty kolejny miesiąc.</p>
+          <p data-i18n="pG_p1">Gdy klient jest kompletny, klikasz kłódkę / <span class="kbd">Zatwierdź</span> przy nim - to blokuje miesiąc (klient nie może już nic zmieniać) i przygotowuje dane do Twojego programu księgowego.</p>
+          <p data-i18n="pG_p2">Przycisk <span class="kbd">Eksport do Excel</span> generuje zbiorczy arkusz: wszyscy klienci, statusy i odczytane dane - do raportów albo do wczytania gdzie indziej.</p>
+          <p data-i18n="pG_p3">A <span class="kbd">Zamknij miesiąc</span> archiwizuje wszystko i otwiera czysty kolejny miesiąc.</p>
         </div></div>
       </div>
 
@@ -1701,106 +1711,106 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ============ OBSŁUGA NA CO DZIEŃ (instrukcja subskrybenta) ============ -->
 <section id="obsluga">
   <div class="wrap">
-    <div class="eyebrow">Część 5 · Codzienna praca</div>
-    <h2>Obsługa na co dzień</h2>
-    <p class="intro">Gdy masz już konto, codzienna praca to kilka prostych ruchów. Dwie najważniejsze rzeczy Brakomat robi za Ciebie: <strong>sam dopomina się o braki</strong> i <strong>na żywo pokazuje status każdego dokumentu</strong> - od „czekamy" po „zatwierdzone". To jest sedno; reszta to wygoda.</p>
+    <div data-i18n="ob_eyebrow" class="eyebrow">Część 5 · Codzienna praca</div>
+    <h2 data-i18n="ob_h2">Obsługa na co dzień</h2>
+    <p data-i18n="ob_intro" class="intro">Gdy masz już konto, codzienna praca to kilka prostych ruchów. Dwie najważniejsze rzeczy Brakomat robi za Ciebie: <strong>sam dopomina się o braki</strong> i <strong>na żywo pokazuje status każdego dokumentu</strong> - od „czekamy" po „zatwierdzone". To jest sedno; reszta to wygoda.</p>
 
     <div class="steps">
 
       <div class="step open">
-        <div class="head"><div class="num">1</div><div><h3>Dodaj klienta i ustaw zasady zbierania dokumentów</h3><div class="sub">Klient, termin, kategorie i link do jego strefy</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">1</div><div><h3 data-i18n="ob1_h3">Dodaj klienta i ustaw zasady zbierania dokumentów</h3><div data-i18n="ob1_sub" class="sub">Klient, termin, kategorie i link do jego strefy</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Ten krok robisz raz dla klienta, zanim wyślesz mu link. Brakomat musi wiedzieć, <strong>kogo pilnuje</strong>, <strong>do kiedy ma zebrać dokumenty</strong> i <strong>jakie kategorie mają być widoczne w panelu klienta</strong>.</p>
+          <p data-i18n="ob1_p1">Ten krok robisz raz dla klienta, zanim wyślesz mu link. Brakomat musi wiedzieć, <strong>kogo pilnuje</strong>, <strong>do kiedy ma zebrać dokumenty</strong> i <strong>jakie kategorie mają być widoczne w panelu klienta</strong>.</p>
           <div class="setup-grid">
             <div class="setup-card">
-              <b>1. Dodaj klienta</b>
-              <span>Klikasz <span class="kbd">Dodaj klienta</span>, wpisujesz nazwę firmy i dane kontaktowe potrzebne do zaproszenia oraz przypomnień.</span>
+              <b data-i18n="ob1_c1">1. Dodaj klienta</b>
+              <span data-i18n="ob1_c1s">Klikasz <span class="kbd">Dodaj klienta</span>, wpisujesz nazwę firmy i dane kontaktowe potrzebne do zaproszenia oraz przypomnień.</span>
             </div>
             <div class="setup-card">
-              <b>2. Ustaw termin miesiąca</b>
-              <span>Wybierasz datę dostarczenia dokumentów. Po jej przekroczeniu klient trafia do spóźnionych, a biuro widzi priorytet bez ręcznego sprawdzania.</span>
+              <b data-i18n="ob1_c2">2. Ustaw termin miesiąca</b>
+              <span data-i18n="ob1_c2s">Wybierasz datę dostarczenia dokumentów. Po jej przekroczeniu klient trafia do spóźnionych, a biuro widzi priorytet bez ręcznego sprawdzania.</span>
             </div>
             <div class="setup-card">
-              <b>3. Wybierz kategorie dokumentów</b>
-              <span>Tworzysz “szuflady” dla dokumentów: faktury kosztowe, sprzedażowe, wyciągi, ZUS, kadry, delegacje albo własne kategorie klienta.</span>
+              <b data-i18n="ob1_c3">3. Wybierz kategorie dokumentów</b>
+              <span data-i18n="ob1_c3s">Tworzysz “szuflady” dla dokumentów: faktury kosztowe, sprzedażowe, wyciągi, ZUS, kadry, delegacje albo własne kategorie klienta.</span>
             </div>
             <div class="setup-card">
-              <b>4. Wyślij prywatny link</b>
-              <span>Klient dostaje swoją strefę z listą kategorii i widzi, co ma dodać. Biuro nie tłumaczy tego za każdym razem od nowa.</span>
+              <b data-i18n="ob1_c4">4. Wyślij prywatny link</b>
+              <span data-i18n="ob1_c4s">Klient dostaje swoją strefę z listą kategorii i widzi, co ma dodać. Biuro nie tłumaczy tego za każdym razem od nowa.</span>
             </div>
           </div>
-          <p>Kategorie ustawiasz pod sposób pracy biura. Dla prostego klienta wystarczą 3-4 pozycje, a dla bardziej wymagającego możesz dodać osobne kategorie dla kadr, banku, umów, raportów kasowych czy dokumentów do poprawki.</p>
-          <div class="tip">💡 Kategorie i terminy nie są tylko “ustawieniami”. To szablon porządku, który potem wraca co miesiąc i ogranicza chaos w mailach.</div>
+          <p data-i18n="ob1_p2">Kategorie ustawiasz pod sposób pracy biura. Dla prostego klienta wystarczą 3-4 pozycje, a dla bardziej wymagającego możesz dodać osobne kategorie dla kadr, banku, umów, raportów kasowych czy dokumentów do poprawki.</p>
+          <div data-i18n="ob1_tip" class="tip">💡 Kategorie i terminy nie są tylko “ustawieniami”. To szablon porządku, który potem wraca co miesiąc i ogranicza chaos w mailach.</div>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">2</div><div><h3>Wyślij klientowi jego prywatny link</h3><div class="sub">Klient wrzuca dokumenty u siebie, bez instalacji</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">2</div><div><h3 data-i18n="ob2_h3">Wyślij klientowi jego prywatny link</h3><div data-i18n="ob2_sub" class="sub">Klient wrzuca dokumenty u siebie, bez instalacji</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Przy każdym kliencie możesz <strong>skopiować jego prywatny link</strong> albo kliknąć <span class="kbd">Wyślij zaproszenie</span> - klient dostaje e-mail i wchodzi na swoją prostą podstronę. Może ustawić sobie hasło, żeby logować się stale, bez szukania linku co miesiąc.</p>
-          <div class="tip">💡 Klient nie potrzebuje żadnego programu - wszystko robi w przeglądarce, też z telefonu.</div>
+          <p data-i18n="ob2_p">Przy każdym kliencie możesz <strong>skopiować jego prywatny link</strong> albo kliknąć <span class="kbd">Wyślij zaproszenie</span> - klient dostaje e-mail i wchodzi na swoją prostą podstronę. Może ustawić sobie hasło, żeby logować się stale, bez szukania linku co miesiąc.</p>
+          <div data-i18n="ob2_tip" class="tip">💡 Klient nie potrzebuje żadnego programu - wszystko robi w przeglądarce, też z telefonu.</div>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">3</div><div><h3>Brakomat sam pilnuje braków <span class="pill" style="background:var(--brand-50);color:var(--brand-700)">to robi różnicę</span></h3><div class="sub">Automat + komunikat z karty klienta lub dokumentu</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">3</div><div><h3 data-i18n="ob3_h3">Brakomat sam pilnuje braków <span class="pill" style="background:var(--brand-50);color:var(--brand-700)">to robi różnicę</span></h3><div data-i18n="ob3_sub" class="sub">Automat + komunikat z karty klienta lub dokumentu</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Nie musisz pamiętać, kto czego nie przysłał - Brakomat pamięta za Ciebie. Gdy zbliża się termin albo minął, do klienta idzie <strong>grzeczne przypomnienie</strong> o brakujących dokumentach, według Twoich reguł. Możesz też jednym przyciskiem <span class="kbd">pogonić wszystkich spóźnialskich</span> naraz.</p>
-          <p>Masz też ręczną kontrolę wtedy, gdy chcesz zareagować konkretnie: z <strong>karty danego klienta</strong> możesz wysłać komunikat tylko do tej jednej firmy, a z poziomu <strong>wybranego dokumentu</strong> możesz wysłać wiadomość dotyczącą konkretnego pliku - na przykład przy odrzuceniu, błędnej kategorii albo nieczytelnym skanie.</p>
-          <div class="tip">💡 To zdejmuje z Ciebie najgorszą część miesiąca: automat pilnuje rutyny, a Ty dosyłasz punktowy komunikat tylko tam, gdzie naprawdę trzeba.</div>
+          <p data-i18n="ob3_p1">Nie musisz pamiętać, kto czego nie przysłał - Brakomat pamięta za Ciebie. Gdy zbliża się termin albo minął, do klienta idzie <strong>grzeczne przypomnienie</strong> o brakujących dokumentach, według Twoich reguł. Możesz też jednym przyciskiem <span class="kbd">pogonić wszystkich spóźnialskich</span> naraz.</p>
+          <p data-i18n="ob3_p2">Masz też ręczną kontrolę wtedy, gdy chcesz zareagować konkretnie: z <strong>karty danego klienta</strong> możesz wysłać komunikat tylko do tej jednej firmy, a z poziomu <strong>wybranego dokumentu</strong> możesz wysłać wiadomość dotyczącą konkretnego pliku - na przykład przy odrzuceniu, błędnej kategorii albo nieczytelnym skanie.</p>
+          <div data-i18n="ob3_tip" class="tip">💡 To zdejmuje z Ciebie najgorszą część miesiąca: automat pilnuje rutyny, a Ty dosyłasz punktowy komunikat tylko tam, gdzie naprawdę trzeba.</div>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">4</div><div><h3>Status każdego dokumentu - na żywo <span class="pill" style="background:var(--brand-50);color:var(--brand-700)">to robi różnicę</span></h3><div class="sub">Zawsze wiesz, na czym stoisz, bez otwierania maili</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">4</div><div><h3 data-i18n="ob4_h3">Status każdego dokumentu - na żywo <span class="pill" style="background:var(--brand-50);color:var(--brand-700)">to robi różnicę</span></h3><div data-i18n="ob4_sub" class="sub">Zawsze wiesz, na czym stoisz, bez otwierania maili</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Każda kategoria u każdego klienta ma swój kolor i status na bieżącym etapie: <em>czekamy → przyszło → sprawdzone → zatwierdzone</em>, a gdy coś jest nie tak - <em>do poprawki</em>. Jeden rzut oka na panel i wiesz, kto jest gotowy, a kto nie.</p>
-          <div class="tip">💡 W panelu status jest opisany także tekstem, więc nie musisz zapamiętywać samych kolorów.</div>
+          <p data-i18n="ob4_p">Każda kategoria u każdego klienta ma swój kolor i status na bieżącym etapie: <em>czekamy → przyszło → sprawdzone → zatwierdzone</em>, a gdy coś jest nie tak - <em>do poprawki</em>. Jeden rzut oka na panel i wiesz, kto jest gotowy, a kto nie.</p>
+          <div data-i18n="ob4_tip" class="tip">💡 W panelu status jest opisany także tekstem, więc nie musisz zapamiętywać samych kolorów.</div>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">5</div><div><h3>Sprawdź i zatwierdź - albo odeślij z powodem</h3><div class="sub">Klient od razu wie, co poprawić</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">5</div><div><h3 data-i18n="ob5_h3">Sprawdź i zatwierdź - albo odeślij z powodem</h3><div data-i18n="ob5_sub" class="sub">Klient od razu wie, co poprawić</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Dokument w porządku? <strong>Zatwierdzasz</strong> jednym kliknięciem. Coś nie tak (nieczytelny skan, zła kategoria, brak strony)? <strong>Odsyłasz z powodem</strong> - a klient widzi tę informację u siebie i poprawia, bez telefonu z Twojej strony.</p>
-          <p>Komunikat możesz wysłać bezpośrednio z poziomu dokumentu, którego dotyczy sprawa. Dzięki temu klient nie dostaje ogólnego “proszę poprawić dokumenty”, tylko konkretną informację: co jest nie tak i który plik ma wymienić.</p>
+          <p data-i18n="ob5_p1">Dokument w porządku? <strong>Zatwierdzasz</strong> jednym kliknięciem. Coś nie tak (nieczytelny skan, zła kategoria, brak strony)? <strong>Odsyłasz z powodem</strong> - a klient widzi tę informację u siebie i poprawia, bez telefonu z Twojej strony.</p>
+          <p data-i18n="ob5_p2">Komunikat możesz wysłać bezpośrednio z poziomu dokumentu, którego dotyczy sprawa. Dzięki temu klient nie dostaje ogólnego “proszę poprawić dokumenty”, tylko konkretną informację: co jest nie tak i który plik ma wymienić.</p>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">6</div><div><h3>Automatyczny odczyt faktur <span class="pill" style="background:var(--violet-50);color:#6d28d9">Pakiet Porządkujący +</span></h3><div class="sub">Mniej ręcznego przepisywania</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">6</div><div><h3 data-i18n="ob6_h3">Automatyczny odczyt faktur <span class="pill" style="background:var(--violet-50);color:#6d28d9">Pakiet Porządkujący +</span></h3><div data-i18n="ob6_sub" class="sub">Mniej ręcznego przepisywania</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>W wyższych pakietach Brakomat sam odczytuje z faktury numer, datę, sprzedawcę, NIP i kwoty - nie musisz ich przepisywać ręcznie. Przy okazji sprawdza NIP sprzedawcy na <strong>Białej Liście VAT</strong> i w <strong>VIES</strong>, więc od razu widzisz, czy z kontrahentem wszystko gra.</p>
-          <div class="tip">💡 To miły dodatek, nie clou - najwięcej czasu i nerwów oszczędza Ci pilnowanie braków i kontrola statusów.</div>
+          <p data-i18n="ob6_p">W wyższych pakietach Brakomat sam odczytuje z faktury numer, datę, sprzedawcę, NIP i kwoty - nie musisz ich przepisywać ręcznie. Przy okazji sprawdza NIP sprzedawcy na <strong>Białej Liście VAT</strong> i w <strong>VIES</strong>, więc od razu widzisz, czy z kontrahentem wszystko gra.</p>
+          <div data-i18n="ob6_tip" class="tip">💡 To miły dodatek, nie clou - najwięcej czasu i nerwów oszczędza Ci pilnowanie braków i kontrola statusów.</div>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">7</div><div><h3>Nic nie ginie - Kosz i archiwum</h3><div class="sub">Usunięte da się przywrócić, miesiące się archiwizują</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">7</div><div><h3 data-i18n="ob7_h3">Nic nie ginie - Kosz i archiwum</h3><div data-i18n="ob7_sub" class="sub">Usunięte da się przywrócić, miesiące się archiwizują</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Skasowany plik trafia najpierw do <strong>Kosza</strong> - można go przywrócić. Gdy zamykasz miesiąc, cały komplet ląduje w <strong>archiwum</strong>, a Brakomat otwiera czysty kolejny miesiąc. Historia zawsze pod ręką.</p>
+          <p data-i18n="ob7_p">Skasowany plik trafia najpierw do <strong>Kosza</strong> - można go przywrócić. Gdy zamykasz miesiąc, cały komplet ląduje w <strong>archiwum</strong>, a Brakomat otwiera czysty kolejny miesiąc. Historia zawsze pod ręką.</p>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">8</div><div><h3>Porządek w plikach i eksport</h3><div class="sub">Uporządkowane foldery w chmurze + zestawienie do Excela</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">8</div><div><h3 data-i18n="ob8_h3">Porządek w plikach i eksport</h3><div data-i18n="ob8_sub" class="sub">Uporządkowane foldery w chmurze + zestawienie do Excela</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Zatwierdzone dokumenty Brakomat odkłada na dysku w dedykowanym folderze każdego klienta, z podziałem na <strong>miesiące</strong> i <strong>kategorie</strong> (klient / miesiąc / kategoria). Dzięki temu dokument nie tylko jest zatwierdzony, ale od razu trafia w miejsce, w którym da się go później szybko znaleźć.</p>
-          <p>Przycisk <span class="kbd">Eksport do Excel</span> robi zbiorcze zestawienie wszystkich klientów i dokumentów - do raportu albo do wczytania w innym programie.</p>
+          <p data-i18n="ob8_p1">Zatwierdzone dokumenty Brakomat odkłada na dysku w dedykowanym folderze każdego klienta, z podziałem na <strong>miesiące</strong> i <strong>kategorie</strong> (klient / miesiąc / kategoria). Dzięki temu dokument nie tylko jest zatwierdzony, ale od razu trafia w miejsce, w którym da się go później szybko znaleźć.</p>
+          <p data-i18n="ob8_p2">Przycisk <span class="kbd">Eksport do Excel</span> robi zbiorcze zestawienie wszystkich klientów i dokumentów - do raportu albo do wczytania w innym programie.</p>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">9</div><div><h3>Praca zespołowa <span class="pill" style="background:var(--violet-50);color:#6d28d9">Pakiet Porządkujący +</span></h3><div class="sub">Zaproś pracowników do jednego panelu</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">9</div><div><h3 data-i18n="ob9_h3">Praca zespołowa <span class="pill" style="background:var(--violet-50);color:#6d28d9">Pakiet Porządkujący +</span></h3><div data-i18n="ob9_sub" class="sub">Zaproś pracowników do jednego panelu</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Zapraszasz pracowników e-mailem i każdy pracuje na tym samym panelu. Rozliczenia i ustawienia konta widzi tylko właściciel - pracownicy zajmują się dokumentami.</p>
+          <p data-i18n="ob9_p">Zapraszasz pracowników e-mailem i każdy pracuje na tym samym panelu. Rozliczenia i ustawienia konta widzi tylko właściciel - pracownicy zajmują się dokumentami.</p>
         </div></div>
       </div>
 
       <div class="step">
-        <div class="head"><div class="num">10</div><div><h3>e-Faktury prosto z KSeF <span class="pill" style="background:var(--violet-50);color:#6d28d9">Pakiet Porządkujący +</span></h3><div class="sub">Część dokumentów masz, zanim klient cokolwiek wgra</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">10</div><div><h3 data-i18n="ob10_h3">e-Faktury prosto z KSeF <span class="pill" style="background:var(--violet-50);color:#6d28d9">Pakiet Porządkujący +</span></h3><div data-i18n="ob10_sub" class="sub">Część dokumentów masz, zanim klient cokolwiek wgra</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Brakomat potrafi pobierać faktury klienta wprost z rządowego systemu e-Faktur (KSeF). Przy fakturach zakupowych decydujesz jednym kliknięciem: <strong>koszt firmy</strong>, <strong>prywatne</strong> albo <strong>zapytaj klienta</strong> - a klient sam potwierdza u siebie.</p>
+          <p data-i18n="ob10_p">Brakomat potrafi pobierać faktury klienta wprost z rządowego systemu e-Faktur (KSeF). Przy fakturach zakupowych decydujesz jednym kliknięciem: <strong>koszt firmy</strong>, <strong>prywatne</strong> albo <strong>zapytaj klienta</strong> - a klient sam potwierdza u siebie.</p>
         </div></div>
       </div>
 
@@ -1811,82 +1821,82 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ============ OD DEMO DO WDROŻENIA (trial) ============ -->
 <section id="wdrozenie">
   <div class="wrap">
-    <div class="eyebrow">Część 6 · Gdy chcesz to u siebie</div>
-    <h2>Od demo do wdrożenia u Ciebie</h2>
-    <p class="intro">Spodobało się klikanie demo? Uruchomienie Brakomatu w swoim biurze to kilkanaście minut. Pierwsze <strong>14 dni jest za darmo</strong> - bez ryzyka.</p>
+    <div data-i18n="wd_eyebrow" class="eyebrow">Część 6 · Gdy chcesz to u siebie</div>
+    <h2 data-i18n="wd_h2">Od demo do wdrożenia u Ciebie</h2>
+    <p data-i18n="wd_intro" class="intro">Spodobało się klikanie demo? Uruchomienie Brakomatu w swoim biurze to kilkanaście minut. Pierwsze <strong>14 dni jest za darmo</strong> - bez ryzyka.</p>
 
     <div class="steps">
       <div class="step open">
-        <div class="head"><div class="num">1</div><div><h3>Załóż konto biura i wybierz pakiet</h3><div class="sub">14 dni za darmo · bez opłat przez pierwsze dwa tygodnie</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">1</div><div><h3 data-i18n="wd1_h3">Załóż konto biura i wybierz pakiet</h3><div data-i18n="wd1_sub" class="sub">14 dni za darmo · bez opłat przez pierwsze dwa tygodnie</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Rejestrujesz biuro (e-mail to Twój login), potwierdzasz adres z wiadomości i uzupełniasz krótki profil. Potem wybierasz pakiet i włączasz <strong>14-dniowy okres próbny</strong>.</p>
-          <div class="tip">💡 Przez pierwsze 14 dni nic nie płacisz, a subskrypcję możesz anulować w każdej chwili - bez kosztów.</div>
+          <p data-i18n="wd1_p">Rejestrujesz biuro (e-mail to Twój login), potwierdzasz adres z wiadomości i uzupełniasz krótki profil. Potem wybierasz pakiet i włączasz <strong>14-dniowy okres próbny</strong>.</p>
+          <div data-i18n="wd1_tip" class="tip">💡 Przez pierwsze 14 dni nic nie płacisz, a subskrypcję możesz anulować w każdej chwili - bez kosztów.</div>
         </div></div>
       </div>
       <div class="step">
-        <div class="head"><div class="num">2</div><div><h3>Dodaj pierwszego klienta i przetestuj portal</h3><div class="sub">Najlepiej „na sobie", zanim zaprosisz prawdziwych klientów</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">2</div><div><h3 data-i18n="wd2_h3">Dodaj pierwszego klienta i przetestuj portal</h3><div data-i18n="wd2_sub" class="sub">Najlepiej „na sobie", zanim zaprosisz prawdziwych klientów</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Dodaj testowego klienta (np. „TEST - Jan Kowalski"), ustaw kilka kategorii i skopiuj jego link. Otwórz go w nowym oknie, wgraj dowolny plik - i wróć do panelu. Zobaczysz, że status zmienia się <strong>na żywo</strong>.</p>
+          <p data-i18n="wd2_p">Dodaj testowego klienta (np. „TEST - Jan Kowalski"), ustaw kilka kategorii i skopiuj jego link. Otwórz go w nowym oknie, wgraj dowolny plik - i wróć do panelu. Zobaczysz, że status zmienia się <strong>na żywo</strong>.</p>
         </div></div>
       </div>
       <div class="step">
-        <div class="head"><div class="num">3</div><div><h3>Zaproś prawdziwych klientów</h3><div class="sub">Wysyłasz link, ustawiasz termin - i gotowe</div></div><div class="chev">⌄</div></div>
+        <div class="head"><div class="num">3</div><div><h3 data-i18n="wd3_h3">Zaproś prawdziwych klientów</h3><div data-i18n="wd3_sub" class="sub">Wysyłasz link, ustawiasz termin - i gotowe</div></div><div class="chev">⌄</div></div>
         <div class="body"><div class="body-inner">
-          <p>Gdy wszystko działa, dodajesz realne firmy, ustawiasz im kategorie i terminy, a potem klikasz „Wyślij zaproszenie". Od tego momentu Brakomat pilnuje braków za Ciebie.</p>
+          <p data-i18n="wd3_p">Gdy wszystko działa, dodajesz realne firmy, ustawiasz im kategorie i terminy, a potem klikasz „Wyślij zaproszenie". Od tego momentu Brakomat pilnuje braków za Ciebie.</p>
         </div></div>
       </div>
     </div>
 
     <div class="ba" style="margin-top:34px">
       <div class="col after">
-        <h3>Co warto przygotować</h3>
+        <h3 data-i18n="wd_after_h3">Co warto przygotować</h3>
         <ul>
-          <li>Adres e-mail biura</li>
-          <li>Listę klientów (nazwy)</li>
-          <li>Listę kategorii, które zbierasz co miesiąc</li>
-          <li>E-maile i NIP-y klientów - do zaproszeń i sprawdzania kontrahentów</li>
+          <li data-i18n="wd_after_1">Adres e-mail biura</li>
+          <li data-i18n="wd_after_2">Listę klientów (nazwy)</li>
+          <li data-i18n="wd_after_3">Listę kategorii, które zbierasz co miesiąc</li>
+          <li data-i18n="wd_after_4">E-maile i NIP-y klientów - do zaproszeń i sprawdzania kontrahentów</li>
         </ul>
       </div>
       <div class="arrow">+</div>
       <div class="col before" style="border-style:solid;border-color:var(--slate-200);background:#fff">
-        <h3 style="color:var(--slate-700)">Czego NIE potrzebujesz</h3>
+        <h3 data-i18n="wd_before_h3" style="color:var(--slate-700)">Czego NIE potrzebujesz</h3>
         <ul>
-          <li>Własnego serwera ani chmury</li>
-          <li>Instalowania programów - działa w przeglądarce</li>
-          <li>Wymiany swojego programu księgowego - Brakomat działa obok niego</li>
+          <li data-i18n="wd_before_1">Własnego serwera ani chmury</li>
+          <li data-i18n="wd_before_2">Instalowania programów - działa w przeglądarce</li>
+          <li data-i18n="wd_before_3">Wymiany swojego programu księgowego - Brakomat działa obok niego</li>
         </ul>
       </div>
     </div>
 
-    <h3 style="font-size:18px;font-weight:800;margin-top:40px;margin-bottom:4px">Pakiety</h3>
-    <p class="intro" style="margin-bottom:0">Każdy pakiet pilnuje braków i pokazuje statusy na żywo - wyższe dokładają wygody. Aktualne limity i ceny znajdziesz w cenniku.</p>
-    <p class="intro seg-only small" style="margin-top:10px;margin-bottom:0;color:var(--brand-700)">Dla zespołu 2–5 osób zwykle wystarcza <strong>Asystent Dokumentów</strong> — całe pilnowanie braków i statusy na żywo. Wyższy pakiet włączysz, gdy zechcesz odczyt faktur i pracę zespołową.</p>
-    <p class="intro seg-only large" style="margin-top:10px;margin-bottom:0;color:var(--brand-700)">Przy większym zespole najwięcej daje <strong>Pakiet Porządkujący</strong> — wiele osób na jednym panelu, automatyczny odczyt faktur i e-Faktury z KSeF.</p>
+    <h3 data-i18n="pk_h3" style="font-size:18px;font-weight:800;margin-top:40px;margin-bottom:4px">Pakiety</h3>
+    <p data-i18n="pk_intro" class="intro" style="margin-bottom:0">Każdy pakiet pilnuje braków i pokazuje statusy na żywo - wyższe dokładają wygody. Aktualne limity i ceny znajdziesz w cenniku.</p>
+    <p data-i18n="pk_small" class="intro seg-only small" style="margin-top:10px;margin-bottom:0;color:var(--brand-700)">Dla zespołu 2–5 osób zwykle wystarcza <strong>Asystent Dokumentów</strong> — całe pilnowanie braków i statusy na żywo. Wyższy pakiet włączysz, gdy zechcesz odczyt faktur i pracę zespołową.</p>
+    <p data-i18n="pk_large" class="intro seg-only large" style="margin-top:10px;margin-bottom:0;color:var(--brand-700)">Przy większym zespole najwięcej daje <strong>Pakiet Porządkujący</strong> — wiele osób na jednym panelu, automatyczny odczyt faktur i e-Faktury z KSeF.</p>
     <div class="grid cols-3">
       <div class="card gain pkg-rec pkg-rec-small">
         <span class="plan-icon" aria-hidden="true">
           <svg viewBox="0 0 32 32"><path d="M10 5.5h8l5 5V26a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V7.5a2 2 0 0 1 2-2Z"></path><path d="M18 5.5v6h6"></path><path d="M12 16h7"></path><path d="M12 20h4"></path><path d="m12 24 1.7 1.7 3.8-4"></path><path d="M24.5 16.5h3"></path><path d="M26 15v3"></path></svg>
         </span>
-        <h3>Asystent Dokumentów</h3>
-        <p>Sedno Brakomatu: klient wrzuca dokumenty na swoją podstronę, Ty masz statusy na żywo, automatyczne przypomnienia i porządek w dokumentach klienta.</p>
+        <h3 data-i18n="pk_c1_h3">Asystent Dokumentów</h3>
+        <p data-i18n="pk_c1_p">Sedno Brakomatu: klient wrzuca dokumenty na swoją podstronę, Ty masz statusy na żywo, automatyczne przypomnienia i porządek w dokumentach klienta.</p>
       </div>
       <div class="card gain pkg-rec pkg-rec-large">
         <span class="plan-icon order" aria-hidden="true">
           <svg viewBox="0 0 32 32"><path d="M5 11h8l2.2 2.5H27v11.2a2.3 2.3 0 0 1-2.3 2.3H7.3A2.3 2.3 0 0 1 5 24.7Z"></path><path d="M5 11V8.4A2.4 2.4 0 0 1 7.4 6h6.2L16 8.6h8.5a2.5 2.5 0 0 1 2.5 2.5v2.4"></path><path d="M10 17.5h8"></path><path d="M10 21h5.5"></path><path d="M22 18.2c1.7.5 2.6 1.4 2.6 2.5 0 1.5-1.8 2.7-4.1 2.7"></path><path d="m22.7 16.6-.9 1.9 2 .7"></path></svg>
         </span>
-        <h3>Pakiet Porządkujący</h3>
-        <p>Wszystko z Asystenta + automatyczny odczyt faktur, e-Faktury z KSeF, praca zespołowa i archiwum zatwierdzonych dokumentów: klient / miesiąc / kategoria.</p>
+        <h3 data-i18n="pk_c2_h3">Pakiet Porządkujący</h3>
+        <p data-i18n="pk_c2_p">Wszystko z Asystenta + automatyczny odczyt faktur, e-Faktury z KSeF, praca zespołowa i archiwum zatwierdzonych dokumentów: klient / miesiąc / kategoria.</p>
       </div>
       <div class="card gain">
         <span class="plan-icon scale" aria-hidden="true">
           <svg viewBox="0 0 32 32"><rect x="5" y="18" width="7" height="8" rx="1.5"></rect><rect x="20" y="18" width="7" height="8" rx="1.5"></rect><rect x="12.5" y="6" width="7" height="8" rx="1.5"></rect><path d="M16 14v4"></path><path d="M12 22H9.5"></path><path d="M20 22h2.5"></path><path d="M9.5 18v-2.2A1.8 1.8 0 0 1 11.3 14H16"></path><path d="M22.5 18v-2.2a1.8 1.8 0 0 0-1.8-1.8H16"></path><path d="M7.5 22h2"></path><path d="M22.5 22h2"></path></svg>
         </span>
-        <h3>Dla dużych biur i wielu oddziałów</h3>
-        <p>Pełna moc dla biur obsługujących wielu klientów, zespołów lub oddziałów naraz - z jednym standardem porządku dokumentów.</p>
+        <h3 data-i18n="pk_c3_h3">Dla dużych biur i wielu oddziałów</h3>
+        <p data-i18n="pk_c3_p">Pełna moc dla biur obsługujących wielu klientów, zespołów lub oddziałów naraz - z jednym standardem porządku dokumentów.</p>
       </div>
     </div>
 
-    <div class="client-demo-tip" style="margin-top:26px">💡 Po 14 dniach: jeśli zostajesz, nic nie musisz robić - wszyscy klienci, dokumenty i historia zostają na miejscu. Jeśli rezygnujesz, anulujesz przed końcem okresu próbnego i nie płacisz nic.</div>
+    <div data-i18n="pk_trialtip" class="client-demo-tip" style="margin-top:26px">💡 Po 14 dniach: jeśli zostajesz, nic nie musisz robić - wszyscy klienci, dokumenty i historia zostają na miejscu. Jeśli rezygnujesz, anulujesz przed końcem okresu próbnego i nie płacisz nic.</div>
   </div>
 </section>
 
@@ -1894,15 +1904,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section id="demo">
   <div class="wrap">
     <div class="cta-final">
-      <h2>Najlepiej po prostu kliknąć</h2>
-      <p>Czytanie o tym zajmuje 5 minut - przeklikanie demo zajmie 3. Dane są fikcyjne, więc możesz wcisnąć każdy przycisk bez obaw.</p>
+      <h2 data-i18n="cta_h2">Najlepiej po prostu kliknąć</h2>
+      <p data-i18n="cta_p">Czytanie o tym zajmuje 5 minut - przeklikanie demo zajmie 3. Dane są fikcyjne, więc możesz wcisnąć każdy przycisk bez obaw.</p>
       <div class="cta-row" style="justify-content:center;display:flex;gap:12px;flex-wrap:wrap">
         <a class="btn btn-primary" href="https://client.accounting.artwebcraft.com/?utm_source=przewodnik&utm_medium=guide&utm_campaign=demo" target="_blank" rel="noopener">Otwórz żywe demo ↗</a>
-        <a class="btn btn-ghost" href="#po-co" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25)">Wróć na górę przewodnika</a>
+        <a data-i18n="cta_back" class="btn btn-ghost" href="#po-co" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25)">Wróć na górę przewodnika</a>
       </div>
       <div style="margin-top:30px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)">
-        <p style="color:rgba(219,234,254,.9);font-weight:600;font-size:16px;margin:0 auto 16px;max-width:520px">Znasz już Brakomat z demo i chcesz go po prostu mieć?</p>
-        <a class="btn btn-primary" href="https://brakomatpro.artwebcraft.com/?utm_source=przewodnik&utm_medium=guide&utm_campaign=cennik#cennik" target="_blank" rel="noopener" onclick="track('cennik_click',{from:'przewodnik_cta'})">Wybierz pakiet i zacznij →</a>
+        <p data-i18n="cta_warm_p" style="color:rgba(219,234,254,.9);font-weight:600;font-size:16px;margin:0 auto 16px;max-width:520px">Znasz już Brakomat z demo i chcesz go po prostu mieć?</p>
+        <a data-i18n="cta_warm_btn" class="btn btn-primary" href="https://brakomatpro.artwebcraft.com/?utm_source=przewodnik&utm_medium=guide&utm_campaign=cennik#cennik" target="_blank" rel="noopener" onclick="track('cennik_click',{from:'przewodnik_cta'})">Wybierz pakiet i zacznij →</a>
       </div>
     </div>
   </div>
@@ -1910,11 +1920,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <footer>
   <div class="wrap">
-    <p><strong>BrakomatPro</strong> - Twój asystent w zarządzaniu dokumentami biura rachunkowego.</p>
-    <p style="margin-top:6px">Masz pytania albo chcesz BrakomatPro u siebie? Napisz: <a href="mailto:accounting@artwebcraft.com">accounting@artwebcraft.com</a> · <span class="tag">ArtWebCraft 2026</span></p>
+    <p data-i18n="ft_p1"><strong>BrakomatPro</strong> - Twój asystent w zarządzaniu dokumentami biura rachunkowego.</p>
+    <p data-i18n="ft_p2" style="margin-top:6px">Masz pytania albo chcesz BrakomatPro u siebie? Napisz: <a href="mailto:accounting@artwebcraft.com">accounting@artwebcraft.com</a> · <span class="tag">ArtWebCraft 2026</span></p>
   </div>
 </footer>
 
+<script>window.__I18N_EN = {"nav_brand":"BRAKOMAT <span>· guide</span>","nav_spis":"Contents","nav_poco":"Why use it?","nav_start":"Getting started","nav_klient":"Client area","nav_panel":"Office area","nav_obsluga":"Daily use","nav_wdrozenie":"Rollout","nav_demo":"Try it","nav_demo_m":"Try the demo","hero_badge":"⏱️ A 5-minute read · a 3-minute demo","hero_h1":"Stop chasing clients for documents. <span class=\"hl\">Let the system do it for you.</span>","hero_lead":"Brakomat is a panel for accounting offices that keeps an eye on deadlines, chases missing documents on its own and shows the live status of every one of your clients’ invoices. This guide shows you <strong>what it’s for</strong> and <strong>how to use it</strong> – no jargon.","hero_cta1":"Show me how it works →","demo_open_btn":"Open the live demo ↗","hero_meta":"The demo data is fictional. You can’t break anything – click freely.","seg_q":"Tell us who you run? <span class=\"muted\">We’ll tailor the guide in one click — nothing gets blocked.</span>","seg_small_t":"I run an office of 2–5 people","seg_small_s":"A smaller team with a lot of clients on its plate","seg_large_t":"I run a larger team","seg_large_s":"Many employees and clients at once","spis_eyebrow":"Contents · choose your path","spis_h2":"Where to start?","spis_intro":"Expand the path that fits you and jump straight to the topic you care about.","toc_demo_h":"Demo","toc_demo_sub":"Click around with no account · data is fictional","toc_demo_1":"What’s it for? – the problem and the document flow","toc_demo_2":"How to open the demo","toc_demo_3":"What your client sees","toc_demo_4":"The Office area step by step","toc_assist_h":"Document Assistant","toc_assist_sub":"Package 1","toc_poco":"What’s it for?","toc_obsluga":"Daily use","toc_wdrozenie":"How to get started at your office","toc_order_h":"Organizer Package","toc_order_sub":"Package 2 · + invoice reading, KSeF, team","poco_eyebrow":"Part 1 · For everyone","poco_h2":"What’s it for?","poco_intro":"First things first: the problem Brakomat solves. If you’ve ever chased a client for a missing bank statement three days before the deadline – this is for you.","poco_head_h3":"4 ways Brakomat works to make your office money","poco_head_p":"This is a system for selling clients better service: a document portal, order, automation, KSeF-readiness and less manual work on the office side. The technology stays in the background, while the front end shows a premium standard.","pc_time_h4":"The office regains capacity","pc_time_lead":"Brakomat takes the operational document-chasing off the team, so accountants can serve more clients without adding more hours.","pc_time_li1":"automatic reminders about missing items,","pc_time_li2":"a bulk “chase the latecomers” for your whole portfolio,","pc_time_li3":"less admin work per client.","pc_time_instead":"Emails, texts and calls every month to the same people.","pc_time_effect":"<span>Result:</span> more clients on the same team.","pc_ctrl_h4":"The office gets a command center","pc_ctrl_lead":"The owner and the team see statuses, gaps, corrections, the month history and client completeness in one panel.","pc_ctrl_li1":"the status of every client and every category,","pc_ctrl_li2":"month history and an archive: client / month / category,","pc_ctrl_li3":"team roles and an activity log to keep work tidy.","pc_ctrl_instead":"Invoices in email, on WhatsApp and on a drive. No idea who sent what or what’s missing.","pc_ctrl_effect":"<span>Result:</span> approved documents land straight into dedicated folders.","pc_money_h4":"The office sells a premium package","pc_money_lead":"Less administrative chaos means more time for profitable advisory work, premium clients, or simply peace and quiet after 4 p.m.","pc_money_li1":"the client sees a portal, statuses and an archive,","pc_money_li2":"AI reads invoices, and exports support Optima, QuickBooks and Excel,","pc_money_li3":"KSeF-ready: invoices can enter the process automatically.","pc_money_instead":"“We’re just another bookkeeping office” – with no visible difference worth paying extra for.","pc_money_effect":"<span>Result:</span> it’s easier to sell pricier, well-organized service.","pc_client_h4":"The client feels a higher standard","pc_client_lead":"Instead of sending files “anywhere,” the client gets their own portal, a clear list of what’s missing, and prompts that walk them through step by step.","pc_client_li1":"a client portal with login and the option to install it as a PWA,","pc_client_li2":"rejection reasons and corrections visible without a phone call,","pc_client_li3":"tax reminders for ZUS, VAT, PIT, CIT, JPK.","pc_client_instead":"The client keeps asking whether everything arrived, or doesn’t know what was wrong with a document.","pc_client_effect":"<span>Result:</span> the client sees the value of your service before the bill arrives.","pc_sum_b":"The client isn’t buying “yet another system.” They’re buying calmer, more organized service.","pc_sum_s":"Brakomat gives the office a visible premium layer: the client gets a portal and clear statuses, while the team receives documents faster, cleaner and closer to ready for the books.","cmp_bad_h4":"<span class=\"compare-mark\">×</span> Without Brakomat","cmp_bad_1":"manual reminders","cmp_bad_2":"hunting for missing items","cmp_bad_3":"retyping data","cmp_bad_4":"work with no visible premium value","cmp_good_h4":"<span class=\"compare-mark\">✓</span> With Brakomat","cmp_good_1":"live statuses","cmp_good_2":"automatic reminders","cmp_good_3":"AI invoice reading","cmp_good_4":"portal, KSeF-readiness and exports","flow_h3":"And here’s how it works with Brakomat – in three steps","poco_outro":"The rest of the guide is about how this looks in practice.","alt_klient":"A client drags invoices and bank statements onto their own page, from a phone or a computer; the system confirms the upload.","alt_system":"Brakomat watches the deadline and organizes the document, and chases the client for anything missing on its own.","alt_biuro":"Your office – you see everything in one panel and decide with a single click: Approve or Send back.","alt_illu":"Something wrong with a document? It goes back to the client with a reason – and the client fixes it and resends, without a call from your side.","np_kick":"Important, so there’s no confusion","np_h2":"This is not accounting software.<br>It’s a <span class=\"hl\">layer of order and profit</span> on top of accounting.","np_p":"Accounting software helps you <strong>post</strong> a document. Brakomat helps make sure the document <strong>arrives at all</strong> — legible, described, checked and ready to work with. It runs <strong>alongside</strong> your Optima, Insert or enova — it replaces nothing.","start_eyebrow":"Part 2 · The first 30 seconds","start_h2":"How to open the demo","start_intro":"No installation and no account needed. The demo runs in your browser.","start_s1_h3":"Go to the demo page","start_s1_sub":"It opens in any browser – computer or phone","start_s1_p1":"Click: <a class=\"inline\" href=\"https://client.accounting.artwebcraft.com/?utm_source=przewodnik&utm_medium=guide&utm_campaign=demo\" target=\"_blank\" rel=\"noopener\">client.accounting.artwebcraft.com</a>","start_s1_p2":"You’ll see a welcome screen with the line “Stop chasing clients for documents. Let the system do it for you.” It’s a demo version – every company and invoice is made up.","start_s1_tip":"💡 In the full, deployed version there’s secure login here – separate for you and separate for each client.","start_s2_h3":"Click “Show me the demo →”","start_s2_sub":"You enter the accounting office panel","start_s2_p1":"The big button in the middle of the welcome screen. Once you click it you land in the <strong>panel</strong> – your main working view as an accountant.","start_s2_p2":"At the top you’ll see a greeting (“Good morning”) and a summary of what’s happening in the office today.","kl_eyebrow":"Part 3 · This is where documents come from","kl_h2":"What your client sees","kl_p":"This is where it all begins: most of the work is done by the client on their own simple page – and the office receives a ready, complete set. The client panel needs no manual; you’ll see this screen via the “client area” preview for any company.","alt_panel":"The Brakomat client panel – a list of required documents, statuses, alerts and buttons to add files","kl_guide_h3":"A how-to the office can hand to the client","kl_guide_p":"A simple, jargon-free walkthrough: the client knows where to go, what to upload, how to fix errors and when to mark the document set as ready.","kl_s1_h3":"Open your link","kl_s1_sub":"The office sends a private link or an email invitation","kl_s1_p":"The client opens the link from the office. On the first visit they can set up an account, and later log in with their email and password.","kl_s1_tip":"For the client: you don’t install accounting software. You enter a simple document portal.","kl_s2_h3":"See what’s missing","kl_s2_sub":"A list of categories shows what the office is asking for","kl_s2_p1":"On the screen the client sees document categories, e.g. cost invoices, sales invoices, bank statements, ZUS, payroll or other items set up by the office.","kl_s2_p2":"The status clearly says whether a document is missing, in progress, approved or needs fixing.","kl_s3_h3":"Upload files from a computer or phone","kl_s3_sub":"A PDF, photo or scan goes straight to the right category","kl_s3_p":"The client drags a file in or picks it from their phone. They can add a short note, e.g. “deposit for the office refurb” or “fuel, company car.”","kl_s3_tip":"For the office: fewer documents lost in email, Messenger and “misc” folders.","kl_s4_h3":"Fix it if the office sends a document back","kl_s4_sub":"The rejection reason is visible in the portal","kl_s4_p":"If a file is blurry, incomplete or in the wrong category, the client sees the reason and can upload a corrected version without calling the office.","kl_s5_h3":"Click “Finish uploading”","kl_s5_sub":"The office immediately sees the set is ready","kl_s5_p":"Once the client has uploaded everything, they click finish uploading. In the office panel the company moves on to processing, with no “is that everything?” question.","kl_s5_tip":"Result: the client has a clear checklist, and the office gets a tidy, complete set.","kl_preview_p":"In the client list, click this “client area” preview icon next to any company to see this screen through the client’s eyes.","kl_preview_label":"preview","panel_eyebrow":"Part 4 · For you, to work in","panel_h2":"The Office area in 3 pillars","panel_intro":"You don’t need to learn seven tabs to grasp the value of the panel. In practice Brakomat does three things: it shows priorities, prepares documents and helps you wrap up without chaos.","ops1_h3":"Overview and priorities","ops1_p":"On one screen you see which clients are ready, who is missing what, and where the month is starting to slip.","ops1_li1":"tiles: ready, missing, overdue, needs fixing,","ops1_li2":"a client list with document-completeness bars,","ops1_li3":"problem filters and quick reminders to latecomers.","ops1_proof":"Value: less searching, more deciding.","ops2_h3":"AI prepares the documents","ops2_p":"The smart register reads invoices, organizes the data and flags documents that aren’t ready to work with yet.","ops2_li1":"reads numbers, dates, amounts and VAT rates,","ops2_li2":"a suggested category and a “to review” status,","ops2_li3":"handling of KSeF invoices in higher packages.","ops2_proof":"Value: less retyping, better input for the books.","ops3_h3":"Decision and export","ops3_p":"The accountant doesn’t hunt for files across messaging channels. They check, approve, send back with a reason, and approved documents go into a tidy archive.","ops3_li1":"approve a document or send it back to the client with a clear reason,","ops3_li2":"close the month and lock further changes,","ops3_li3":"store approved documents in client / month / category folders,","ops3_li4":"export data to Excel, Optima or QuickBooks.","ops3_proof":"Value: a month closed faster and fewer misunderstandings with the client.","panel_eyebrow2":"For people who want the details","panel_h2b":"The Office area step by step","panel_introb":"If you want to go through the panel more thoroughly, expand the points below. This is the how-to part – handy after the first spark of interest, when someone wants to see exactly what each element does.","pA_h3":"Tiles at the top – the whole office’s state in 1 second","pA_sub":"All clients · Ready · Missing · Overdue · Needs fixing","pA_p1":"At the top of the panel are color-coded counters. They’re the “dashboard” of your month:","pA_p2":"• <strong>Ready</strong> – companies that delivered everything and are approved.<br>\n             • <strong>Missing</strong> – something is missing, but the deadline hasn’t passed yet.<br>\n             • <strong>Overdue</strong> – alarm: the client is past the deadline. The system has already prepared reminders for them.<br>\n             • <strong>Needs fixing</strong> – invoices that are blurry or poorly described and need correcting.","pA_tip":"💡 Hover over each tile – a tooltip appears with a precise explanation.","pB_h3":"Client list – who sent what, what’s missing","pB_sub":"Each row = one company, with a bar of document statuses","pB_p1":"Below the tiles is a list of all your clients (Tech Solutions, the “Pod Chmurką” café, MedCare Clinic…). Next to each you see color statuses for the individual categories: Cost Invoices, Sales Invoices, Statements, ZUS, Payroll.","pB_p2":"Color tells you everything without reading – green is order, red is overdue. (The full color cheat sheet is in the next part.)","pB_tip":"💡 At the top of the list there’s a search box (“Search client…”) and a “by problem” filter, to show only the latecomers right away.","pC_h3":"Reminders – the system chases clients for you","pC_sub":"A “reminder” button per client + a bulk “Chase the latecomers”","pC_p1":"There’s a reminder icon next to every client. You click – and the AI Agent sends the client a ready, polite message (email / WhatsApp) about the missing documents. The wording is already prepared; you write nothing.","pC_p2":"There’s also a big <span class=\"kbd\">CHASE THE LATECOMERS</span> button – one click sends reminders to everyone who is past the deadline.","pC_tip":"💡 In the full version these reminders send <strong>themselves</strong>, by your rules – you don’t even have to click.","pD_h3":"Smart Register – AI reads invoices","pD_sub":"The table at the bottom: “Analyze with AI” reads NIP, amounts, dates","pD_p1":"At the bottom of the panel is the <strong>Smart Document Register</strong>. Every uploaded file lands here. You click <span class=\"kbd\">Analyze with AI</span> on an invoice, and the system pulls out: the number, date, seller’s NIP, net amount, VAT and gross.","pD_p2":"Try it on the sample rows:","pD_p3":"• A Microsoft / Medicover invoice → the AI reads all the data nicely (the status changes to “To review”).<br>\n             • “holiday_photo.jpg” → the AI recognizes it’s <strong>not</strong> an invoice and politely sends it back asking for the right file.","pD_tip":"💡 This shows the core: the AI does the reading and retyping, and you just check whether it’s right.","pE_h3":"NIP check – VAT White List and VIES","pE_sub":"An automatic counterparty check before payment","pE_p1":"Alongside the invoice data, Brakomat automatically checks the seller’s NIP against the Ministry of Finance <strong>VAT White List</strong> and against <strong>VIES</strong> (for EU counterparties). You instantly see whether the taxpayer is active and what their bank account number is.","pE_p2":"If something is off, a warning appears: <span class=\"pill\" style=\"background:var(--rose-50);color:#be123c\">⚠ Tax risk</span> – so you don’t pay into the wrong account.","pF_h3":"Approve or reject a document","pF_sub":"Green “Approve data” / red “Reject and notify the client”","pF_p1":"After the analysis you decide with one click:","pF_p2":"• <strong>Approve data</strong> – the document is OK, it moves on.<br>\n             • <strong>Reject and notify the client</strong> – you pick a reason (illegible scan, missing pages, wrong category…), and the client is notified right away <em>and sees it in their own portal</em>, so they know what to fix.","pF_tip":"💡 The client doesn’t call asking “what was wrong” – they see the rejection reason themselves.","pG_h3":"Closing the month and exporting to Excel","pG_sub":"“Approve month” locks editing · “Export to Excel” builds a summary","pG_p1":"When a client is complete, you click the padlock / <span class=\"kbd\">Approve</span> next to them – this locks the month (the client can no longer change anything) and prepares the data for your accounting software.","pG_p2":"The <span class=\"kbd\">Export to Excel</span> button generates a combined sheet: all clients, statuses and the read data – for reports or to load elsewhere.","pG_p3":"And <span class=\"kbd\">Close month</span> archives everything and opens a clean next month.","ob_eyebrow":"Part 5 · Everyday work","ob_h2":"Daily use","ob_intro":"Once you have an account, day-to-day work is a few simple moves. Brakomat does the two most important things for you: it <strong>chases missing items on its own</strong> and <strong>shows the live status of every document</strong> – from “waiting” to “approved.” That’s the core; the rest is convenience.","ob1_h3":"Add a client and set the document-collection rules","ob1_sub":"Client, deadline, categories and a link to their area","ob1_p1":"You do this step once per client, before you send them the link. Brakomat needs to know <strong>who it’s watching</strong>, <strong>by when it should collect the documents</strong> and <strong>which categories should be visible in the client panel</strong>.","ob1_c1":"1. Add a client","ob1_c1s":"You click <span class=\"kbd\">Add client</span>, enter the company name and the contact details needed for the invitation and reminders.","ob1_c2":"2. Set the month’s deadline","ob1_c2s":"You pick the document delivery date. After it passes, the client moves into “overdue,” and the office sees the priority without checking manually.","ob1_c3":"3. Choose document categories","ob1_c3s":"You create “drawers” for documents: cost invoices, sales invoices, statements, ZUS, payroll, business trips or the client’s own categories.","ob1_c4":"4. Send the private link","ob1_c4s":"The client gets their area with the list of categories and sees what to add. The office doesn’t have to explain it from scratch every time.","ob1_p2":"You set the categories to match how your office works. For a simple client 3–4 items are enough, and for a more demanding one you can add separate categories for payroll, banking, contracts, cash reports or documents to fix.","ob1_tip":"💡 Categories and deadlines aren’t just “settings.” They’re a template of order that comes back every month and curbs the chaos in your inbox.","ob2_h3":"Send the client their private link","ob2_sub":"The client uploads documents on their side, no installation","ob2_p":"Next to each client you can <strong>copy their private link</strong> or click <span class=\"kbd\">Send invitation</span> – the client gets an email and goes to their own simple page. They can set a password to stay logged in, without hunting for a link each month.","ob2_tip":"💡 The client needs no software at all – they do everything in the browser, from a phone too.","ob3_h3":"Brakomat watches for missing items on its own <span class=\"pill\" style=\"background:var(--brand-50);color:var(--brand-700)\">this makes the difference</span>","ob3_sub":"Automation + a message from the client or document card","ob3_p1":"You don’t have to remember who hasn’t sent what – Brakomat remembers for you. As the deadline nears or passes, the client gets a <strong>polite reminder</strong> about missing documents, by your rules. You can also <span class=\"kbd\">chase all the latecomers</span> at once with one button.","ob3_p2":"You also keep manual control when you want to react specifically: from a <strong>given client’s card</strong> you can message that one company, and from a <strong>specific document</strong> you can send a message about that particular file – for example on a rejection, a wrong category or an illegible scan.","ob3_tip":"💡 This takes the worst part of the month off you: automation handles the routine, and you send a targeted message only where it’s truly needed.","ob4_h3":"The status of every document – live <span class=\"pill\" style=\"background:var(--brand-50);color:var(--brand-700)\">this makes the difference</span>","ob4_sub":"You always know where you stand, without opening emails","ob4_p":"Every category for every client has its own color and status at the current stage: <em>waiting → arrived → checked → approved</em>, and when something’s off – <em>needs fixing</em>. One glance at the panel and you know who’s ready and who isn’t.","ob4_tip":"💡 In the panel the status is also written out in words, so you don’t have to memorize the colors.","ob5_h3":"Check and approve – or send back with a reason","ob5_sub":"The client immediately knows what to fix","ob5_p1":"Document fine? You <strong>approve</strong> it with one click. Something off (illegible scan, wrong category, missing page)? You <strong>send it back with a reason</strong> – and the client sees that on their side and fixes it, without a call from you.","ob5_p2":"You can send the message straight from the document it concerns. That way the client doesn’t get a generic “please fix your documents,” but specific information: what’s wrong and which file to replace.","ob6_h3":"Automatic invoice reading <span class=\"pill\" style=\"background:var(--violet-50);color:#6d28d9\">Organizer Package +</span>","ob6_sub":"Less manual retyping","ob6_p":"In higher packages Brakomat reads the invoice number, date, seller, NIP and amounts for you – no manual typing. While at it, it checks the seller’s NIP against the <strong>VAT White List</strong> and <strong>VIES</strong>, so you see right away whether everything’s fine with the counterparty.","ob6_tip":"💡 It’s a nice extra, not the main point – what saves you the most time and nerves is watching for missing items and tracking statuses.","ob7_h3":"Nothing gets lost – Trash and archive","ob7_sub":"Deleted items can be restored, months get archived","ob7_p":"A deleted file first goes to <strong>Trash</strong> – you can restore it. When you close a month, the whole set lands in the <strong>archive</strong>, and Brakomat opens a clean next month. The history is always at hand.","ob8_h3":"Tidy files and export","ob8_sub":"Organized cloud folders + an Excel summary","ob8_p1":"Brakomat files approved documents on the drive in each client’s dedicated folder, split by <strong>months</strong> and <strong>categories</strong> (client / month / category). So a document isn’t just approved – it lands exactly where you can find it quickly later.","ob8_p2":"The <span class=\"kbd\">Export to Excel</span> button builds a combined summary of all clients and documents – for a report or to load into another program.","ob9_h3":"Teamwork <span class=\"pill\" style=\"background:var(--violet-50);color:#6d28d9\">Organizer Package +</span>","ob9_sub":"Invite employees into one panel","ob9_p":"You invite employees by email and everyone works in the same panel. Only the owner sees billing and account settings – employees handle the documents.","ob10_h3":"e-Invoices straight from KSeF <span class=\"pill\" style=\"background:var(--violet-50);color:#6d28d9\">Organizer Package +</span>","ob10_sub":"You have some documents before the client uploads anything","ob10_p":"Brakomat can pull the client’s invoices straight from the government e-Invoice system (KSeF). For purchase invoices you decide with one click: <strong>company cost</strong>, <strong>private</strong> or <strong>ask the client</strong> – and the client confirms on their side.","wd_eyebrow":"Part 6 · When you want it at your office","wd_h2":"From demo to rollout at your office","wd_intro":"Enjoyed clicking through the demo? Setting Brakomat up in your own office takes about fifteen minutes. The first <strong>14 days are free</strong> – no risk.","wd1_h3":"Create an office account and choose a package","wd1_sub":"14 days free · no charges for the first two weeks","wd1_p":"You register the office (your email is your login), confirm the address from the message and fill in a short profile. Then you pick a package and start the <strong>14-day trial</strong>.","wd1_tip":"💡 For the first 14 days you pay nothing, and you can cancel the subscription anytime – at no cost.","wd2_h3":"Add your first client and test the portal","wd2_sub":"Best done “on yourself” before you invite real clients","wd2_p":"Add a test client (e.g. “TEST – John Smith”), set up a few categories and copy their link. Open it in a new window, upload any file – and go back to the panel. You’ll see the status change <strong>live</strong>.","wd3_h3":"Invite real clients","wd3_sub":"You send the link, set the deadline – and you’re done","wd3_p":"When everything works, you add real companies, set their categories and deadlines, and then click “Send invitation.” From that moment Brakomat watches for missing items for you.","wd_after_h3":"What’s worth preparing","wd_after_1":"The office email address","wd_after_2":"A list of clients (names)","wd_after_3":"A list of categories you collect each month","wd_after_4":"Clients’ emails and NIPs – for invitations and counterparty checks","wd_before_h3":"What you DON’T need","wd_before_1":"Your own server or cloud","wd_before_2":"Installing software – it runs in the browser","wd_before_3":"Replacing your accounting software – Brakomat runs alongside it","pk_h3":"Packages","pk_intro":"Every package watches for missing items and shows live statuses – the higher ones add convenience. You’ll find current limits and prices in the pricing.","pk_small":"For a team of 2–5, the <strong>Document Assistant</strong> is usually enough — all the missing-item chasing and live statuses. You can switch to a higher package when you want invoice reading and teamwork.","pk_large":"For a larger team the <strong>Organizer Package</strong> gives the most — many people in one panel, automatic invoice reading and e-Invoices from KSeF.","pk_c1_h3":"Document Assistant","pk_c1_p":"The core of Brakomat: the client uploads documents to their own page, you get live statuses, automatic reminders and order in the client’s documents.","pk_c2_h3":"Organizer Package","pk_c2_p":"Everything in the Assistant + automatic invoice reading, e-Invoices from KSeF, teamwork and an archive of approved documents: client / month / category.","pk_c3_h3":"For large offices and multiple branches","pk_c3_p":"Full power for offices serving many clients, teams or branches at once – with one standard of document order.","pk_trialtip":"💡 After 14 days: if you stay, you do nothing – all clients, documents and history remain in place. If you opt out, you cancel before the trial ends and pay nothing.","cta_h2":"The best move is simply to click","cta_p":"Reading about it takes 5 minutes – clicking through the demo takes 3. The data is fictional, so you can press every button without worry.","cta_back":"Back to the top of the guide","cta_warm_p":"Already know Brakomat from the demo and just want to have it?","cta_warm_btn":"Choose a package and get started →","ft_p1":"<strong>BrakomatPro</strong> – your assistant for managing accounting-office documents.","ft_p2":"Have questions or want BrakomatPro at your office? Write to: <a href=\"mailto:accounting@artwebcraft.com\">accounting@artwebcraft.com</a> · <span class=\"tag\">ArtWebCraft 2026</span>","doc_title":"Brakomat – how it works (guide)"};</script>
 <script>
   const prog=document.getElementById('progress');
   const onScroll=()=>{const h=document.documentElement;const sc=(h.scrollTop)/(h.scrollHeight-h.clientHeight);prog.style.width=(sc*100)+'%';};
@@ -1935,21 +1946,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
   track('guide_open');
 
-  // === „Ankieta bez ankiety" — wybór profilu personalizuje treść i wysyła zdarzenie ===
+  // === Dwujęzyczność PL/EN: PL zostaje inline w HTML, EN ze słownika; PL cache'owany przy starcie ===
+  var I18N = (function(){
+    var EN = window.__I18N_EN || {};
+    var PL = {}, PLALT = {}, PL_TITLE = document.title, cur = 'pl', subs = [];
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var k=el.getAttribute('data-i18n'); if(PL[k]==null) PL[k]=el.innerHTML;
+    });
+    document.querySelectorAll('[data-i18n-alt]').forEach(function(el){
+      var k=el.getAttribute('data-i18n-alt'); if(PLALT[k]==null) PLALT[k]=el.getAttribute('alt')||'';
+    });
+    function apply(lang){
+      cur = (lang==='en') ? 'en' : 'pl';
+      document.documentElement.lang = cur;
+      document.body.setAttribute('data-lang', cur);
+      document.querySelectorAll('[data-i18n]').forEach(function(el){
+        var k=el.getAttribute('data-i18n'), v = cur==='en' ? EN[k] : PL[k];
+        if(v!=null) el.innerHTML = v;
+      });
+      document.querySelectorAll('[data-i18n-alt]').forEach(function(el){
+        var k=el.getAttribute('data-i18n-alt'), v = cur==='en' ? EN[k] : PLALT[k];
+        if(v!=null) el.setAttribute('alt', v);
+      });
+      document.title = (cur==='en' && EN.doc_title) ? EN.doc_title : PL_TITLE;
+      document.querySelectorAll('[data-lang-pick]').forEach(function(b){
+        b.setAttribute('aria-pressed', b.getAttribute('data-lang-pick')===cur ? 'true':'false');
+      });
+      subs.forEach(function(fn){ try{ fn(cur); }catch(e){} });
+    }
+    function set(lang, fire){
+      apply(lang);
+      try{ localStorage.setItem('brakomat_lang', cur); }catch(e){}
+      if(fire) track('lang_switch', {lang: cur});
+    }
+    document.querySelectorAll('[data-lang-pick]').forEach(function(b){
+      b.addEventListener('click', function(){ set(b.getAttribute('data-lang-pick'), true); });
+    });
+    var saved=null; try{ saved=localStorage.getItem('brakomat_lang'); }catch(e){}
+    apply(saved || ((navigator.language||'').toLowerCase().indexOf('en')===0 ? 'en' : 'pl'));
+    return { lang:function(){return cur;}, onChange:function(fn){subs.push(fn);} };
+  })();
+
+  // === „Ankieta bez ankiety" — wybór profilu personalizuje treść i wysyła zdarzenie (dwujęzyczne) ===
   (function(){
     var KEY='brakomat_seg';
-    var labels={small:'biuro 2–5 osób', large:'większy zespół'};
+    var L={ pl:{small:'biuro 2–5 osób', large:'większy zespół',
+                done:function(x){return 'Dopasowano przewodnik dla profilu: '+x+'. Niżej podświetliliśmy rekomendowany pakiet.';}},
+            en:{small:'an office of 2–5', large:'a larger team',
+                done:function(x){return 'Guide tailored for: '+x+'. We’ve highlighted the recommended package below.';}} };
     var done=document.getElementById('seg-done');
     var btns=document.querySelectorAll('[data-seg-pick]');
+    var sel=null;
+    function render(){ if(!sel||!done) return; var t=L[I18N.lang()]||L.pl; done.textContent=t.done(t[sel]); }
     function apply(seg, fire){
-      if(!labels[seg]) return;
+      if(seg!=='small' && seg!=='large') return;
+      sel=seg;
       document.body.setAttribute('data-seg', seg);
       btns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-seg-pick')===seg ? 'true':'false'); });
-      if(done) done.textContent='Dopasowano przewodnik dla profilu: '+labels[seg]+'. Niżej podświetliliśmy rekomendowany pakiet.';
+      render();
       if(fire){ track('segment_select', {segment:seg}); try{localStorage.setItem(KEY,seg);}catch(e){} }
     }
     btns.forEach(function(b){ b.addEventListener('click', function(){ apply(b.getAttribute('data-seg-pick'), true); }); });
     try{ var saved=localStorage.getItem(KEY); if(saved) apply(saved, false); }catch(e){}
+    I18N.onChange(render);
   })();
 
   // === Kliknięcie „Otwórz demo" — zdarzenie + przeniesienie wyboru profilu w UTM ===
