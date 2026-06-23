@@ -86,7 +86,8 @@
     "work_in_progress": "W trakcie księgowania",
     "welcome_morning": "Dzień dobry",
     "welcome_evening": "Dobry wieczór",
-    "welcome_sub": "Oto co dzieje się dzisiaj w Twoim biurze."
+    "welcome_sub": "Oto co dzieje się dzisiaj w Twoim biurze.",
+    "guide_link": "Przewodnik po demo"
     },
   "ai": {
     "nudge_msg": "Dzień dobry! Agent AI z tej strony. 🤖 Widzę, że w firmie {{name}} brakuje dokumentów. Pomóżmy sobie to dokończyć!",
@@ -378,7 +379,8 @@
   "flow_biuro_desc": "Widzi wszystko i decyduje jednym kliknięciem",
   "description": "Wersja demonstracyjna — dane są fikcyjne. Kliknij poniżej, żeby zobaczyć jak to działa.",
   "button": "Pokaż mi demo →",
-  "cta_button": "Chcę to dla swojego biura"
+  "cta_button": "Chcę to dla swojego biura",
+  "guide_link": "📖 Najpierw zobacz przewodnik po demo"
   },
   "activity": {
   "title": "OSTATNIE DZIAŁANIA",
