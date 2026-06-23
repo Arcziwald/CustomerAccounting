@@ -86,7 +86,8 @@
     "work_in_progress": "Work in progress",
     "welcome_morning": "Good morning",
     "welcome_evening": "Good evening",
-    "welcome_sub": "Here's what's happening in your office today."
+    "welcome_sub": "Here's what's happening in your office today.",
+    "guide_link": "Demo guide"
   },
   "ai": {
     "nudge_msg": "Hello! AI Agent here. 🤖 I see that {{name}} is missing some documents. Let's get this done!",
@@ -376,7 +377,8 @@
   "flow_biuro_desc": "Sees everything and decides in one click",
   "description": "Demo version — all data is fictional. Click below to explore.",
   "button": "Show me the demo →",
-  "cta_button": "I want this for my office"
+  "cta_button": "I want this for my office",
+  "guide_link": "See the demo guide first"
   },
   "activity": {
   "title": "RECENT ACTIVITY",

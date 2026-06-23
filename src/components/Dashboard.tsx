@@ -481,6 +481,9 @@ export default function Dashboard({
       <p className="text-slate-500 font-medium mt-1">
         {t('dashboard.welcome_sub')}
       </p>
+      <a href="/przewodnik-demo.html" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+        <FileText className="w-4 h-4" /> {t('dashboard.guide_link')}
+      </a>
     </div>
     <div className="text-right relative z-10">
       <div className="text-4xl font-black text-slate-200 uppercase tracking-tighter tabular-nums leading-none">
@@ -1936,6 +1939,9 @@ export default function Dashboard({
           >
             {t('welcome.cta_button')}
           </motion.button>
+          <a href="/przewodnik-demo.html" target="_blank" rel="noopener noreferrer" className="block text-center text-sm font-semibold text-blue-100 hover:text-white underline underline-offset-4 transition-colors">
+            {t('welcome.guide_link')}
+          </a>
 
           <p className="text-[8px] md:text-[9px] text-white/20 uppercase tracking-[0.3em] text-center pt-2">
             ArtWebCraft Digital Experience 2026
